@@ -1,0 +1,67 @@
+import React, { Component } from "react";
+// import M from "materialize-css/dist/js/materialize.min.js";
+
+export default class NavBar extends Component {
+  componentDidMount() {
+    // var elem = document.querySelector(".sidenav");
+    // var instance = M.Sidenav.init(elem, {
+    //   edge: "left",
+    //   inDuration: 250,
+    // });
+  }
+
+  render() {
+    return (
+      <div>
+        <nav>
+          <ul id="slide-out" className="sidenav">
+            <li className="center-align">
+              <div className="user-view">
+                <a href="#user" className="profile-image">
+                  <img
+                    className="circle profile"
+                    src="https://upload-icon.s3.us-east-2.amazonaws.com/uploads/icons/png/4080540331548233623-512.png"
+                    alt=""
+                  />
+                  <i className="material-icons edit-icon">edit</i>
+                </a>
+                <a href="#name" className="text-black">
+                  <span className="name">John Doe</span>
+                </a>
+                <a href="#email">
+                  <span className="email">jdandturk@gmail.com</span>
+                </a>
+              </div>
+            </li>
+            <li>
+              <a href="#!">
+                <i className="material-icons">edit</i>EDIT PROFILE
+              </a>
+            </li>
+            <li>
+              <a href="#!">
+                <i className="material-icons">lock</i>LOGOUT
+              </a>
+            </li>
+            <li>
+              <div className="divider"></div>
+            </li>
+            <li>
+              <a href="/" className="subheader">
+                My Shops
+              </a>
+            </li>
+            <li>
+              <a className="waves-effect" href="#!">
+                Shop One
+              </a>
+            </li>
+          </ul>
+          <a href="" data-target="slide-out" className="sidenav-trigger">
+            <i className="material-icons">menu</i>
+          </a>
+        </nav>
+      </div>
+    );
+  }
+}
