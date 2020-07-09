@@ -5,6 +5,11 @@
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
+
+    <!-- Tell the browser it's a PWA -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <!-- Tell iOS it's a PWA -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta
       name="description"
       content="Web site created using create-react-app"
@@ -16,7 +21,7 @@
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <link
-      href="http://fonts.googleapis.com/icon?family=Material+Icons"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
     />
 
@@ -25,9 +30,6 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
     />
-
-    <!-- Compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
@@ -44,6 +46,49 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
 
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+
+    <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyDgmRLt89-dUMvq-KvZZKeEBexosVgsI3o",
+        authDomain: "pwa-app-fc7bd.firebaseapp.com",
+        databaseURL: "https://pwa-app-fc7bd.firebaseio.com",
+        projectId: "pwa-app-fc7bd",
+        storageBucket: "pwa-app-fc7bd.appspot.com",
+        messagingSenderId: "120212693196",
+        appId: "1:120212693196:web:89d6c455c707f2ccafe269",
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("input.autocomplete").autocomplete({
+          data: {
+            Apple: null,
+            Microsoft: null,
+            Google: "https://placehold.it/250x250",
+          },
+        });
+        $(".unit").autocomplete({
+          data: {
+            KG: null,
+            Grams: null,
+            Pieces: "https://placehold.it/250x250",
+          },
+        });
+      });
+    </script>
+
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {
@@ -57,7 +102,7 @@
                 );
               },
               function (err) {
-                console.log("Worker registration failed", err);
+                console.log("Workerr registration failed", err);
               }
             )
             .catch(function (err) {

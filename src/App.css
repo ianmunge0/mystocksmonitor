@@ -1,6 +1,77 @@
 .App {
   text-align: center;
 }
+:root {
+  font-family: "Roboto", "Helvetica Neue", sans-serif;
+}
+.row {
+  margin: 0em;
+}
+.stocktxt p {
+  font-size: 12px;
+}
+.forminput label {
+  padding: 10px;
+}
+.forminput input {
+  background-color: white !important;
+  padding: 10px !important;
+  border-radius: 5px !important;
+  /* margin-left: 10px !important; */
+  text-align: center;
+}
+html {
+  overflow: scroll;
+  overflow-x: hidden;
+}
+::-webkit-scrollbar {
+  width: 0px; /* Remove scrollbar space */
+  background: transparent; /* Optional: just make scrollbar invisible */
+}
+/* Optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+  background: #ff0000;
+}
+.formcenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.editicons {
+  cursor: pointer;
+}
+.countpreview p {
+  font-size: 10;
+  float: left;
+}
+.countitem .title {
+  font-weight: bold;
+}
+body {
+  overscroll-behavior-y: contain;
+}
+.main-sidebar {
+  transform: translateX(0%);
+  position: relative;
+  width: auto;
+  padding: 0;
+  height: 500px;
+  margin: 0;
+}
+.bottom-modal {
+  transform: translateX(0%);
+  position: relative;
+  width: auto;
+  padding: 0;
+  margin: 0;
+}
+.product-item {
+  cursor: pointer;
+}
+
+.side-Wrap {
+  padding: 0 !important;
+}
 
 .App-logo {
   height: 40vmin;
@@ -23,7 +94,32 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
-
+.rdrStaticRange {
+  padding: 10px !important;
+  font-size: 23px !important;
+  font-weight: bold;
+}
+.modal {
+  height: 80%;
+}
+.rdrInputRanges {
+  display: none;
+}
+.rdrDefinedRangesWrapper,
+.rdrCalendarWrapper,
+.rdrMonth {
+  width: 100% !important;
+}
+.rdrDayNumber {
+  font-size: 23px;
+}
+.rdrInputRangeInput {
+  width: 50% !important;
+}
+.rdrWeekDay {
+  font-size: 20px;
+  font-weight: bold !important;
+}
 .App-link {
   color: #61dafb;
 }
@@ -33,10 +129,13 @@
 .edit-icon {
   position: absolute;
   top: 0;
-  right: 10px;
+  right: -68px;
 }
 .container {
   width: 90%;
+}
+.carousel.carousel-slider .carousel-item {
+  min-height: auto;
 }
 .content-wrap {
   height: 500px;
@@ -46,11 +145,16 @@
   width: 80px;
   margin: 0 auto;
 }
+/* .tabs-content.carousel {
+  overflow: scroll;
+} */
 .user-view a {
   color: black;
 }
 .collection-wrap .collection {
-  border: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
 }
 .side-Wrap {
   background-color: #f6a2ad;
