@@ -29,7 +29,7 @@ function App() {
 
   return (
     <React.Fragment>
-      <div className="container" style={{ background: "#EE6E73" }}>
+      <div className="container">
         <NavBar />
         <div className="row">
           {loggedin.loggedin ? (

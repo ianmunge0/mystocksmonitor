@@ -52,7 +52,8 @@ export const register = (email, phone, password, country) => {
         console.log("saving to localstorage", res.data);
         if (regdata.status) {
           console.log("saving to localstorage in", res.data);
-          reactLocalStorage.set("userdata", regdata);
+          reactLocalStorage.set("userdata", JSON.stringify(regdata));
+          reactLocalStorage.set("loggedin", true);
         }
 
         // new DBService().put("userdata", regdata);

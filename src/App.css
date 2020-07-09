@@ -10,16 +10,15 @@
 .stocktxt p {
   font-size: 12px;
 }
-.forminput label {
+/* .forminput label {
   padding: 10px;
 }
 .forminput input {
   background-color: white !important;
   padding: 10px !important;
   border-radius: 5px !important;
-  /* margin-left: 10px !important; */
   text-align: center;
-}
+} */
 html {
   overflow: scroll;
   overflow-x: hidden;

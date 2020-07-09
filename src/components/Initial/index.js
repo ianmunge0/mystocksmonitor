@@ -1,10 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { login } from "../../Redux/Actions";
+import { reactLocalStorage } from "reactjs-localstorage";
 
 export default function Initial(props) {
-  const loggedin = useSelector((state) => state.login);
+  // const loggedin = useSelector((state) => state.login);
   const dispatch = useDispatch();
 
   // const fetch_data = () => {
@@ -13,11 +14,11 @@ export default function Initial(props) {
   //   });
   // };
 
-  // console.log(loggedin.loggedin);
+  console.log(JSON.parse(reactLocalStorage.getItem("loggedin")));
   // if (loggedin.loggedin)
-  if (loggedin.loggedin) {
-    props.history.push("/login");
-  }
+  // if (reactLocalStorage.getItem("loggedin")) {
+  //   props.history.push("/dashboard");
+  // }
   return (
     <div className="container center-align">
       <div className="row ">
