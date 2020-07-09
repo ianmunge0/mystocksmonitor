@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
 export default class SideNavbar extends Component {
   render() {
@@ -33,9 +34,9 @@ export default class SideNavbar extends Component {
             </a>
           </li>
           <li>
-            <a href="#!">
+            <Link>
               <i className="material-icons">lock</i>LOGOUT
-            </a>
+            </Link>
           </li>
           <li>
             <div className="divider"></div>

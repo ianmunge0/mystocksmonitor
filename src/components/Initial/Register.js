@@ -36,7 +36,7 @@ function Register(props) {
   if (props.loggedin) {
     history.push("/dashboard");
   }
-  console.log(props.regdata);
+  // console.log(props.regdata);
   return (
     <div className="container">
       <div className="row">

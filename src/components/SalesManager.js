@@ -13,7 +13,7 @@ export default function SalesManager() {
   // }
 
   const handleSelect = (ranges) => {
-    console.log(ranges.selection);
+    // console.log(ranges.selection);
     setState([ranges.selection]);
     // {
     //   selection: {

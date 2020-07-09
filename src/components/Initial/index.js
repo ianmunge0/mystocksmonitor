@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { login } from "../../Redux/Actions";
+import { setUserType } from "../../Redux/Actions";
 import { reactLocalStorage } from "reactjs-localstorage";
 
-export default function Initial(props) {
+function Initial(props) {
   // const loggedin = useSelector((state) => state.login);
   const dispatch = useDispatch();
 
@@ -14,11 +14,16 @@ export default function Initial(props) {
   //   });
   // };
 
-  console.log(JSON.parse(reactLocalStorage.getItem("loggedin")));
   // if (loggedin.loggedin)
-  // if (reactLocalStorage.getItem("loggedin")) {
-  //   props.history.push("/dashboard");
-  // }
+
+  try {
+    // console.log(reactLocalStorage.get("loggedin"));
+
+    if (reactLocalStorage.get("loggedin") == "true") {
+      props.history.push("/dashboard");
+    }
+  } catch (error) {}
+
   return (
     <div className="container center-align">
       <div className="row ">
@@ -26,19 +31,14 @@ export default function Initial(props) {
           <h5>Continue as: </h5>
         </div>
         <div className="col s12">
-          <button
-            className="btn btn-primary"
-            onClick={() =>
-              dispatch(
-                login({
-                  type: "attendant",
-                })
-              )
-            }
-            style={{ marginTop: 30, marginBottom: 30 }}
-          >
-            Attendant
-          </button>
+          <Link to="login">
+            <button
+              className="btn btn-primary"
+              style={{ marginTop: 30, marginBottom: 30 }}
+            >
+              Attendant
+            </button>
+          </Link>
         </div>
         <div className="col s12">
           <Link to="login">
@@ -54,3 +54,5 @@ export default function Initial(props) {
     </div>
   );
 }
+
+export default Initial;
