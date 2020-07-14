@@ -1,11 +1,11 @@
 import AuthenticationReducer from "./Auth";
-// import counterReducer from "./counter";
+import stockReducer from "./Stock";
 
 import { combineReducers } from "redux";
 
 const allReducers = combineReducers({
   login: AuthenticationReducer,
-  // counter: counterReducer,
+  stock: stockReducer,
 });
 
 export default allReducers;

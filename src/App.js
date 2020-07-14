@@ -15,15 +15,19 @@ import Singlecashflow from "./components/cashflow/Singlecashflow";
 import ProfitExpenseSummary from "./components/ProfitExpenses/ProfitExpenseSummary";
 import Attendants from "./components/Attendants/Attendants";
 import AttendantsProfile from "./components/Attendants/Attendantprofile";
-import CountHistory from "./components/CountHistory";
+import CountHistory from "./components/Stock/CountHistory";
+import Counts from "./components/Counts";
 import Count from "./components/Counts";
 import DefaultPage from "./components/Initial/index";
 import Login from "./components/Initial/Login";
 import { useSelector } from "react-redux";
-
+import Units from "./components/Units";
 import CashSalesHistory from "./components/CashSales/CashSalesHistory";
 import StockFilter from "./components/StockFilter";
 import Register from "./components/Initial/Register";
+import NewStock from "./components/Stock/NewStock";
+import StockCount from "./components/Stock/StockCount";
+
 function App() {
   const loggedin = useSelector((state) => state.login);
 
@@ -57,6 +61,10 @@ function App() {
               <Route path="/profitexpense" component={ProfitExpensesManager} />
               <Route path="/attendants" component={Attendants} />
               <Route path="/attendantsprofile" component={AttendantsProfile} />
+              <Route path="/units" component={Units} />
+              <Route path="/newstock" component={NewStock} />
+              <Route path="/counts" component={Counts} />
+              <Route path="/stockcount" component={StockCount} />
 
               <Route
                 path="/profitexpensesummary"
@@ -64,7 +72,7 @@ function App() {
               />
               <Route path="/cashsaleshistory" component={CashSalesHistory} />
 
-              <Route path="/editstock" component={EditStock} />
+              <Route path="/editstock/:id" component={EditStock} />
               <Route path="/cashflow" component={Singlecashflow} />
               <Route path="/counthistory" component={CountHistory} />
               <Route path="/count" component={Count} />

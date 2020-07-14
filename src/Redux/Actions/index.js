@@ -20,16 +20,15 @@ export const login = (email, password) => {
 
         const userdata = res.data;
 
-        dispatch({
-          type: LOG_IN,
-          userdata: userdata,
-        });
-
         if (userdata.status) {
           console.log("saving to localstorage login", res.data);
           reactLocalStorage.setObject("userdata", userdata);
           reactLocalStorage.set("loggedin", true);
         }
+        dispatch({
+          type: LOG_IN,
+          userdata: userdata,
+        });
       })
       .catch((error) => {
         // your error handling goes here}

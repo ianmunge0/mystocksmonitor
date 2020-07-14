@@ -1,9 +1,8 @@
-import React, { Component, useEffect } from "react";
+import React, { useEffect } from "react";
 import M from "materialize-css/dist/js/materialize.min.js";
 import { Link, withRouter } from "react-router-dom";
 import { reactLocalStorage } from "reactjs-localstorage";
 import { connect } from "react-redux";
-import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../Redux/Actions";
 // import { Navbar } from "react-materialize";
 // import { hashHistory } from "react-router";
@@ -13,7 +12,7 @@ import { logout } from "../../Redux/Actions";
 // import { useHistory } from "react-router-dom";
 
 function NavBar(props) {
-  const loggedout = useSelector((state) => state);
+  // const loggedout = useSelector((state) => state);
 
   useEffect(() => {
     var elem = document.querySelector(".sidenav");
@@ -23,7 +22,7 @@ function NavBar(props) {
     });
   }, []);
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   console.log(props.logoutres);
 
@@ -49,7 +48,14 @@ function NavBar(props) {
           <div className="col s8 ">
             {props.history.location.pathname !== "/dashboard" &&
             props.history.location.pathname !== "/" ? (
-              <Link to="" onClick={() => props.history.goBack()}>
+              <Link
+                to=""
+                onClick={() => {
+                  // console.log(props.history);
+
+                  props.history.goBack();
+                }}
+              >
                 <i className="material-icons" style={{ fontSize: 60 }}>
                   keyboard_arrow_left
                 </i>
@@ -73,10 +79,14 @@ function NavBar(props) {
                 <i className="material-icons edit-icon">edit</i>
               </a>
               <a href="#name" className="text-black">
-                <span className="name">John Doe</span>
+                <span className="name">
+                  {reactLocalStorage.getObject("userdata").username}
+                </span>
               </a>
               <a href="#email">
-                <span className="email">jdandturk@gmail.com </span>
+                <span className="email">
+                  {reactLocalStorage.getObject("userdata").emailorphone_}
+                </span>
               </a>
             </div>
           </li>
@@ -87,6 +97,7 @@ function NavBar(props) {
           </li>
           <li>
             <Link
+              to="!#"
               onClick={() => {
                 uiLogout();
               }}

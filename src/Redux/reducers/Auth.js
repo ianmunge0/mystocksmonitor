@@ -1,4 +1,4 @@
-import { LOG_IN, REG, LOG_OUT, USER_TYPE } from "../Actions/actions";
+import { LOG_IN, REG, LOG_OUT } from "../Actions/actions";
 const initialState = {
   loggedin: false,
   loading: true,
@@ -22,7 +22,6 @@ const AuthenticationReducer = (state = initialState, action) => {
         ...state,
         userdata: action.userdata,
         loggedin: action.userdata.status,
-        loggedin: true,
         loading: false,
       };
     case LOG_OUT:

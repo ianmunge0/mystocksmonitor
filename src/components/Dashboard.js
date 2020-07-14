@@ -58,6 +58,7 @@ export default class Dashboard extends Component {
             description="manage your subscription for better experience"
             title="Subscriptions"
             icon="subscriptions"
+            route="/"
           />
         </div>
       </>

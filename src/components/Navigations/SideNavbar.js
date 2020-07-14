@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { reactLocalStorage } from "reactjs-localstorage";
 
 export default class SideNavbar extends Component {
   render() {
@@ -21,7 +22,9 @@ export default class SideNavbar extends Component {
                 <i className="material-icons edit-icon">edit</i>
               </a>
               <a href="#name" className="text-black">
-                <span className="name">John Doe</span>
+                <span className="name">
+                  {reactLocalStorage.get("userdata").username}
+                </span>
               </a>
               <a href="#email">
                 <span className="email">jdandturk@gmail.com </span>

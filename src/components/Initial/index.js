@@ -1,25 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setUserType } from "../../Redux/Actions";
 import { reactLocalStorage } from "reactjs-localstorage";
 
 function Initial(props) {
-  // const loggedin = useSelector((state) => state.login);
-  const dispatch = useDispatch();
-
-  // const fetch_data = () => {
-  //   return axios.get("http://localhost:5001/todos").then((Response) => {
-  //     store.dispatch(addTodo(Response.data));
-  //   });
-  // };
-
-  // if (loggedin.loggedin)
+  console.log("index", reactLocalStorage.get("loggedin"));
 
   try {
-    // console.log(reactLocalStorage.get("loggedin"));
-
-    if (reactLocalStorage.get("loggedin") == "true") {
+    if (reactLocalStorage.get("loggedin") === "true") {
       props.history.push("/dashboard");
     }
   } catch (error) {}

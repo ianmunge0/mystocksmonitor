@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { login } from "../../Redux/Actions";
-import { useDispatch, useSelector } from "react-redux";
+import { reactLocalStorage } from "reactjs-localstorage";
 // import Api from "../../api/api";
 
 function Login(props) {
@@ -11,11 +11,6 @@ function Login(props) {
     password: "",
   });
   const { username, password } = inputs;
-  // const loggingIn = useSelector((state) => state.loggedin);
-
-  // console.log(loggingIn);
-
-  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,7 +23,7 @@ function Login(props) {
     props.login(username, password);
     // }
   };
-  if (props.loggedin) {
+  if (props.loggedin && reactLocalStorage.getObject("userdata") != null) {
     props.history.push("/dashboard");
   }
 
