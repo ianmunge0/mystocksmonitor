@@ -1,207 +1,169 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, withRouter } from "react-router-dom";
 import M from "materialize-css/dist/js/materialize.min.js";
+import { getReport } from "../Redux/Actions/Reports";
+import { connect } from "react-redux";
+import moment from "moment";
+import NavBar from "../components/Navigations/NavBar";
+import { Loader } from "react-overlay-loader";
+import "react-overlay-loader/styles.css";
 
-export default class StockFilter extends Component {
-  componentDidMount() {
+function StockFilter(props) {
+  // console.log("dates ", props.location.state.date.endDate);
+
+  const [cash, setCash] = useState(0);
+  var fromdate = new Date(props.location.state.date.startDate);
+  var fromtimeStamp = fromdate.getTime();
+  var todate = new Date(props.location.state.date.endDate);
+  var totimestamp = todate.getTime();
+  useEffect(() => {
     M.Modal.init(document.querySelectorAll(".modal"), {
       onOpenEnd: function (el) {},
     });
-  }
-  render() {
-    return (
-      <>
-        <div
-          className="nav-wrapper z-depth-3"
-          style={{ padding: 5, marginTop: 10 }}
-        >
-          <form>
-            <div className="input-field">
-              <input
-                placeholder="quick search"
-                id="search"
-                type="search"
-                required
-              />
-              <label className="label-icon" for="search">
-                <i className="material-icons">search</i>
-              </label>
-              <i class="material-icons">close</i>
-            </div>
-          </form>
-        </div>
+    props.getReport(fromtimeStamp, totimestamp);
+  }, []);
 
-        <div>
-          <div>
+  var fromdateString = moment(Date.parse(fromdate)).format("LLLL");
+
+  return (
+    <>
+      <NavBar titleone="Stock in Report  " titletwo={fromdateString} />
+
+      <div>
+        <Loader fullPage loading={props.reports.loading} />
+        {props.reports.stocks.items && props.reports.stocks.items.length ? (
+          <>
+            <div
+              className="nav-wrapper z-depth-3"
+              style={{ padding: 5, marginTop: 10 }}
+            >
+              <form>
+                <div className="input-field">
+                  <input
+                    placeholder="quick search"
+                    id="search"
+                    type="search"
+                    required
+                  />
+                  <label className="label-icon" htmlFor="search">
+                    <i className="material-icons">search</i>
+                  </label>
+                  <i className="material-icons">close</i>
+                </div>
+              </form>
+            </div>
             <div className="container">
               <div className="row">
                 <div className="col s3 center">
                   <h6>Entries</h6>
-                  <h6>3</h6>
+                  <h6>
+                    {props.reports.stocks.items
+                      ? props.reports.stocks.items.length
+                      : 0}
+                  </h6>
                 </div>
                 <div className="col s5 center">
                   <h6>On Credit</h6>
-                  <h6>3</h6>
+                  <h6>{props.reports.stocks.credit}</h6>
                 </div>
                 <div className="col s4 center">
                   <h6>On cash</h6>
-                  <h6>3</h6>
+                  <h6>{props.reports.stocks.cash}</h6>
                 </div>
               </div>
             </div>
-            <div class="section modal-trigger " data-target="editmodal">
-              <h5>Hammer </h5>
-              <div>qty 2 x 22 = 44/=</div>
-              <div className="container">
-                <div className="row">
-                  <div className="col s4 stocktxt">
-                    <p>~ by fred</p>
+          </>
+        ) : (
+          <h5>no products</h5>
+        )}
+        <div className="section modal-trigger " data-target="editmodal">
+          <div className="container">
+            {props.reports.stocks.items
+              ? props.reports.stocks.items.map((value, index) => (
+                  <div className="row" key={index}>
+                    <div className="col s12">
+                      <h6 style={{ fontWeight: "bold" }}>
+                        {value.name} ~{" "}
+                        <span className="green-text">{value.status}</span>
+                      </h6>
+                      <div>
+                        qty {value.stock_qty} x {value.buyingprice} =
+                        {value.stock_qty * value.buyingprice}/=
+                      </div>
+                    </div>
+                    <div className="col s12">
+                      <div className="col s6 stocktxt">
+                        {/* <p>~ by fred</p> */}
+                        <p>supplier ~ {value.supplier_name} </p>
+                      </div>
+                      <div className="col s6 stocktxt">
+                        <p className="stocktxt right" style={{ fontSize: 10 }}>
+                          {value.date_time}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="col s4 stocktxt">
-                    <p>supplied by ~ fred</p>
-                  </div>
-                  <div className="col s4 stocktxt">
-                    <p>30 days a go</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="divider"></div>
-            <div class="section modal-trigger " data-target="editmodal">
-              <h5>Hammer </h5>
-              <div>qty 2 x 22 = 44/=</div>
-              <div className="container">
-                <div className="row">
-                  <div className="col s4 stocktxt">
-                    <p>~ by fred</p>
-                  </div>
-                  <div className="col s4 stocktxt">
-                    <p>supplied by ~ fred</p>
-                  </div>
-                  <div className="col s4 stocktxt">
-                    <p>30 days a go</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="divider"></div>
-            <div class="section modal-trigger " data-target="editmodal">
-              <h5>Hammer </h5>
-              <div>qty 2 x 22 = 44/=</div>
-              <div className="container">
-                <div className="row">
-                  <div className="col s4 stocktxt">
-                    <p>~ by fred</p>
-                  </div>
-                  <div className="col s4 stocktxt">
-                    <p>supplied by ~ fred</p>
-                  </div>
-                  <div className="col s4 stocktxt">
-                    <p>30 days a go</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="divider"></div>
-            <div class="section modal-trigger " data-target="editmodal">
-              <h5>Hammer </h5>
-              <div>qty 2 x 22 = 44/=</div>
-              <div className="container">
-                <div className="row">
-                  <div className="col s4 stocktxt">
-                    <p>~ by fred</p>
-                  </div>
-                  <div className="col s4 stocktxt">
-                    <p>supplied by ~ fred</p>
-                  </div>
-                  <div className="col s4 stocktxt">
-                    <p>30 days a go</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="divider"></div>
-            <div class="section modal-trigger " data-target="editmodal">
-              <h5>Hammer </h5>
-              <div>qty 2 x 22 = 44/=</div>
-              <div className="container">
-                <div className="row">
-                  <div className="col s4 stocktxt">
-                    <p>~ by fred</p>
-                  </div>
-                  <div className="col s4 stocktxt">
-                    <p>supplied by ~ fred</p>
-                  </div>
-                  <div className="col s4 stocktxt">
-                    <p>30 days a go</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="divider"></div>
-            <div class="section modal-trigger " data-target="editmodal">
-              <h5>Hammer </h5>
-              <div>qty 2 x 22 = 44/=</div>
-              <div className="container">
-                <div className="row">
-                  <div className="col s4 stocktxt">
-                    <p>~ by fred</p>
-                  </div>
-                  <div className="col s4 stocktxt">
-                    <p>supplied by ~ fred</p>
-                  </div>
-                  <div className="col s4 stocktxt">
-                    <p>30 days a go</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="divider"></div>
+                ))
+              : ""}
           </div>
         </div>
+        <div className="divider"></div>
+      </div>
 
-        <div className="col s12">
-          <div id="editmodal" className="modal bottom-sheet">
-            <div className="modal-content sidenav bottom-modal">
-              <ul>
-                <li>
-                  <Link to="editstock">
-                    <i className="material-icons">edit</i>Edit
-                  </Link>
-                </li>
-                <li>
-                  <a
-                    href="#!"
-                    className="modal-trigger "
-                    data-target="deletealert"
-                  >
-                    <i className="material-icons">delete</i>Delete
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div id="deletealert" className="modal">
-            <div className="modal-content">
-              Are you sure you want to delete this product?
-            </div>
-            <div class="modal-footer">
-              <a
-                href="#!"
-                class="modal-close waves-effect waves-green btn-flat"
-              >
-                NO
-              </a>
-              <a
-                href="#!"
-                class="modal-close waves-effect waves-green btn-flat"
-              >
-                YES
-              </a>
-            </div>
+      <div className="col s12">
+        <div id="editmodal" className="modal bottom-sheet">
+          <div className="modal-content sidenav bottom-modal">
+            <ul>
+              <li>
+                <Link to="editstock">
+                  <i className="material-icons">edit</i>Edit
+                </Link>
+              </li>
+              <li>
+                <a
+                  href="#!"
+                  className="modal-trigger "
+                  data-target="deletealert"
+                >
+                  <i className="material-icons">delete</i>Delete
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
-      </>
-    );
-  }
+        <div id="deletealert" className="modal">
+          <div className="modal-content">
+            Are you sure you want to delete this product?
+          </div>
+          <div className="modal-footer">
+            <a
+              href="#!"
+              className="modal-close waves-effect waves-green btn-flat"
+            >
+              NO
+            </a>
+            <a
+              href="#!"
+              className="modal-close waves-effect waves-green btn-flat"
+            >
+              YES
+            </a>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
+const mapStateToProps = (state) => ({
+  reports: state.reports,
+});
+const mapDispacthToProps = (dispatch) => {
+  return {
+    getReport: (timeStamp, totimestamp) =>
+      dispatch(getReport(timeStamp, totimestamp)),
+  };
+};
+export default connect(
+  mapStateToProps,
+  mapDispacthToProps
+)(withRouter(StockFilter));

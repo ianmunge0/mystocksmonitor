@@ -8,12 +8,14 @@ function EditStock(props) {
   useEffect(() => {
     props.getSingleStock(id);
   }, []);
-  return <NewStock stock={props.stock} />;
+  console.log(props.item);
+
+  return <NewStock stock={props.item} />;
 }
 
 const mapStateToProps = (state) => ({
   stock: state.stock.stock,
-  stockresponse: state.stock,
+  item: state.stock.item,
 });
 
 const mapDispacthToProps = (dispatch) => {

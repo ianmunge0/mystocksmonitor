@@ -1,16 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { reactLocalStorage } from "reactjs-localstorage";
+import auth from "../auth";
 
 function Initial(props) {
   console.log("index", reactLocalStorage.get("loggedin"));
-
-  try {
-    if (reactLocalStorage.get("loggedin") === "true") {
-      props.history.push("/dashboard");
-    }
-  } catch (error) {}
-
+  if (auth.isAuthenticated()) {
+    props.history.push("/dashboard");
+  }
   return (
     <div className="container center-align">
       <div className="row ">
@@ -18,17 +15,16 @@ function Initial(props) {
           <h5>Continue as: </h5>
         </div>
         <div className="col s12">
-          <Link to="login">
-            <button
-              className="btn btn-primary"
-              style={{ marginTop: 30, marginBottom: 30 }}
-            >
-              Attendant
-            </button>
+          <Link
+            to={`/login/attendant`}
+            className="btn btn-primary"
+            style={{ marginTop: 30, marginBottom: 30 }}
+          >
+            Attendant
           </Link>
         </div>
         <div className="col s12">
-          <Link to="login">
+          <Link to={`/login/admin`}>
             <button
               className="btn btn-primary"
               style={{ marginTop: 10, marginBottom: 30 }}

@@ -3,6 +3,7 @@ import M from "materialize-css/dist/js/materialize.min.js";
 import { getStock } from "../../Redux/Actions/Stock";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import NavBar from "../../components/Navigations/NavBar";
 
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
@@ -28,9 +29,8 @@ function AllStocks(props) {
 
   return (
     <div>
+      <NavBar titleone="Stock Setup" />
       <Loader fullPage loading={props.stockresponse.loading} />
-
-      {/* {props.stockresponse.loading ? <Loader /> : ""} */}
       <table className="highlight">
         <thead>
           <tr>
@@ -49,7 +49,7 @@ function AllStocks(props) {
           <Link to="/stockcount" className="btn" style={{ marginTop: 10 }}>
             Products Count >>
           </Link>
-          {props.stocks ? (
+          {props.stocks.length > 0 ? (
             props.stocks.map((item, key) => (
               <tr
                 key={key}
@@ -63,7 +63,7 @@ function AllStocks(props) {
                 </td>
                 <td className="right">
                   <div className="left">
-                    {item.quantity} {item.unit_name}
+                    {item.stock_qty} {item.unit_name}
                     <br />
                     {item.sellingprice}/=
                   </div>

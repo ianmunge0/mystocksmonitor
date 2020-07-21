@@ -30,10 +30,11 @@ function NewProduct(props) {
   const [stock, setStock] = useState({
     name: "",
     stock_qty: "",
-    buying_price: "",
-    selling_price: "",
+    buyingprice: "",
+    sellingprice: "",
     type: "",
     unit_name: "",
+    reorder_level: "",
   });
 
   const [unit, setUnit] = useState({
@@ -61,6 +62,7 @@ function NewProduct(props) {
       ...stock,
       [e.target.id]: e.target.value,
     });
+    console.log(stock);
   };
 
   const addNewStock = (e) => {
@@ -101,14 +103,6 @@ function NewProduct(props) {
     <div>
       <Loader fullPage loading={props.stockresponse.loading} />
       <form className="col s12 forminput" onSubmit={addNewStock}>
-        <input
-          onChange={handleStockData}
-          id="action"
-          type="hidden"
-          defaultValue={props.stock ? "update" : "save"}
-          className="validate"
-        />
-
         <p className="red-text">{error}</p>
         <div className="row">
           <div className="input-field col s6">
@@ -127,7 +121,7 @@ function NewProduct(props) {
               id="stock_qty"
               placeholder="Qty"
               inputMode="numeric"
-              defaultValue={props.stock ? props.stock.quantity : ""}
+              defaultValue={props.stock ? props.stock.stock_qty : ""}
               pattern="[0-9]*"
               type="text"
               className="validate"
@@ -139,7 +133,7 @@ function NewProduct(props) {
             <input
               onChange={handleStockData}
               defaultValue={props.stock ? props.stock.buyingprice : ""}
-              id="buying_price"
+              id="buyingprice"
               type="text"
               inputMode="numeric"
               pattern="[0-9]*"
@@ -152,7 +146,7 @@ function NewProduct(props) {
             <input
               onChange={handleStockData}
               type="text"
-              id="selling_price"
+              id="sellingprice"
               defaultValue={props.stock ? props.stock.sellingprice : ""}
               inputMode="numeric"
               pattern="[0-9]*"
@@ -167,7 +161,7 @@ function NewProduct(props) {
             <input
               onChange={handleStockData}
               id="reorder_level"
-              defaultValue={props.stock ? props.stock.re_order : ""}
+              defaultValue={props.stock ? props.stock.reorder_level : ""}
               type="text"
               className="validate"
               placeholder="Re-Order Level"
@@ -190,45 +184,51 @@ function NewProduct(props) {
         <div className="row">
           <div className="col s12">
             <div className="row">
-              <div className="col s12">
+              <div className="col s12"></div>
+              {stock ? (
+                <p className="modal-trigger col s12">unit: {stock.unit_name}</p>
+              ) : (
                 <p style={{ margin: 0 }}>
                   {props.stock ? "unit: " + props.stock.unit_name : ""}
                 </p>
-              </div>
-              <div className="input-field col s6">
+              )}
+              <div className="input-field col s8">
                 <a
-                  style={{ fontSize: 10 }}
+                  style={{ fontSize: 15 }}
                   href="#unitsmodal"
-                  className="btn modal-trigger"
+                  className="modal-trigger col s12"
                 >
                   {props.stock ? "Change" : "Select unit"}
                 </a>
               </div>
-              <div className="input-field col s6 ">
+              <div className="input-field col s4 ">
                 <a href="#modal1" className="modal-trigger">
-                  Add New
                   <i className="material-icons left">add</i>
                 </a>
               </div>
             </div>
             <div className="row">
-              <div className="col s12">
+              <div className="col s12"></div>
+              {stock ? (
+                <p className="modal-trigger col s12">
+                  Supplier: {stock.supplier_name}
+                </p>
+              ) : (
                 <p style={{ margin: 0 }}>
                   {props.stock ? "Supplier: " + props.stock.supplier_name : ""}
                 </p>
-              </div>
-              <div className="input-field col s6">
+              )}
+              <div className="input-field col s8">
                 <a
-                  style={{ fontSize: 10 }}
+                  style={{ fontSize: 15 }}
                   href="#suppliersmodal"
-                  className="btn modal-trigger"
+                  className="modal-trigger col s12"
                 >
                   {props.stock ? "Change" : "Select Supplier"}
                 </a>
               </div>
-              <div className="input-field col s6 ">
+              <div className="input-field col s4 ">
                 <a href="#newsuppliermodal" className="modal-trigger">
-                  Add New
                   <i className="material-icons left">add</i>
                 </a>
               </div>

@@ -4,16 +4,9 @@ import { Link, withRouter } from "react-router-dom";
 import { reactLocalStorage } from "reactjs-localstorage";
 import { connect } from "react-redux";
 import { logout } from "../../Redux/Actions";
-// import { Navbar } from "react-materialize";
-// import { hashHistory } from "react-router";
-// import { useHistory } from "react-router-dom";
-// import { withRouter } from "react-router-dom";
-// import { BrowserHistory } from "react-router";
-// import { useHistory } from "react-router-dom";
+import auth from "../auth";
 
 function NavBar(props) {
-  // const loggedout = useSelector((state) => state);
-
   useEffect(() => {
     var elem = document.querySelector(".sidenav");
     M.Sidenav.init(elem, {
@@ -24,48 +17,22 @@ function NavBar(props) {
 
   // const dispatch = useDispatch();
 
-  console.log(props.logoutres);
+  // console.log(props.logoutres);
 
   const uiLogout = () => {
-    props.history.push("/");
     var elem = document.querySelector(".sidenav");
     M.Sidenav.init(elem, {
       edge: "left",
       inDuration: 250,
     });
-    props.logout();
+    auth.logout(() => {
+      props.history.push("/");
+    });
   };
 
   return (
+    // <div className="navbar-fixed">
     <nav>
-      <div className="container">
-        <div className="row">
-          {/* <div className="col s4 hide-on-med-and-down">
-              <a href="#!" className="brand-logo ">
-                My Profile
-              </a>
-            </div> */}
-          <div className="col s8 ">
-            {props.history.location.pathname !== "/dashboard" &&
-            props.history.location.pathname !== "/" ? (
-              <Link
-                to=""
-                onClick={() => {
-                  // console.log(props.history);
-
-                  props.history.goBack();
-                }}
-              >
-                <i className="material-icons" style={{ fontSize: 60 }}>
-                  keyboard_arrow_left
-                </i>
-              </Link>
-            ) : (
-              ""
-            )}
-          </div>
-        </div>
-      </div>
       <div className="nav-wrapper">
         <ul id="slide-out" className="sidenav">
           <li className="center-align">
@@ -97,7 +64,7 @@ function NavBar(props) {
           </li>
           <li>
             <Link
-              to="!#"
+              to="/"
               onClick={() => {
                 uiLogout();
               }}
@@ -124,10 +91,58 @@ function NavBar(props) {
             <i className="material-icons">menu</i>
           </a>
         ) : (
-          ""
+          <div className="row">
+            <div className="col s2">
+              <Link
+                to=""
+                onClick={() => {
+                  // console.log(props.history);
+
+                  props.history.goBack();
+                }}
+              >
+                <i className="material-icons" style={{ fontSize: 60 }}>
+                  keyboard_arrow_left
+                </i>
+              </Link>
+            </div>
+            <div className="col s10 ">
+              <div className="row " style={{ display: "inline-grid" }}>
+                <div className="nolineheight col s12">{props.titleone}</div>
+                <div className="nolineheight  col s12">{props.titletwo}</div>
+              </div>
+            </div>
+          </div>
         )}
+
+        {/* <div className="col s3">
+            {props.history.location.pathname !== "/dashboard" &&
+            props.history.location.pathname !== "/" ? (
+              <Link
+                to=""
+                onClick={() => {
+                  // console.log(props.history);
+
+                  props.history.goBack();
+                }}
+              >
+                <i className="material-icons" style={{ fontSize: 60 }}>
+                  keyboard_arrow_left
+                </i>
+              </Link>
+            ) : (
+              ""
+            )}
+          </div> */}
+        {/* <div className="col s9 ">
+          <div className="row " style={{ display: "inline-grid" }}>
+            <div className="nolineheight col s12">{props.titleone}</div>
+            <div className="nolineheight  col s12">{props.titletwo}</div>
+          </div>
+        </div> */}
       </div>
     </nav>
+    // </div>
   );
 }
 

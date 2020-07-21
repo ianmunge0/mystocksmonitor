@@ -9,9 +9,13 @@ import {
   LOADING,
   GET_SINGLE_ITEM,
   UPDATE_STOCK_COUNT,
+  GET_STOCK_COUNT_GROUPED,
+  GET_COUNT_HISTORY,
+  STOCK_FILTER,
 } from "./actions";
 import Api from "../../api/api";
 import { reactLocalStorage } from "reactjs-localstorage";
+import moment from "moment";
 
 export const getSingleStock = (id) => {
   return (dispatch) => {
@@ -27,12 +31,12 @@ export const getSingleStock = (id) => {
       },
     })
       .then((res) => {
-        const stockrespose = res.data;
-        console.log("single", stockrespose);
+        const item = res.data;
+        console.log("single", item);
 
         dispatch({
           type: GET_SINGLE_ITEM,
-          stockrespose: stockrespose,
+          item,
         });
       })
       .catch((error) => {
@@ -48,9 +52,14 @@ export const addStock = (stockinput) => {
       type: ADDING_STOCK,
       loading: true,
     });
+
+    var dd = new Date().getTime();
+    stockinput.date_time = moment(dd).format("YYYY-MM-DD hh:mm:ss");
+    stockinput.time_ = parseInt((dd / 1000).toFixed(0)); //new Date().getTime();
+    stockinput.action = "insert";
     console.log("stockinput", stockinput);
 
-    Api.get(`/newstock.php`, {
+    Api.get(`/stocks.php`, {
       params: stockinput,
     })
       .then((res) => {
@@ -124,6 +133,12 @@ export const saveUnit = (unit) => {
       type: LOADING,
     });
 
+    console.log({
+      unit_name: unit.unit_name,
+      action: "add",
+      owner: reactLocalStorage.getObject("userdata").serialno,
+    });
+
     Api.get(`/units.php`, {
       params: {
         unit_name: unit.unit_name,
@@ -190,6 +205,30 @@ export const getStock = (shopid) => {
       });
   };
 };
+export const filter = (data, string) => {
+  return (dispatch) => {
+    dispatch({
+      type: STOCK_FILTER,
+      string: string,
+    });
+    // let filtered = [];
+    // // var copydata = data;
+    // if (data) {
+    //   console.log("filter ", data);
+    //   data.items = data.items.filter((t) => t.name.includes(string));
+    //   console.log("after filter ", data);
+    // }
+    // filtered = data;
+    // if (string === "") {
+    //   data = [];
+    // }
+
+    // dispatch({
+    //   type: STOCK_FILTER,
+    //   stocks: filtered,
+    // });
+  };
+};
 
 export const saveStockCount = (newcount, item) => {
   return (dispatch) => {
@@ -198,8 +237,11 @@ export const saveStockCount = (newcount, item) => {
     });
 
     item.newcount = newcount;
+    var dd = new Date().getTime();
+    item.date_time = moment(dd).format("YYYY-MM-DD hh:mm:ss");
+    item.time_ = parseInt((dd / 1000).toFixed(0)); //new Date().getTime();
     item.action = "updatecount";
-    console.log("saveStockCount ", { item });
+    console.log("saveStockCount ", moment(dd).format("YYYY-MM-DD hh:mm:ss"));
 
     console.log({
       item,
@@ -223,29 +265,53 @@ export const saveStockCount = (newcount, item) => {
   };
 };
 
-export const getStockCountHistory = (newcount, item) => {
+export const getStockCountHistory = (shopid) => {
   return (dispatch) => {
     dispatch({
       type: LOADING,
     });
 
-    item.newcount = newcount;
-    item.action = "updatecount";
-    console.log("saveStockCount ", { item });
+    Api.get(`/stocks.php`, {
+      params: {
+        currentshopidkey: shopid,
+        action: "countdayhistory",
+      },
+    })
+      .then((res) => {
+        console.log("getStockCountHistory " + res.data.items);
+        dispatch({
+          type: GET_STOCK_COUNT_GROUPED,
+          stocks: res.data,
+        });
+      })
+      .catch((error) => {
+        // your error handling goes here}
+        console.log("error", error);
+      });
+  };
+};
 
+export const getCountHistory = (timestamp) => {
+  return (dispatch) => {
+    dispatch({
+      type: LOADING,
+    });
     console.log({
-      item,
-      action: "updatecount",
+      timestamp,
+      action: "counthistory",
     });
 
     Api.get(`/stocks.php`, {
-      params: item,
+      params: {
+        timestamp,
+        action: "counthistory",
+      },
     })
       .then((res) => {
-        console.log("from db ", res.data);
+        console.log("getCountHistory " + res.data);
         dispatch({
-          type: UPDATE_STOCK_COUNT,
-          stocks: res.data.items,
+          type: GET_COUNT_HISTORY,
+          stocks: res.data,
         });
       })
       .catch((error) => {

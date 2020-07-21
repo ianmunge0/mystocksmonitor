@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import M from "materialize-css/dist/js/materialize.min.js";
 import { register } from "../../Redux/Actions";
 
+import auth from "../auth";
 function Register(props) {
   useEffect(() => {
     var selectelems = document.querySelectorAll("select");
@@ -33,8 +34,8 @@ function Register(props) {
 
   const history = useHistory();
 
-  if (props.loggedin) {
-    history.push("/dashboard");
+  if (auth.isAuthenticated()) {
+    props.history.push("/dashboard");
   }
   // console.log(props.regdata);
   return (

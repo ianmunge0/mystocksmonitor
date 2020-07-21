@@ -1,45 +1,79 @@
-import { LOG_IN, REG, LOG_OUT } from "./actions";
+import { LOG_IN, REG, LOG_OUT, LOADING } from "./actions";
 import Api from "../../api/api";
 // import { DBService } from "../../services/DBService";
 import { reactLocalStorage } from "reactjs-localstorage";
+import auth from "../../components/auth";
 
-export const login = (email, password) => {
+export const login = (email, password, type) => {
   return (dispatch) => {
-    console.log("Login dispatch");
+    dispatch({
+      type: LOADING,
+    });
+    console.log("Login dispatch", {
+      emailorphonekey: email,
+      password,
+      type,
+    });
 
-    console.log({ emailorphonekey: email, passwordkey: password });
-
-    Api.get(`/login.php`, {
-      params: {
-        emailorphonekey: email,
-        passwordkey: password,
-      },
-    })
-      .then((res) => {
-        console.log(res.data);
-
-        const userdata = res.data;
-
-        if (userdata.status) {
-          console.log("saving to localstorage login", res.data);
-          reactLocalStorage.setObject("userdata", userdata);
-          reactLocalStorage.set("loggedin", true);
-        }
-        dispatch({
-          type: LOG_IN,
-          userdata: userdata,
-        });
+    if (type === "attendant") {
+      Api.get(`/login.php`, {
+        params: { attendant_id: email, password, type },
       })
-      .catch((error) => {
-        // your error handling goes here}
-        console.log("error", error);
-      });
+        .then((res) => {
+          console.log(res.data);
+
+          const userdata = res.data;
+
+          if (userdata.status) {
+            console.log("saving to localstorage login", res.data);
+            reactLocalStorage.setObject("userdata", userdata);
+            reactLocalStorage.set("loggedin", true);
+            reactLocalStorage.set("user_type", type);
+          }
+          dispatch({
+            type: LOG_IN,
+            userdata: userdata,
+          });
+        })
+        .catch((error) => {
+          // your error handling goes here}
+          console.log("error", error);
+        });
+    } else {
+      Api.get(`/login.php`, {
+        params: {
+          emailorphonekey: email,
+          password,
+          type,
+        },
+      })
+        .then((res) => {
+          console.log(res.data);
+
+          const userdata = res.data;
+
+          if (userdata.status) {
+            console.log("saving to localstorage login", res.data);
+            reactLocalStorage.setObject("userdata", userdata);
+            reactLocalStorage.set("loggedin", true);
+            reactLocalStorage.set("user_type", type);
+          }
+          dispatch({
+            type: LOG_IN,
+            userdata: userdata,
+          });
+        })
+        .catch((error) => {
+          // your error handling goes here}
+          console.log("error", error);
+        });
+    }
   };
 };
 
 export const logout = () => {
   return (dispatch) => {
-    // reactLocalStorage.clear();
+    reactLocalStorage.clear();
     console.log("logged out");
     dispatch({
       type: LOG_OUT,
@@ -61,7 +95,7 @@ export const register = (email, phone, password, country) => {
       },
     })
       .then((res) => {
-        console.log(res.data);
+        console.log("register", res.data);
 
         const regdata = res.data;
         dispatch({

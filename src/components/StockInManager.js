@@ -4,6 +4,7 @@ import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { DefinedRange } from "react-date-range";
 import { DateRange } from "react-date-range";
+import NavBar from "../components/Navigations/NavBar";
 export default function StockInManager(props) {
   // componentDidMount() {
   //   document.addEventListener("DOMContentLoaded", function () {
@@ -15,7 +16,10 @@ export default function StockInManager(props) {
   const handleSelect = (ranges) => {
     console.log(ranges.selection);
     setState([ranges.selection]);
-    props.history.push("/stockfilter");
+    props.history.push({
+      pathname: "/stockfilter",
+      state: { date: ranges.selection },
+    });
     // {
     //   selection: {
     //     startDate: [native Date Object],
@@ -24,16 +28,12 @@ export default function StockInManager(props) {
     // }
   };
   const getstock = (item) => {
-    console.log(item.selection);
-    props.history.push("/stockfilter");
+    // console.log(item.selection.endDate);
+    props.history.push({
+      pathname: "/stockfilter",
+      state: { date: item.selection },
+    });
   };
-
-  // render() {
-  //   const selectionRange = {
-  //     startDate: new Date(),
-  //     endDate: null,
-  //     key: "selection",
-  //   };
 
   const [state, setState] = useState([
     {
@@ -44,21 +44,22 @@ export default function StockInManager(props) {
   ]);
 
   return (
-    <div className="container">
-      <div className="row">
-        <DateRange
-          editableDateInputs={false}
-          onChange={(item) => {
-            handleSelect(item);
-          }}
-          moveRangeOnFirstSelection={false}
-          ranges={state}
-        />
-      </div>
-      <div className="row">
-        <DefinedRange onChange={(item) => getstock(item)} ranges={state} />
-      </div>
-    </div>
+    <>
+      <NavBar titleone="Stock in Manager" />
+      <DateRange
+        editableDateInputs={false}
+        onChange={(item) => {
+          handleSelect(item);
+        }}
+        moveRangeOnFirstSelection={false}
+        ranges={state}
+      />
+      <DefinedRange
+        dateDisplayFormat="MMM d, yyyy"
+        onChange={(item) => getstock(item)}
+        ranges={state}
+      />
+    </>
   );
   // }
 }

@@ -9,10 +9,16 @@ import {
   LOADING,
   GET_SINGLE_ITEM,
   UPDATE_STOCK_COUNT,
+  GET_STOCK_COUNT_GROUPED,
+  GET_COUNT_HISTORY,
+  STOCK_FILTER,
 } from "../Actions/actions";
 const initialState = {
   stock: [],
   stocks: [],
+  stockcounts: [],
+  stockcounthistory: [],
+  filteredstocks: [],
   loading: true,
 };
 
@@ -23,6 +29,32 @@ const Stock = (state = initialState, action) => {
         ...state,
         loading: true,
       };
+    case STOCK_FILTER:
+      console.log("filter string ", state.stockcounthistory);
+      return {
+        ...state,
+        stockcounthistory: {
+          title: state.stockcounthistory.title,
+          over_stocked: state.stockcounthistory.over_stocked,
+          under_stocked: state.stockcounthistory.under_stocked,
+          items: state.stockcounthistory.items.filter((p) =>
+            p.name.includes(action.string)
+          ),
+        },
+      };
+    case GET_COUNT_HISTORY:
+      return {
+        ...state,
+        stockcounthistory: action.stocks,
+        loading: false,
+      };
+    case GET_STOCK_COUNT_GROUPED:
+      return {
+        ...state,
+        stockcounts: action.stocks,
+        loading: false,
+      };
+
     case UPDATE_STOCK_COUNT:
       return {
         ...state,
@@ -32,7 +64,7 @@ const Stock = (state = initialState, action) => {
     case GET_SINGLE_ITEM:
       return {
         ...state,
-        stock: action.updateresponse,
+        item: action.item,
         loading: false,
       };
     case GET_STOCK:

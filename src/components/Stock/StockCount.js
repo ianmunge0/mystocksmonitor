@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
+import NavBar from "../../components/Navigations/NavBar";
 
 function StockCount(props) {
   useEffect(() => {
@@ -30,6 +31,7 @@ function StockCount(props) {
 
   return (
     <div>
+      <NavBar titleone="Stock Count" />
       <Loader fullPage loading={props.updateresponse.stock.loading} />
       <ul className="collection">
         <div className="collection-item">
@@ -42,7 +44,7 @@ function StockCount(props) {
             History
           </Link>
         </div>
-        {props.stocks
+        {props.stocks.length > 0
           ? props.stocks.map((item, key) => (
               <li className="collection-item" key={key}>
                 <form onSubmit={(e) => saveCount(e, item, count)}>
@@ -51,7 +53,7 @@ function StockCount(props) {
                       <div className="col s12">
                         <p style={{ fontSize: 16 }}>{item.name}</p>
                         <p style={{ fontSize: 12 }}>
-                          System Count ({item.quantity} )
+                          System Count ({item.stock_qty} )
                         </p>
                       </div>
                     </div>
@@ -60,7 +62,7 @@ function StockCount(props) {
                         type="text"
                         className="editinput center"
                         onChange={(e) => handleCount(item.stockserial_key, e)}
-                        defaultValue={item.quantity}
+                        defaultValue={item.stock_qty}
                         id={item.stockserial_key}
                       />
                     </div>
@@ -75,6 +77,7 @@ function StockCount(props) {
             ))
           : ""}
       </ul>
+      {props.stocks.length == 0 ? <h5>No counts at the moment</h5> : " "}
     </div>
   );
 }

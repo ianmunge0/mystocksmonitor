@@ -1,14 +1,19 @@
-import { LOG_IN, REG, LOG_OUT } from "../Actions/actions";
+import { LOG_IN, REG, LOG_OUT, LOADING } from "../Actions/actions";
 const initialState = {
   loggedin: false,
-  loading: true,
-  userdata: null,
+  loading: false,
+  userdata: [],
   logout: false,
   user_type: "admin",
 };
 
 const AuthenticationReducer = (state = initialState, action) => {
   switch (action.type) {
+    case LOADING:
+      return {
+        ...state,
+        loading: true,
+      };
     case LOG_IN:
       console.log("login dispatch");
       return {
