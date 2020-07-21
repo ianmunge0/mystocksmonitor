@@ -3,8 +3,6 @@ import M from "materialize-css/dist/js/materialize.min.js";
 import NavBar from "../../components/Navigations/NavBar";
 import { getprofile, updateProfile } from "../../Redux/Actions/Attendants";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
 
 function Attendantprofile(props) {

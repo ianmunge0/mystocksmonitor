@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { login, logout } from "../../Redux/Actions";
-import { reactLocalStorage } from "reactjs-localstorage";
+import { login } from "../../Redux/Actions";
 import auth from "../auth";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getStock, saveStockCount } from "../../Redux/Actions/Stock";
 import { connect } from "react-redux";
-import { Link, withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
 import NavBar from "../../components/Navigations/NavBar";
@@ -25,8 +25,8 @@ function StockCount(props) {
 
   const saveCount = (e, item, count) => {
     e.preventDefault();
-    var count = count[item.stockserial_key];
-    props.saveStockCount(count, item);
+    var countt = count[item.stockserial_key];
+    props.saveStockCount(countt, item);
   };
 
   return (
