@@ -1,17 +1,33 @@
 import React, { Component } from "react";
+import {connect} from 'react-redux';
 import { Link } from "react-router-dom";
+import {getCashAtHand} from '../../Redux/Actions/profitAndExpenseActions'
 
-export default class ProfitExpenseSummary extends Component {
+class ProfitExpenseSummary extends Component {
+  state = {
+    adminemailorphonekey: 'ian@ian.com',
+    currentshopkey: 'ashop',
+    cfmanagerkey: 'currentcash',
+    cashathand: ''
+}
   componentDidMount() {
     window.scrollTo(0, 0);
+    this.props.getCashAtHand(this.state);
   }
   render() {
+
     return (
       <>
         <div class="card blue-grey darken-1">
           <div class="card-content white-text center">
-            <p>Profit Today</p>
-            <h5>0/=</h5>
+            {/*<p>Profit Today</p> */}
+            <p>Cash At Hand</p>
+            <h5>{this.props.cashathand}/=</h5>
+          </div>
+        </div>
+        <div className="container">
+          <div className="row">
+            <h5 align="center">Profit/Loss = (Total Sales - Total Purchase) - Total Expenses - Total Bad Stock</h5>
           </div>
         </div>
         <div className="container">
@@ -65,4 +81,20 @@ export default class ProfitExpenseSummary extends Component {
       </>
     );
   }
+
 }
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getCashAtHand: (cashathandcreds) => dispatch(getCashAtHand(cashathandcreds))
+  }
+}
+
+const mapStateToProps = (state) => {
+  console.log('mappedstatestoprops',state.cashAtHand.cashathand);
+  return {
+     cashathand: state.cashAtHand.cashathand
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProfitExpenseSummary);

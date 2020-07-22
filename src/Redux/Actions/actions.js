@@ -27,3 +27,5 @@ export const GET_PROFILE = "GET_PROFILE";
 export const GET_SHOPS = "GET_SHOPS";
 export const ADDED_SHOP = "ADDED_SHOP";
 export const GET_SHOP = "GET_SHOP";
+
+export const CASH_AT_HAND = "CASH_AT_HAND";
