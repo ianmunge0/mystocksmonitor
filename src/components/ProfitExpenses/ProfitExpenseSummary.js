@@ -5,14 +5,24 @@ import {getCashAtHand} from '../../Redux/Actions/profitAndExpenseActions'
 
 class ProfitExpenseSummary extends Component {
   state = {
-    adminemailorphonekey: 'ian@ian.com',
-    currentshopkey: 'ashop',
-    cfmanagerkey: 'currentcash',
-    cashathand: ''
+    startDate: '',
+    endDate: '',
+    profit: '',
+    sales: '',
+    purchases: '',
+    expenses: '',
+    badstock: '',
 }
   componentDidMount() {
     window.scrollTo(0, 0);
-    this.props.getCashAtHand(this.state);
+    
+    console.log("pesummaryprops",this.props.location.state.date);
+    
+    var cashathandcreds = {
+      startDate: this.props.location.state.date.startDate,
+      endDate: this.props.location.state.date.endDate
+    }
+    this.props.getCashAtHand(cashathandcreds);
   }
   render() {
 
@@ -20,9 +30,8 @@ class ProfitExpenseSummary extends Component {
       <>
         <div class="card blue-grey darken-1">
           <div class="card-content white-text center">
-            {/*<p>Profit Today</p> */}
-            <p>Cash At Hand</p>
-            <h5>{this.props.cashathand}/=</h5>
+          <p>Profit Today{/*ofperiod */}</p>
+            <h5>{this.props.profit}/=</h5>
           </div>
         </div>
         <div className="container">
@@ -40,18 +49,29 @@ class ProfitExpenseSummary extends Component {
                     <p>sales summary</p>
                   </div>
                   <div className="col s6">
-                    <h5 className="right">0/=</h5>
+                    <h5 className="right">{this.props.sales}/=</h5>
                   </div>
                 </div>
               </Link>
               <li class="collection-item">
                 <div className="row">
                   <div className="col s6">
-                    <h5>Sales profit</h5>
-                    <p>sales profie</p>
+                    <h5>Total Purchases</h5>
+                    <p>Total Purchases</p>
                   </div>
                   <div className="col s6">
-                    <h5 className="right">0/=</h5>
+                    <h5 className="right">{this.props.purchases}/=</h5>
+                  </div>
+                </div>
+              </li>
+              
+              <li class="collection-item">
+                <div className="row">
+                  <div className="col s6">
+                    <h5>Expenses</h5>
+                  </div>
+                  <div className="col s6">
+                    <h5 className="right">{this.props.expenses}/=</h5>
                   </div>
                 </div>
               </li>
@@ -61,20 +81,11 @@ class ProfitExpenseSummary extends Component {
                     <h5>Bad Stock</h5>
                   </div>
                   <div className="col s6">
-                    <h5 className="right">0/=</h5>
+                    <h5 className="right">{this.props.badstock}/=</h5>
                   </div>
                 </div>
               </li>
-              <li class="collection-item">
-                <div className="row">
-                  <div className="col s6">
-                    <h5>Expenses</h5>
-                  </div>
-                  <div className="col s6">
-                    <h5 className="right">0/=</h5>
-                  </div>
-                </div>
-              </li>
+              
             </ul>
           </div>
         </div>
@@ -91,9 +102,13 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 const mapStateToProps = (state) => {
-  console.log('mappedstatestoprops',state.cashAtHand.cashathand);
+  console.log('mappedstatestoprops',state);
   return {
-     cashathand: state.cashAtHand.cashathand
+    profit: state.cashAtHand.profit,
+    sales: state.cashAtHand.sales,
+    purchases: state.cashAtHand.purchases,
+    expenses: state.cashAtHand.expenses,
+    badstock: state.cashAtHand.badstock,
   }
 }
 

@@ -41,8 +41,12 @@ const ProfitExpensesManager = (props) => {
   ]);
 
   const getProfitExpense = (item) => {
-    console.log(item.selection);
-    props.history.push("/profitexpensesummary");
+    
+    props.history.push({
+      pathname: "/profitexpensesummary",
+      state: { date: item.selection},
+    });
+    // props.history.push("/profitexpensesummary");
   };
 
   return (

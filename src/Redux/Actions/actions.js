@@ -29,3 +29,8 @@ export const ADDED_SHOP = "ADDED_SHOP";
 export const GET_SHOP = "GET_SHOP";
 
 export const CASH_AT_HAND = "CASH_AT_HAND";
+export const PROFIT = "PROFIT";
+export const TOTAL_SALES = "TOTAL_SALES";
+export const TOTAL_PURCHASES = "TOTAL_PURCHASES";
+export const TOTAL_EXPENSES = "TOTAL_EXPENSES";
+export const TOTAL_BAD_STOCK = "TOTAL_BAD_STOCK";
