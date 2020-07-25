@@ -12,7 +12,7 @@ class ProfitExpenseSummary extends Component {
     purchases: '',
     expenses: '',
     badstock: '',
-}
+  }
   componentDidMount() {
     window.scrollTo(0, 0);
     
@@ -36,7 +36,7 @@ class ProfitExpenseSummary extends Component {
         </div>
         <div className="container">
           <div className="row">
-            <h5 align="center">Profit/Loss = (Total Sales - Total Purchase) - Total Expenses - Total Bad Stock</h5>
+            <h6 align="center">Profit/Loss = (Total Sales - Total Purchase) - Total Expenses - Total Bad Stock</h6>
           </div>
         </div>
         <div className="container">
@@ -53,7 +53,7 @@ class ProfitExpenseSummary extends Component {
                   </div>
                 </div>
               </Link>
-              <li class="collection-item">
+              <Link to="purchases" class="collection-item">
                 <div className="row">
                   <div className="col s6">
                     <h5>Total Purchases</h5>
@@ -63,9 +63,9 @@ class ProfitExpenseSummary extends Component {
                     <h5 className="right">{this.props.purchases}/=</h5>
                   </div>
                 </div>
-              </li>
+              </Link>
               
-              <li class="collection-item">
+              <Link to="expenses" class="collection-item">
                 <div className="row">
                   <div className="col s6">
                     <h5>Expenses</h5>
@@ -74,8 +74,8 @@ class ProfitExpenseSummary extends Component {
                     <h5 className="right">{this.props.expenses}/=</h5>
                   </div>
                 </div>
-              </li>
-              <li class="collection-item">
+              </Link>
+              <Link to="badstock" class="collection-item">
                 <div className="row">
                   <div className="col s6">
                     <h5>Bad Stock</h5>
@@ -84,7 +84,7 @@ class ProfitExpenseSummary extends Component {
                     <h5 className="right">{this.props.badstock}/=</h5>
                   </div>
                 </div>
-              </li>
+              </Link>
               
             </ul>
           </div>

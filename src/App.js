@@ -33,6 +33,9 @@ import Auth from "./components/AuthCheck";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import Shops from "./components/Shops/Shops";
 import ShopSettings from "./components/Shops/ShopSettings";
+import Purchases from './components/Purchases';
+import Expenses from './components/Expenses';
+import BadStock from './components/BadStock';
 
 function App(props) {
   const loggedin = useSelector((state) => state.login);
@@ -87,6 +90,18 @@ function App(props) {
             <ProtectedRoute
               path="/cashsaleshistory"
               component={CashSalesHistory}
+            />
+            <ProtectedRoute
+              path="/purchases"
+              component={Purchases}
+            />
+            <ProtectedRoute
+              path="/expenses"
+              component={Expenses}
+            />
+            <ProtectedRoute
+              path="/badstock"
+              component={BadStock}
             />
 
             <ProtectedRoute path="/editstock/:id" component={EditStock} />
