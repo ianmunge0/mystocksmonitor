@@ -59,3 +59,9 @@ export const getCashAtHand = (cashathandcreds) => {
         });
     }
 }
+
+export const sendSalesDetails = () => {
+    return (dispatch) => {
+
+    }
+}

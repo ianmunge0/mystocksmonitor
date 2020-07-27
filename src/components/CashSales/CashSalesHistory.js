@@ -1,6 +1,15 @@
 import React, { Component } from "react";
 
 export default class CashSalesHistory extends Component {
+
+  state = {
+    
+  }
+
+  componentDidMount(){
+    console.log("cashsalesprops",this.props);
+  }
+
   render() {
     return (
       <div className="container">

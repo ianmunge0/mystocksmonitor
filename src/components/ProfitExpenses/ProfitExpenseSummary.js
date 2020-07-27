@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import {connect} from 'react-redux';
 import { Link } from "react-router-dom";
 import {getCashAtHand} from '../../Redux/Actions/profitAndExpenseActions'
+import {sendSalesDetails} from '../../Redux/Actions/profitAndExpenseActions'
 
 class ProfitExpenseSummary extends Component {
   state = {
@@ -24,6 +25,11 @@ class ProfitExpenseSummary extends Component {
     }
     this.props.getCashAtHand(cashathandcreds);
   }
+  dispatchingSales(salesdetails){
+    console.log("salestodispatch",this.props);
+    //this.props.sendSalesDetails();
+    
+  }
   render() {
 
     return (
@@ -42,7 +48,7 @@ class ProfitExpenseSummary extends Component {
         <div className="container">
           <div className="row">
             <ul class="collection">
-              <Link to="cashsaleshistory" class="collection-item">
+              <Link to="cashsaleshistory" class="collection-item" onClick={() => this.dispatchingSales(this.props)}>
                 <div className="row">
                   <div className="col s6">
                     <h5>Cash sales</h5>
@@ -97,7 +103,8 @@ class ProfitExpenseSummary extends Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getCashAtHand: (cashathandcreds) => dispatch(getCashAtHand(cashathandcreds))
+    getCashAtHand: (cashathandcreds) => dispatch(getCashAtHand(cashathandcreds)),
+    sendSalesDetails: () => dispatch(sendSalesDetails())
   }
 }
 
