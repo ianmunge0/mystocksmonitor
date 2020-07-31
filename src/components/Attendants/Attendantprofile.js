@@ -155,14 +155,16 @@ function Attendantprofile(props) {
                         <h6>Sales notification </h6>
                       </div>
                       <div className="col s4">
+                        {console.log(
+                          props.profile.profile
+                            ? props.profile.profile.sales_notifications
+                            : ""
+                        )}
                         <input
                           type="checkbox"
                           defaultChecked={
                             props.profile.profile
-                              ? props.profile.profile.sales_notifications ===
-                                "1"
-                                ? true
-                                : false
+                              ? props.profile.profile.sales_notifications
                               : false
                           }
                         />

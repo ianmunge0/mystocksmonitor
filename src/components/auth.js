@@ -1,8 +1,6 @@
 import { reactLocalStorage } from "reactjs-localstorage";
 class Auth {
   constructor() {
-    console.log("cons ", reactLocalStorage.get("loggedin"));
-
     this.authenticated = reactLocalStorage.get("loggedin") ? true : false;
   }
 

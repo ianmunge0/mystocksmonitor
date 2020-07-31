@@ -55,6 +55,7 @@ export const login = (email, password, type) => {
           if (userdata.status) {
             console.log("saving to localstorage login", res.data);
             reactLocalStorage.setObject("userdata", userdata);
+            reactLocalStorage.setObject("shops", userdata.shops);
             reactLocalStorage.set("loggedin", true);
             reactLocalStorage.set("user_type", type);
           }

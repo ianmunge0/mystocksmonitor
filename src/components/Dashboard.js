@@ -2,26 +2,51 @@ import React, { useEffect } from "react";
 import Item from "./Item";
 import M from "materialize-css/dist/js/materialize.min.js";
 import NavBar from "../components/Navigations/NavBar";
+import { Link } from "react-router-dom";
+import { reactLocalStorage } from "reactjs-localstorage";
+import Button from "@material-ui/core/Button";
+import ShopsDialog from "./Shops/SelectDefaultShop";
 
 function Dashboard(props) {
-  useEffect(() => {
-    var elems = document.querySelectorAll(".sidenav");
-    M.Sidenav.init(elems, {});
-    var selectelems = document.querySelectorAll("select");
-  }, []);
+  const [open, setOpen] = React.useState(false);
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
     <>
-      <NavBar titleone="Store Admin" />
-      <div class="card">
-        <div class="card-content">
-          <div className="row">
-            <div className="s6">
-              <h6>Current Shop: Shop One</h6>
-            </div>
-            <div className="s6">
-              <button className="btn btn-info">Change</button>
-            </div>
+      <div style={{ marginTop: 20 }}>
+        <div className="row">
+          <div className="col s12">
+            <Button
+              variant="outlined"
+              color="primary"
+              style={{ padding: 10 }}
+              className="col s12"
+              onClick={handleClickOpen}
+            >
+              Current Shop:{" "}
+              {reactLocalStorage.getObject("userdata").currentshop
+                ? reactLocalStorage.getObject("userdata").currentshop.shopname
+                : "N/A"}
+            </Button>
+            {/* <Button
+                variant="outlined"
+                className="col s12"
+                style={{ padding: 10 }}
+                color="primary"
+                onClick={handleClickOpen}
+              >
+                Current Shop:{" "}
+                {reactLocalStorage.getObject("userdata").currentshop
+                  ? reactLocalStorage.getObject("userdata").currentshop.shopname
+                  : "N/A"}
+              </Button> */}
+            <ShopsDialog fullScreen open={open} handleClose={handleClose} />
           </div>
         </div>
       </div>

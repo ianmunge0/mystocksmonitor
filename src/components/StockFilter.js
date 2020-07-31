@@ -25,9 +25,13 @@ function StockFilter(props) {
 
   var fromdateString = moment(Date.parse(fromdate)).format("LLLL");
 
+  const deleteProduct = (item) => {
+    // props.deleteStock(item);
+  };
+
   return (
     <>
-      <NavBar titleone="Stock in Report  " titletwo={fromdateString} />
+      {/* <NavBar titleone="Stock in Report  " titletwo={fromdateString} /> */}
 
       <div>
         <Loader fullPage loading={props.reports.loading} />
@@ -42,6 +46,7 @@ function StockFilter(props) {
                   <input
                     placeholder="quick search"
                     id="search"
+                    // onChange={onText}
                     type="search"
                     required
                   />
@@ -116,38 +121,10 @@ function StockFilter(props) {
             <ul>
               <li>
                 <Link to="editstock">
-                  <i className="material-icons">edit</i>Edit
+                  <i className="material-icons">edit</i>Product History
                 </Link>
               </li>
-              <li>
-                <a
-                  href="#!"
-                  className="modal-trigger "
-                  data-target="deletealert"
-                >
-                  <i className="material-icons">delete</i>Delete
-                </a>
-              </li>
             </ul>
-          </div>
-        </div>
-        <div id="deletealert" className="modal">
-          <div className="modal-content">
-            Are you sure you want to delete this product?
-          </div>
-          <div className="modal-footer">
-            <a
-              href="#!"
-              className="modal-close waves-effect waves-green btn-flat"
-            >
-              NO
-            </a>
-            <a
-              href="#!"
-              className="modal-close waves-effect waves-green btn-flat"
-            >
-              YES
-            </a>
           </div>
         </div>
       </div>

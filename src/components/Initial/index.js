@@ -6,7 +6,11 @@ import auth from "../auth";
 function Initial(props) {
   console.log("index", reactLocalStorage.get("loggedin"));
   if (auth.isAuthenticated()) {
-    props.history.push("/dashboard");
+    if (reactLocalStorage.getObject("shops").length > 0) {
+      props.history.push("/dashboard");
+    } else {
+      props.history.push("/initialshopspage");
+    }
   }
   return (
     <div className="container center-align">

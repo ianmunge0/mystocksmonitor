@@ -4,11 +4,38 @@
 :root {
   font-family: "Roboto", "Helvetica Neue", sans-serif;
 }
+.MuiTable-root {
+  white-space: pre-wrap;
+}
+.MuiBox-root-7,
+.MuiBox-root-16 {
+  padding: 10px !important;
+}
 .row {
   margin: 0em;
 }
 .unitsmodalcontent {
   padding: 0 !important;
+}
+.card-action {
+  padding: 10px 0 !important;
+}
+.item-custom {
+  margin-right: 5px;
+  padding: 10px 0;
+  font-size: 30px;
+}
+#deletealert.modal {
+  height: 40%;
+}
+#editmodal.modal {
+  height: 20%;
+}
+.salesinput {
+  border: solid !important;
+  border-width: 0.8px !important;
+  text-align: center;
+  border-radius: 5px !important;
 }
 .stocktxt p {
   font-size: 12px;
@@ -36,6 +63,9 @@ html {
 /* Optional: show position indicator in red */
 ::-webkit-scrollbar-thumb {
   background: #ff0000;
+}
+main {
+  padding: 0px !important;
 }
 .formcenter {
   display: flex;
@@ -168,13 +198,46 @@ body {
   border-left: none;
   border-right: none;
 }
+.tabwrap > div input.countinput {
+  border-bottom: 1px solid grey !important;
+  border-radius: 5px;
+}
 .side-Wrap {
   background-color: #f6a2ad;
 }
 .side-Wrapper {
   height: 500px;
 }
+@media only screen and (max-width: 600px) {
+  nav {
+    width: 0px;
+  }
+  .makeStyles-toolbar-5 {
+    min-height: 32px !important;
+  }
+}
+@media screen and (min-width: 600px) {
+  .makeStyles-toolbar-5 {
+    min-height: 40px !important;
+  }
+}
+.tabwrap > div input {
+  border-bottom: 0px !important;
 
+  padding-left: 5px !important;
+}
+.tabwrap > div {
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+}
+
+.makeStyles-content-7 {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+.tabwrap > div {
+  padding-top: 0px !important;
+}
 @media screen and (max-width: 40em) {
   .container {
     width: 100%;

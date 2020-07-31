@@ -14,53 +14,51 @@ export default class ProfitExpenseSummary extends Component {
             <h5>0/=</h5>
           </div>
         </div>
-        <div className="container">
-          <div className="row">
-            <ul class="collection">
-              <Link to="cashsaleshistory" class="collection-item">
-                <div className="row">
-                  <div className="col s6">
-                    <h5>Cash sales</h5>
-                    <p>sales summary</p>
-                  </div>
-                  <div className="col s6">
-                    <h5 className="right">0/=</h5>
-                  </div>
+        <div className="row">
+          <ul class="collection">
+            <Link to="cashsaleshistory" class="collection-item">
+              <div className="row">
+                <div className="col s6">
+                  <h5>Cash sales</h5>
+                  <p>sales summary</p>
                 </div>
-              </Link>
-              <li class="collection-item">
-                <div className="row">
-                  <div className="col s6">
-                    <h5>Sales profit</h5>
-                    <p>sales profie</p>
-                  </div>
-                  <div className="col s6">
-                    <h5 className="right">0/=</h5>
-                  </div>
+                <div className="col s6">
+                  <h5 className="right">0/=</h5>
                 </div>
-              </li>
-              <li class="collection-item">
-                <div className="row">
-                  <div className="col s6">
-                    <h5>Bad Stock</h5>
-                  </div>
-                  <div className="col s6">
-                    <h5 className="right">0/=</h5>
-                  </div>
+              </div>
+            </Link>
+            <li class="collection-item">
+              <div className="row">
+                <div className="col s6">
+                  <h5>Sales profit</h5>
+                  <p>sales profie</p>
                 </div>
-              </li>
-              <li class="collection-item">
-                <div className="row">
-                  <div className="col s6">
-                    <h5>Expenses</h5>
-                  </div>
-                  <div className="col s6">
-                    <h5 className="right">0/=</h5>
-                  </div>
+                <div className="col s6">
+                  <h5 className="right">0/=</h5>
                 </div>
-              </li>
-            </ul>
-          </div>
+              </div>
+            </li>
+            <li class="collection-item">
+              <div className="row">
+                <div className="col s6">
+                  <h5>Bad Stock</h5>
+                </div>
+                <div className="col s6">
+                  <h5 className="right">0/=</h5>
+                </div>
+              </div>
+            </li>
+            <li class="collection-item">
+              <div className="row">
+                <div className="col s6">
+                  <h5>Expenses</h5>
+                </div>
+                <div className="col s6">
+                  <h5 className="right">0/=</h5>
+                </div>
+              </div>
+            </li>
+          </ul>
         </div>
       </>
     );

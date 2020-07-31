@@ -19,11 +19,6 @@ import moment from "moment";
 
 export const getSingleStock = (id) => {
   return (dispatch) => {
-    dispatch({
-      type: ADDING_STOCK,
-      loading: true,
-    });
-
     Api.get(`/stocks.php`, {
       params: {
         id,
@@ -46,7 +41,7 @@ export const getSingleStock = (id) => {
   };
 };
 
-export const addStock = (stockinput) => {
+export const addStock = (stockinput, e) => {
   return (dispatch) => {
     dispatch({
       type: ADDING_STOCK,
@@ -57,6 +52,7 @@ export const addStock = (stockinput) => {
     stockinput.date_time = moment(dd).format("YYYY-MM-DD hh:mm:ss");
     stockinput.time_ = parseInt((dd / 1000).toFixed(0)); //new Date().getTime();
     stockinput.action = "insert";
+    stockinput.shopid = reactLocalStorage.getObject("userdata").default_shop;
     console.log("stockinput", stockinput);
 
     Api.get(`/stocks.php`, {
@@ -64,11 +60,14 @@ export const addStock = (stockinput) => {
     })
       .then((res) => {
         const stockrespose = res.data;
-        console.log("stockrespose " + stockrespose);
+        console.log("stockrespose ", stockrespose);
+        if (stockrespose.status === true) {
+          e.reset();
+        }
 
         dispatch({
           type: ADD_STOCK,
-          stockrespose: stockrespose.query_result,
+          stockrespose: stockrespose,
         });
       })
       .catch((error) => {
@@ -182,13 +181,16 @@ export const getUnits = () => {
   };
 };
 
-export const getStock = (shopid) => {
+export const getStock = () => {
   return (dispatch) => {
-    console.log({ currentshopidkey: shopid, action: "all" });
+    console.log({
+      currentshopidkey: reactLocalStorage.getObject("userdata").default_shop,
+      action: "all",
+    });
 
     Api.get(`/stocks.php`, {
       params: {
-        currentshopidkey: shopid,
+        currentshopidkey: reactLocalStorage.getObject("userdata").default_shop,
         action: "all",
       },
     })
@@ -311,6 +313,39 @@ export const getCountHistory = (timestamp) => {
         console.log("getCountHistory " + res.data);
         dispatch({
           type: GET_COUNT_HISTORY,
+          stocks: res.data,
+        });
+      })
+      .catch((error) => {
+        // your error handling goes here}
+        console.log("error", error);
+      });
+  };
+};
+
+export const deleteStock = (id) => {
+  return (dispatch) => {
+    dispatch({
+      type: LOADING,
+    });
+
+    console.log({
+      id,
+      currentshopidkey: reactLocalStorage.getObject("userdata").default_shop,
+      action: "delete",
+    });
+
+    Api.get(`/stocks.php`, {
+      params: {
+        id,
+        currentshopidkey: reactLocalStorage.getObject("userdata").default_shop,
+        action: "delete",
+      },
+    })
+      .then((res) => {
+        console.log("deleteStock ", res.data);
+        dispatch({
+          type: GET_STOCK,
           stocks: res.data,
         });
       })

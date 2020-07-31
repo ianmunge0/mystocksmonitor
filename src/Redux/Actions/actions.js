@@ -27,3 +27,8 @@ export const GET_PROFILE = "GET_PROFILE";
 export const GET_SHOPS = "GET_SHOPS";
 export const ADDED_SHOP = "ADDED_SHOP";
 export const GET_SHOP = "GET_SHOP";
+export const SET_DEFAULT = "SET_DEFAULT";
+
+export const ADD_SALES = "ADD_SALES";
+export const GET_SALES = "GET_SALES";
+export const GET_RECEIPTS = "GET_RECEIPTS";

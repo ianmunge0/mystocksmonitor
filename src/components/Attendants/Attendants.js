@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import NavBar from "../../components/Navigations/NavBar";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
+import { reactLocalStorage } from "reactjs-localstorage";
 
 function Attendants(props) {
   useEffect(() => {
@@ -13,7 +14,7 @@ function Attendants(props) {
       swipeable: true,
     });
     M.FormSelect.init(document.querySelectorAll("select"), {});
-    props.getAttendants(34);
+    props.getAttendants(reactLocalStorage.getObject("userdata").default_shop);
   }, []);
 
   const [error, setError] = useState();
@@ -32,6 +33,7 @@ function Attendants(props) {
   const addAttendant = (e) => {
     e.preventDefault();
     attendant.roles = roles;
+    attendant.shopid = reactLocalStorage.getObject("userdata").default_shop;
     props.addAttendant(attendant);
   };
 
@@ -78,11 +80,14 @@ function Attendants(props) {
             ) : (
               ""
             )}
-            <ul className="collection">
+            <ul
+              className="collection"
+              style={{ height: 400, overflow: "scroll" }}
+            >
               {props.attendants.attendants.length > 0
                 ? props.attendants.attendants.map((value, index) => (
                     <Link
-                      to={`/attendantsprofile/${value.serialno}`}
+                      to={`/attendantsprofile/${value.shopserial_key}`}
                       className="collection-item avatar"
                       key={index}
                     >

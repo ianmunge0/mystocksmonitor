@@ -11,6 +11,8 @@ import M from "materialize-css/dist/js/materialize.min.js";
 import { Link, withRouter } from "react-router-dom";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
+import NavBar from "../../components/Navigations/NavBar";
+import { reactLocalStorage } from "reactjs-localstorage";
 
 function NewProduct(props) {
   useEffect(() => {
@@ -20,7 +22,7 @@ function NewProduct(props) {
     props.getUnits();
     props.getSuppliers();
 
-    setStock(props.stock);
+    // setStock(props.stock);
     console.log("all ", props.stock);
   }, [props.stock]);
 
@@ -32,8 +34,6 @@ function NewProduct(props) {
     stock_qty: "",
     buyingprice: "",
     sellingprice: "",
-    type: "",
-    unit_name: "",
     reorder_level: "",
   });
 
@@ -69,13 +69,25 @@ function NewProduct(props) {
     e.preventDefault();
 
     setError("");
+    console.log(stock);
+    var send = true;
     Object.keys(stock).map((key) => {
       if (stock[key] === "") {
+        send = false;
         setError(key.split("_").join(" ") + " cannot be empty");
-        return;
       }
     });
-    props.addStock(stock);
+    if (parseInt(stock.stock_qty) < 1) {
+      setError("quantity must be greater than 0");
+      send = false;
+    }
+    if (parseInt(stock.buyingprice) > parseInt(stock.sellingprice)) {
+      setError("selling price must be greater than buying price");
+      send = false;
+    }
+    if (send) {
+      props.addStock(stock, props);
+    }
   };
 
   const addUnit = (e) => {
@@ -102,15 +114,21 @@ function NewProduct(props) {
   return (
     <div>
       <Loader fullPage loading={props.stockresponse.loading} />
+      <NavBar titleone="Add New Stock" />
       <form className="col s12 forminput" onSubmit={addNewStock}>
-        <p className="red-text">{error}</p>
+        <p className="red-text">
+          {props.stockresponse.stockresponse
+            ? props.stockresponse.stockresponse.response
+            : ""}
+          {error}
+        </p>
         <div className="row">
           <div className="input-field col s6">
             <input
               onChange={handleStockData}
               id="name"
               type="text"
-              defaultValue={props.stock ? props.stock.name : ""}
+              defaultValue={props.item ? props.item.name : ""}
               placeholder="Name"
               className="validate"
             />
@@ -167,74 +185,83 @@ function NewProduct(props) {
               placeholder="Re-Order Level"
             />
           </div>
-          <div className="input-field col s6">
-            <select
-              defaultValue={props.stock ? props.stock.type : ""}
-              id="type"
-              onChange={handleStockData}
-            >
-              <option value="" disabled>
-                Choose Type
-              </option>
-              <option value="cash">Cash</option>
-              <option value="credit">Credit</option>
-            </select>
-          </div>
+          {reactLocalStorage.getObject("userdata").user_type === "attendant" ? (
+            <div className="input-field col s6">
+              <select
+                defaultValue={props.stock ? props.stock.type : ""}
+                id="type"
+                onChange={handleStockData}
+              >
+                <option value="" disabled>
+                  Choose Type
+                </option>
+                <option value="cash">Cash</option>
+                <option value="credit">Credit</option>
+              </select>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
-        <div className="row">
-          <div className="col s12">
-            <div className="row">
-              <div className="col s12"></div>
-              {stock ? (
-                <p className="modal-trigger col s12">unit: {stock.unit_name}</p>
-              ) : (
-                <p style={{ margin: 0 }}>
-                  {props.stock ? "unit: " + props.stock.unit_name : ""}
-                </p>
-              )}
-              <div className="input-field col s8">
-                <a
-                  style={{ fontSize: 15 }}
-                  href="#unitsmodal"
-                  className="modal-trigger col s12"
-                >
-                  {props.stock ? "Change" : "Select unit"}
-                </a>
+        {props.stock ? (
+          <div className="row">
+            <div className="col s12">
+              <div className="row">
+                {props.stock ? (
+                  <p className="modal-trigger col s12">
+                    {props.stock
+                      ? "unit: " + props.stock.unit_data.unit_name
+                      : ""}
+                  </p>
+                ) : (
+                  <p style={{ margin: 0 }}>unit: {stock.unit_name}</p>
+                )}
+                <div className="input-field col s8">
+                  <a
+                    style={{ fontSize: 15 }}
+                    href="#unitsmodal"
+                    className="modal-trigger"
+                  >
+                    {props.stock ? "Change" : "Select unit"}
+                  </a>
+                </div>
+                <div className="input-field col s4 ">
+                  <a href="#modal1" className="modal-trigger">
+                    <i className="material-icons left">add</i>
+                  </a>
+                </div>
               </div>
-              <div className="input-field col s4 ">
-                <a href="#modal1" className="modal-trigger">
-                  <i className="material-icons left">add</i>
-                </a>
+              <div className="row">
+                <div className="col s12"></div>
+                {props.stock ? (
+                  <p className="modal-trigger col s12">
+                    {props.stock
+                      ? "Supplier: " + props.stock.supplier_data.supplier_name
+                      : ""}
+                  </p>
+                ) : (
+                  <p style={{ margin: 0 }}>Supplier: {stock.supplier_name}</p>
+                )}
+                <div className="input-field col s8">
+                  <a
+                    style={{ fontSize: 15 }}
+                    href="#suppliersmodal"
+                    className="modal-trigger"
+                  >
+                    {props.stock ? "Change" : "Select Supplier"}
+                  </a>
+                </div>
+                <div className="input-field col s4 ">
+                  <a href="#newsuppliermodal" className="modal-trigger">
+                    <i className="material-icons left">add</i>
+                  </a>
+                </div>
               </div>
             </div>
-            <div className="row">
-              <div className="col s12"></div>
-              {stock ? (
-                <p className="modal-trigger col s12">
-                  Supplier: {stock.supplier_name}
-                </p>
-              ) : (
-                <p style={{ margin: 0 }}>
-                  {props.stock ? "Supplier: " + props.stock.supplier_name : ""}
-                </p>
-              )}
-              <div className="input-field col s8">
-                <a
-                  style={{ fontSize: 15 }}
-                  href="#suppliersmodal"
-                  className="modal-trigger col s12"
-                >
-                  {props.stock ? "Change" : "Select Supplier"}
-                </a>
-              </div>
-              <div className="input-field col s4 ">
-                <a href="#newsuppliermodal" className="modal-trigger">
-                  <i className="material-icons left">add</i>
-                </a>
-              </div>
-            </div>
           </div>
-        </div>
+        ) : (
+          ""
+        )}
         <button
           className="btn btn-primary btn-large col s12"
           style={{ marginTop: 10 }}
@@ -385,7 +412,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispacthToProps = (dispatch) => {
   return {
-    addStock: (stock) => dispatch(addStock(stock)),
+    addStock: (stock, props) => dispatch(addStock(stock, props)),
     saveUnit: (unit) => dispatch(saveUnit(unit)),
     getUnits: () => dispatch(getUnits()),
     saveSupplier: (supplier) => dispatch(saveSupplier(supplier)),

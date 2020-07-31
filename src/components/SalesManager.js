@@ -5,7 +5,7 @@ import "react-date-range/dist/theme/default.css"; // theme css file
 import { DefinedRange } from "react-date-range";
 import { DateRange } from "react-date-range";
 import NavBar from "../components/Navigations/NavBar";
-export default function SalesManager() {
+export default function SalesManager(props) {
   // componentDidMount() {
   //   document.addEventListener("DOMContentLoaded", function () {
   //     var elems = document.querySelectorAll(".datepicker");
@@ -31,6 +31,13 @@ export default function SalesManager() {
   //     key: "selection",
   //   };
 
+  const selectedSalesDate = (item) => {
+    props.history.push({
+      pathname: "/salesreceipts",
+      state: { date: item.selection },
+    });
+  };
+
   const [state, setState] = useState([
     {
       startDate: new Date(),
@@ -41,17 +48,17 @@ export default function SalesManager() {
 
   return (
     <>
-      <NavBar titleone="Sales Manager" />
+      {/* <NavBar titleone="Sales Manager" action="salesmanager" /> */}
       <DateRange
         editableDateInputs={false}
         onChange={(item) => {
-          handleSelect(item);
+          selectedSalesDate(item);
         }}
         moveRangeOnFirstSelection={false}
         ranges={state}
       />
       <DefinedRange
-        onChange={(item) => setState([item.selection])}
+        onChange={(item) => selectedSalesDate(item)}
         ranges={state}
       />
     </>

@@ -45,7 +45,7 @@ export default function StockInManager(props) {
 
   return (
     <>
-      <NavBar titleone="Stock in Manager" />
+      {/* <NavBar titleone="Stock in Manager" /> */}
       <DateRange
         editableDateInputs={false}
         onChange={(item) => {

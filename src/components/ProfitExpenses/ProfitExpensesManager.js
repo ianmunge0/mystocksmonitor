@@ -6,31 +6,11 @@ import "react-date-range/dist/theme/default.css"; // theme css file
 import { DefinedRange } from "react-date-range";
 import { DateRange } from "react-date-range";
 const ProfitExpensesManager = (props) => {
-  // componentDidMount() {
-  //   document.addEventListener("DOMContentLoaded", function () {
-  //     var elems = document.querySelectorAll(".datepicker");
-  //     var instances = M.Datepicker.init(elems, {});
-  //   });
-  // }
-
   const handleSelect = (ranges) => {
     console.log(ranges.selection);
     setState([ranges.selection]);
     props.history.push("/profitexpensesummary");
-    // {
-    //   selection: {
-    //     startDate: [native Date Object],
-    //     endDate: [native Date Object],
-    //   }
-    // }
   };
-
-  // render() {
-  //   const selectionRange = {
-  //     startDate: new Date(),
-  //     endDate: null,
-  //     key: "selection",
-  //   };
 
   const [state, setState] = useState([
     {
@@ -46,7 +26,7 @@ const ProfitExpensesManager = (props) => {
   };
 
   return (
-    <div className="container">
+    <>
       <div className="row">
         <DateRange
           editableDateInputs={false}
@@ -63,7 +43,7 @@ const ProfitExpensesManager = (props) => {
           ranges={state}
         />
       </div>
-    </div>
+    </>
   );
   // }
 };
