@@ -21,9 +21,13 @@
   padding: 10px 0 !important;
 }
 .item-custom {
-  margin-right: 5px;
   padding: 10px 0;
   font-size: 30px;
+  text-align: center;
+}
+span.MuiButton-label a {
+  color: #ffffff !important;
+  font-weight: bold;
 }
 #deletealert.modal {
   height: 40%;
@@ -57,15 +61,27 @@ html {
   overflow-x: hidden;
 }
 ::-webkit-scrollbar {
-  width: 0px; /* Remove scrollbar space */
-  background: transparent; /* Optional: just make scrollbar invisible */
+  width: 0px;
+  background: transparent;
 }
-/* Optional: show position indicator in red */
 ::-webkit-scrollbar-thumb {
   background: #ff0000;
 }
 main {
   padding: 0px !important;
+}
+.MuiSelect-select {
+  padding: 15px 0 !important;
+}
+.profileinputs input,
+.profileinputs input:focus {
+  border-bottom: none !important;
+}
+.expensetom .card-content {
+  padding: 10px 0;
+}
+.expensetom .card {
+  margin: 0 0;
 }
 .formcenter {
   display: flex;

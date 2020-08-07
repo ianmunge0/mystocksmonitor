@@ -34,18 +34,6 @@ function Dashboard(props) {
                 ? reactLocalStorage.getObject("userdata").currentshop.shopname
                 : "N/A"}
             </Button>
-            {/* <Button
-                variant="outlined"
-                className="col s12"
-                style={{ padding: 10 }}
-                color="primary"
-                onClick={handleClickOpen}
-              >
-                Current Shop:{" "}
-                {reactLocalStorage.getObject("userdata").currentshop
-                  ? reactLocalStorage.getObject("userdata").currentshop.shopname
-                  : "N/A"}
-              </Button> */}
             <ShopsDialog fullScreen open={open} handleClose={handleClose} />
           </div>
         </div>

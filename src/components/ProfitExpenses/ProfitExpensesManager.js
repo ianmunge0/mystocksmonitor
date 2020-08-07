@@ -21,8 +21,12 @@ const ProfitExpensesManager = (props) => {
   ]);
 
   const getProfitExpense = (item) => {
-    console.log(item.selection);
-    props.history.push("/profitexpensesummary");
+    // console.log(item.selection);
+    props.history.push({
+      pathname: "/profitexpensesummary",
+      state: { date: item.selection },
+    });
+    // props.history.push("/profitexpensesummary");
   };
 
   return (
@@ -31,7 +35,7 @@ const ProfitExpensesManager = (props) => {
         <DateRange
           editableDateInputs={false}
           onChange={(item) => {
-            handleSelect(item);
+            getProfitExpense(item);
           }}
           moveRangeOnFirstSelection={false}
           ranges={state}

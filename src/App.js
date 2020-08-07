@@ -33,12 +33,13 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import Shops from "./components/Shops/Shops";
 import ShopSettings from "./components/Shops/ShopSettings";
 import NewShops from "./components/Shops/NewShop";
-import ShopsList from "./components/Shops/ShopsList";
 import NewCashSale from "./components/CashSales/NewCashSale";
 import SalesProductList from "./components/CashSales/SalesProductList";
 import SalesReceipts from "./components/Sales/SalesReceipts";
 import SingleSales from "./components/Sales/SingleSales";
 import StockSetup from "./components/Stocks/StockSetup";
+import Expenses from "./components/ProfitExpenses/Expenses";
+import Profile from "./components/Profile/Profile";
 
 function App(props) {
   const loggedin = useSelector((state) => state.login);
@@ -62,6 +63,7 @@ function App(props) {
         <Switch>
           {/* <Main /> */}
           <Route exact path="/" component={DefaultPage} />
+          {/* <Route path="" component={DefaultPage} /> */}
           <Route path="/login/:type" component={Login} />
           <Route path="/register" component={Register} />
 
@@ -78,6 +80,7 @@ function App(props) {
           <ProtectedRoute
             path="/salesmanager"
             title="Sales"
+            settings="sales"
             component={SalesManager}
           />
           <ProtectedRoute path="/newsale" component={NewCashSale} />
@@ -85,9 +88,10 @@ function App(props) {
           <Route path="/salesproductlist" component={SalesProductList} />
           <ProtectedRoute path="/salesreceipts" component={SalesReceipts} />
           <ProtectedRoute path="/singlereceipt" component={SingleSales} />
-          <ProtectedRoute path="/shopslist" component={ShopsList} />
           <ProtectedRoute
             path="/profitexpense"
+            title="Profit & Expenses"
+            settings="profitnexpenses"
             component={ProfitExpensesManager}
           />
           <ProtectedRoute path="/attendants" component={Attendants} />
@@ -95,7 +99,17 @@ function App(props) {
             path="/attendantsprofile/:id"
             component={AttendantsProfile}
           />
+          <ProtectedRoute
+            path="/myprofile"
+            title="My Profile"
+            component={Profile}
+          />
           <ProtectedRoute path="/units" component={Units} />
+          <ProtectedRoute
+            title="Add Expenses"
+            path="/expenses"
+            component={Expenses}
+          />
           <ProtectedRoute path="/newstock" component={NewStock} />
           <ProtectedRoute path="/counts/:timestamp" component={Counts} />
           <ProtectedRoute path="/stockcount" component={StockCount} />

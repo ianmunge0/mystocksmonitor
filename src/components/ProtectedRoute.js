@@ -15,11 +15,13 @@ import MailIcon from "@material-ui/icons/Mail";
 import MenuIcon from "@material-ui/icons/Menu";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
 import Item from "./Item";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+import Avatar from "@material-ui/core/Avatar";
+import Badge from "@material-ui/core/Badge";
 
 import { Route, Redirect } from "react-router-dom";
 import auth from "./auth";
@@ -27,12 +29,48 @@ import { reactLocalStorage } from "reactjs-localstorage";
 import StockSetup from "./Stocks/StockSetup";
 import { Link, withRouter } from "react-router-dom";
 import { Button } from "@material-ui/core";
+import Api from "../api/api";
+import Profile from "../components/Profile/Profile";
 
-const drawerWidth = 240;
+const StyledBadge = withStyles((theme) => ({
+  badge: {
+    backgroundColor: "#44b700",
+    color: "#44b700",
+    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+    "&::after": {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      borderRadius: "50%",
+      animation: "$ripple 1.2s infinite ease-in-out",
+      border: "1px solid currentColor",
+      content: '""',
+    },
+  },
+  "@keyframes ripple": {
+    "0%": {
+      transform: "scale(.8)",
+      opacity: 1,
+    },
+    "100%": {
+      transform: "scale(2.4)",
+      opacity: 0,
+    },
+  },
+}))(Badge);
+
+const drawerWidth = 360;
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
+  },
+
+  actionbtn: {
+    float: "right",
+    fontSize: 10,
   },
   drawer: {
     [theme.breakpoints.up("sm")]: {
@@ -55,6 +93,9 @@ const useStyles = makeStyles((theme) => ({
   menuButtonNormal: {
     marginRight: theme.spacing(2),
   },
+  toolbar: {
+    backgroundColor: "#3f51b5",
+  },
   // necessary for content to be below app bar
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
@@ -63,6 +104,10 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
+  },
+  large: {
+    width: theme.spacing(10),
+    height: theme.spacing(10),
   },
 }));
 // import Main from "../components/Main";
@@ -77,24 +122,58 @@ export const ProtectedRoute = ({ component: Component, ...rest }) => {
     setMobileOpen(!mobileOpen);
   };
 
+  const getProfile = () => {
+    Api.get(`/myprofile.php`, {
+      params: {
+        id: reactLocalStorage.getObject("userdata").serialno,
+        action: "get",
+      },
+    })
+      .then((res) => {
+        console.log("profile", res.data);
+      })
+      .catch((error) => {});
+  };
+
+  // console.log("rest", props);
+
   const drawer = (
     <div>
       <div className={classes.toolbar} />
+      <Grid
+        container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justify="center"
+        style={{ marginBottom: 10 }}
+      >
+        <StyledBadge
+          overlap="circle"
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          variant="dot"
+        >
+          <Avatar
+            alt="Remy Sharp"
+            className={classes.large}
+            src="/static/images/avatar/1.jpg"
+          />
+        </StyledBadge>
+        <h5>Freddy</h5>
+      </Grid>
       <Divider />
       <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem button key={text}>
+        {["My Profile", "Settings", "Logout"].map((text, index) => (
+          <ListItem
+            button
+            key={text}
+            onClick={() => {
+              window.location = "/myprofile";
+            }}
+          >
             <ListItemIcon>
               {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
             </ListItemIcon>
@@ -104,14 +183,23 @@ export const ProtectedRoute = ({ component: Component, ...rest }) => {
       </List>
     </div>
   );
-
   const initToolbar = (title) => {
     console.log("initToolbar", title);
     switch (title) {
-      case "Sales":
+      case "sales":
         return <Link to="/newsale">Add +</Link>;
         break;
-
+      case "profitnexpenses":
+        return (
+          <Link
+            style={{ fontSize: 12 }}
+            className="btn btn-primary"
+            to="/expenses"
+          >
+            Add Expenes +
+          </Link>
+        );
+        break;
       default:
         break;
     }
@@ -138,8 +226,6 @@ export const ProtectedRoute = ({ component: Component, ...rest }) => {
               />
             );
           } else {
-            console.log(rest);
-
             return (
               <div className={classes.root}>
                 <CssBaseline />
@@ -174,7 +260,9 @@ export const ProtectedRoute = ({ component: Component, ...rest }) => {
                         </Typography>
                       </Grid>
                       <Grid item xs={6}>
-                        <Button>{initToolbar(rest.title)}</Button>
+                        <Button className={classes.actionbtn} primary="sdsf">
+                          {initToolbar(rest.settings)}
+                        </Button>
                       </Grid>
                     </Grid>
                     {/* </Typography> */}

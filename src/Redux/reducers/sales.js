@@ -30,15 +30,17 @@ const Sales = (state = initialState, action) => {
         cash: [],
       };
     case "REMOVE_QTY":
+      // var newqty = item.quantity - 1 < 1 ? 1 : item.quantity - 1;
       return {
         ...state,
         sales: state.sales.map((item, index) =>
           item.serialno === action.sales.serialno
             ? {
                 ...state.sales[index],
-                quantity: item.quantity - 1,
+                quantity: item.quantity - 1 < 1 ? 1 : item.quantity - 1,
                 total:
-                  (item.quantity - 1) * parseInt(action.sales.sellingprice),
+                  (item.quantity - 1 < 1 ? 1 : item.quantity - 1) *
+                  parseInt(action.sales.sellingprice),
               }
             : state.sales[index]
         ),
@@ -50,9 +52,14 @@ const Sales = (state = initialState, action) => {
           item.serialno === action.sales.serialno
             ? {
                 ...state.sales[index],
-                quantity: item.quantity + 1,
+                quantity:
+                  item.quantity + 1 > item.stock_qty
+                    ? item.stock_qty
+                    : item.quantity + 1,
                 total:
-                  (item.quantity + 1) * parseInt(action.sales.sellingprice),
+                  (item.quantity + 1 > item.stock_qty
+                    ? item.stock_qty
+                    : item.quantity + 1) * parseInt(action.sales.sellingprice),
               }
             : state.sales[index]
         ),

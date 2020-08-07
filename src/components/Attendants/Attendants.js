@@ -57,7 +57,7 @@ function Attendants(props) {
 
   return (
     <div className="row">
-      <NavBar titleone="Attendants" />
+      {/* <NavBar titleone="Attendants" /> */}
       <ul id="tabs-swipe-demo" className="tabs">
         <li className="tab col s4">
           <a className="active" href="#test-swipe-1">

@@ -100,3 +100,50 @@ export const getAttendants = (shopid) => {
       });
   };
 };
+export const getAdminprofile = () => {
+  return (dispatch) => {
+    Api.get(`/myprofile.php`, {
+      params: {
+        id: reactLocalStorage.getObject("userdata").serialno,
+        action: "get",
+      },
+    })
+      .then((res) => {
+        const profile = res.data;
+        console.log("admin getprofile actions ", profile);
+
+        dispatch({
+          type: "GET_ADMIN_PROFILE",
+          profile,
+        });
+      })
+      .catch((error) => {
+        // your error handling goes here}
+        console.log("error", error);
+      });
+  };
+};
+
+export const updateAdminProfile = (data) => {
+  return (dispatch) => {
+    data.action = "update";
+    console.log(data);
+    data.id = reactLocalStorage.getObject("userdata").serialno;
+    Api.get(`/myprofile.php`, {
+      params: data,
+    })
+      .then((res) => {
+        const profile = res.data;
+        console.log("updateProfile actions ", profile);
+
+        dispatch({
+          type: GET_PROFILE,
+          profile,
+        });
+      })
+      .catch((error) => {
+        // your error handling goes here}
+        console.log("error", error);
+      });
+  };
+};

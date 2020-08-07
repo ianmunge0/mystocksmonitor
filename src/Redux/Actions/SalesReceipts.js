@@ -9,12 +9,6 @@ export const getSalesReceipts = (fromtimeStamp, totimeStamp) => {
       type: LOADING,
       loading: true,
     });
-    console.log({
-      fromtimeStamp: moment(fromtimeStamp).format("YYYY-MM-DD hh:mm:ss"),
-      totimeStamp: moment(totimeStamp).format("YYYY-MM-DD hh:mm:ss"),
-      shop: reactLocalStorage.getObject("userdata").default_shop,
-      action: "getsales",
-    });
 
     Api.get(`/sales.php`, {
       params: {

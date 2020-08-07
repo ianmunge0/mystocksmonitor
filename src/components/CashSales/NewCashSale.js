@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import NavBar from "../../components/Navigations/NavBar";
 import { Link } from "react-router-dom";
 import { addSales, saveSales } from "../../Redux/Actions/Sales";
 import { connect } from "react-redux";
+import SalesDialog from "../CashSales/SalesDialog";
 
 function NewCashSale(props) {
   console.log(props.sales);
@@ -45,6 +45,16 @@ function NewCashSale(props) {
     props.saveSales(props.sales.sales);
   };
 
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   console.log("all items", props.sales);
 
   return (
@@ -52,11 +62,12 @@ function NewCashSale(props) {
       {/* <NavBar titleone="New Sale" action="sales" /> */}
 
       <div className="container">
+        <SalesDialog fullScreen open={open} handleClose={handleClose} />
         <div className="row" style={{ paddingLeft: 10, paddingRight: 10 }}>
           <h5>Enter New Sale</h5>
           <p>2020-08-12 5:56:00 am</p>
           <div className="col s6">
-            <Link to="salesproductlist" className="btn col s12">
+            <Link onClick={handleClickOpen} to="#" className="btn col s12">
               Add +
             </Link>
           </div>
@@ -130,28 +141,6 @@ function NewCashSale(props) {
                           <div className="row ">
                             <Link
                               to="#"
-                              onClick={() =>
-                                props.dispatch({
-                                  type: "ADD_QTY",
-                                  sales: value,
-                                })
-                              }
-                              className="col s3 item-custom"
-                              style={{ margin: 0 }}
-                            >
-                              +
-                            </Link>
-                            <input
-                              type="text"
-                              className="col s4 salesinput"
-                              defaultValue={value.quantity}
-                              onChange={(e) => {
-                                changeQty(value, e);
-                              }}
-                              placeholder="0"
-                            />
-                            <Link
-                              to="#"
                               className="col s3 item-custom"
                               onClick={() =>
                                 props.dispatch({
@@ -162,6 +151,29 @@ function NewCashSale(props) {
                               style={{ margin: 0 }}
                             >
                               -
+                            </Link>
+                            <input
+                              type="text"
+                              className="col s4 salesinput"
+                              // defaultValue={value.quantity}
+                              value={value.quantity}
+                              onChange={(e) => {
+                                changeQty(value, e);
+                              }}
+                              placeholder="0"
+                            />
+                            <Link
+                              to="#"
+                              onClick={() =>
+                                props.dispatch({
+                                  type: "ADD_QTY",
+                                  sales: value,
+                                })
+                              }
+                              className="col s3 item-custom"
+                              style={{ margin: 0 }}
+                            >
+                              +
                             </Link>
                           </div>
                         </div>
@@ -262,10 +274,15 @@ const mapStateToProps = (state) => ({
   stocks: state.stock.stocks,
   stockresponse: state.stock,
 });
-const mapDispacthToProps = (dispatch) => {
-  return {
-    saveSales: (sales) => dispatch(saveSales(sales)),
-  };
-};
+// const mapDispacthToProps = (dispatch) => {
+//   return {
+//     saveSales: (sales) => dispatch(saveSales(sales)),
+//   };
+// };
+
+const mapDispacthToProps = (dispatch) => ({
+  saveSales: (sales) => dispatch(saveSales(sales)),
+  dispatch, // ← Add this
+});
 
 export default connect(mapStateToProps, mapDispacthToProps)(NewCashSale);

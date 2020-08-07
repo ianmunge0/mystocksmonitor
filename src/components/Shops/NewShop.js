@@ -17,8 +17,6 @@ function NewShop(props) {
     props.getShops();
   }, []);
 
-  const [error, setError] = useState();
-  var errortxt = "";
   const [shop, setShop] = useState({
     shop_name: "",
   });

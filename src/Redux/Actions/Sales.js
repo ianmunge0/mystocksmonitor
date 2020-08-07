@@ -13,6 +13,8 @@ export const addSales = (item, props) => {
       type: ADD_SALES,
       sales: item,
     });
+
+    props.handleClose();
   };
 };
 
