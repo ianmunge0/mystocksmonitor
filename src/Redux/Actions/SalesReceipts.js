@@ -3,11 +3,18 @@ import Api from "../../api/api";
 import { reactLocalStorage } from "reactjs-localstorage";
 import moment from "moment";
 
-export const getSalesReceipts = (fromtimeStamp, totimeStamp) => {
+export const getSalesReceipts = (fromtimeStamp, totimeStamp, type) => {
   return (dispatch) => {
     dispatch({
       type: LOADING,
       loading: true,
+    });
+    console.log({
+      fromtimeStamp: moment(fromtimeStamp).format("YYYY-MM-DD hh:mm:ss"),
+      totimeStamp: moment(totimeStamp).format("YYYY-MM-DD hh:mm:ss"),
+      shop: reactLocalStorage.getObject("userdata").default_shop,
+      action: "getsales",
+      type,
     });
 
     Api.get(`/sales.php`, {
@@ -16,6 +23,7 @@ export const getSalesReceipts = (fromtimeStamp, totimeStamp) => {
         totimeStamp: moment(totimeStamp).format("YYYY-MM-DD hh:mm:ss"),
         shop: reactLocalStorage.getObject("userdata").default_shop,
         action: "getsales",
+        type,
       },
     })
       .then((res) => {

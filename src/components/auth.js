@@ -10,8 +10,8 @@ class Auth {
   }
 
   logout(cb) {
-    reactLocalStorage.clear();
     this.authenticated = false;
+    reactLocalStorage.clear();
     cb();
   }
 

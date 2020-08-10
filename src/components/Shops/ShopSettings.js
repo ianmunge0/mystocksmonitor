@@ -148,7 +148,7 @@ function ShopSettings(props) {
               <div className="col s12">
                 <p className="red-text">{error}</p>
               </div>
-              <div className="input-field col s12">
+              <div className="input-field custominpt col s12">
                 <p>Shop name</p>
                 <input
                   id="shopname"
@@ -159,7 +159,7 @@ function ShopSettings(props) {
                   className="validate"
                 />
               </div>
-              <div className="input-field col s12">
+              <div className="input-field custominpt col s12">
                 <p>Location</p>
                 <input
                   id="region"
@@ -171,7 +171,7 @@ function ShopSettings(props) {
                 />
               </div>
 
-              <div className="input-field col s12">
+              <div className="input-field custominpt col s12">
                 <p>Type</p>
                 <input
                   id="shoptype"
@@ -182,7 +182,7 @@ function ShopSettings(props) {
                   className="validate"
                 />
               </div>
-              <div className="input-field col s12">
+              <div className="input-field custominpt col s12">
                 <h5>Settings</h5>
 
                 <div className="switch">
@@ -205,7 +205,7 @@ function ShopSettings(props) {
                 </div>
               </div>
 
-              <div className="input-field col s12">
+              <div className="input-field custominpt col s12">
                 <div>Backup email</div>
                 <input
                   id="shoptype"
@@ -228,7 +228,7 @@ function ShopSettings(props) {
               <h5 className="red-text">Delete Shop</h5>
             </Link>
             <div className="row">
-              <div className="input-field col s12 center">
+              <div className="input-field custominpt col s12 center">
                 <button className="btn btn-primary">
                   <i className="material-icons left ">save</i>Update
                 </button>

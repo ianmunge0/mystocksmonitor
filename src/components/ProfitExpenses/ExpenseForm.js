@@ -24,6 +24,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const getMonth = (monthStr) => {
+  return new Date(monthStr + "-1-01").getMonth() + 1;
+};
+
 function ExpenseForm(props) {
   const [error, setError] = useState("");
   const [expense, setExpense] = useState({
@@ -55,10 +59,13 @@ function ExpenseForm(props) {
       expense.attendantid = 0;
       expense.action = "add";
       expense.type = 0;
+      expense.itemtype = "out";
+
       expense.adminid = reactLocalStorage.getObject("userdata").serialno;
       expense.shopid = reactLocalStorage.getObject("userdata").default_shop;
       var dd = new Date().getTime();
       expense.date_time = moment(dd).format("YYYY-MM-DD hh:mm:ss");
+
       console.log(expense);
 
       Api.get(`/profitandexpense.php`, {

@@ -9,12 +9,7 @@ export const getTodayExpenses = (expense) => {
       type: LOADING,
       loading: true,
     });
-    // var expense = {};
-    // expense.action = "all";
-    if (expense.type == "prev") {
-      counter += 1;
-      expense.counter = counter;
-    }
+    console.log(reactLocalStorage.getObject("userdata").default_shop);
 
     expense.shopid = reactLocalStorage.getObject("userdata").default_shop;
     var dd = new Date().getTime();
@@ -39,13 +34,48 @@ export const getTodayExpenses = (expense) => {
   };
 };
 
+export const getPEA = (fromtimeStamp, totimestamp) => {
+  return (dispatch) => {
+    dispatch({
+      type: LOADING,
+      loading: true,
+    });
+    console.log("getEnPSummary", {
+      params: moment(fromtimeStamp).format("YYYY-MM-DD hh:mm:ss"),
+      totimeStamp: moment(totimestamp).format("YYYY-MM-DD hh:mm:ss"),
+      shopid: reactLocalStorage.getObject("userdata").default_shop,
+      action: "graphprofitexpense",
+    });
+    Api.get(`/profitandexpense.php`, {
+      params: {
+        fromdate: moment(fromtimeStamp).format("YYYY-MM-DD hh:mm:ss"),
+        todate: moment(totimestamp).format("YYYY-MM-DD hh:mm:ss"),
+        shopid: reactLocalStorage.getObject("userdata").default_shop,
+        action: "graphprofitexpense",
+      },
+    })
+      .then((res) => {
+        const response = res.data;
+        console.log("profitandexpense", response);
+
+        dispatch({
+          type: "GET_EXPENSES_GRAPH",
+          response,
+        });
+      })
+      .catch((error) => {
+        // your error handling goes here}
+        console.log("error", error);
+      });
+  };
+};
 export const getEnPSummary = (payload) => {
   return (dispatch) => {
     dispatch({
       type: LOADING,
       loading: true,
     });
-    console.log(payload);
+    console.log("getEnPSummary", payload);
     Api.get(`/profitandexpense.php`, {
       params: payload,
     })

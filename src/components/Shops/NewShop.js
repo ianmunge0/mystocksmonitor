@@ -20,17 +20,17 @@ function NewShop(props) {
   const [shop, setShop] = useState({
     shop_name: "",
   });
+  const [error, setError] = useState("");
 
   const addShop = (e) => {
     e.preventDefault();
-    console.log(shop);
-
-    props.addShop(shop, props);
-  };
-
-  const handleShopRoles = (e, role) => {
-    var isChecked = e.target.checked;
-    var item = e.target.value;
+    setError("");
+    // console.log(shop, props);
+    if (shop.shop_name !== "") {
+      props.addShop(shop, props);
+    } else {
+      setError("shop name must be set");
+    }
   };
 
   const handleShopData = (e) => {
@@ -43,10 +43,10 @@ function NewShop(props) {
 
   return (
     <div>
-      <NavBar titleone="Add New Shop" />
       <div className="container">
         <Loader fullPage loading={props.shops.loading} />
         <div className="row">
+          <span className="red-text">{error}</span>
           <form className="col s12" onSubmit={addShop}>
             <div className="row">
               <div className="input-field col s12">

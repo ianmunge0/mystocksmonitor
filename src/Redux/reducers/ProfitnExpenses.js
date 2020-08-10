@@ -21,6 +21,14 @@ const ProfitnExpenses = (state = initialState, action) => {
         todayexpenses: action.response,
         loading: false,
       };
+
+    case "GET_EXPENSES_GRAPH":
+      console.log("GET_EXPENSES_GRAPH ", action);
+      return {
+        ...state,
+        graphexpensereport: action.response,
+        loading: false,
+      };
     case "GET_EXPENSES":
       console.log("GET_EXPENSES ", action);
       return {

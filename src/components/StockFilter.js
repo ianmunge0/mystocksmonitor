@@ -3,27 +3,26 @@ import { Link, withRouter } from "react-router-dom";
 import M from "materialize-css/dist/js/materialize.min.js";
 import { getReport } from "../Redux/Actions/Reports";
 import { connect } from "react-redux";
-import moment from "moment";
 import NavBar from "../components/Navigations/NavBar";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
+import moment from "moment";
 
 function StockFilter(props) {
-  // console.log("dates ", props.location.state.date.endDate);
+  // const [cash, setCash] = useState(0);
+  var fromtimeStamp = props.location.state.fromdate;
+  var totimestamp = props.location.state.todate;
+  console.log("StockFilter", (fromtimeStamp, totimestamp));
 
-  const [cash, setCash] = useState(0);
-  var fromdate = new Date(props.location.state.date.startDate);
-  var fromtimeStamp = fromdate.getTime();
-  var todate = new Date(props.location.state.date.endDate);
-  var totimestamp = todate.getTime();
   useEffect(() => {
     M.Modal.init(document.querySelectorAll(".modal"), {
       onOpenEnd: function (el) {},
     });
+    console.log(fromtimeStamp, totimestamp);
     props.getReport(fromtimeStamp, totimestamp);
   }, []);
 
-  var fromdateString = moment(Date.parse(fromdate)).format("LLLL");
+  // var fromdateString = moment(Date.parse(props.startDate)).format("LLLL");
 
   const deleteProduct = (item) => {
     // props.deleteStock(item);

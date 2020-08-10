@@ -1,9 +1,18 @@
-import { GET_ATTENDANTS, ADDED_ATTENDANT, GET_PROFILE } from "./actions";
+import {
+  GET_ATTENDANTS,
+  ADDED_ATTENDANT,
+  GET_PROFILE,
+  LOADING,
+} from "./actions";
 import Api from "../../api/api";
 import { reactLocalStorage } from "reactjs-localstorage";
 
-export const addAttendant = (attendant) => {
+export const addAttendant = (attendant, event) => {
   return (dispatch) => {
+    dispatch({
+      type: LOADING,
+    });
+
     attendant.action = "add";
     console.log("Adding", attendant);
 
@@ -18,6 +27,7 @@ export const addAttendant = (attendant) => {
           type: ADDED_ATTENDANT,
           attendants,
         });
+        event.reset();
       })
       .catch((error) => {
         // your error handling goes here}
@@ -81,7 +91,7 @@ export const getAttendants = (shopid) => {
   return (dispatch) => {
     Api.get(`/attendants.php`, {
       params: {
-        shopid,
+        shopid: reactLocalStorage.getObject("userdata").default_shop,
         action: "all",
       },
     })
@@ -126,7 +136,11 @@ export const getAdminprofile = () => {
 
 export const updateAdminProfile = (data) => {
   return (dispatch) => {
-    data.action = "update";
+    dispatch({
+      type: "LOADING",
+      loading: true,
+    });
+
     console.log(data);
     data.id = reactLocalStorage.getObject("userdata").serialno;
     Api.get(`/myprofile.php`, {
@@ -135,6 +149,10 @@ export const updateAdminProfile = (data) => {
       .then((res) => {
         const profile = res.data;
         console.log("updateProfile actions ", profile);
+
+        reactLocalStorage.setObject("userdata", profile.profile);
+        reactLocalStorage.setObject("shops", profile.shops);
+        reactLocalStorage.setObject("countries", profile.countries);
 
         dispatch({
           type: GET_PROFILE,

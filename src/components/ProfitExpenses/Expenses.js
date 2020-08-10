@@ -8,15 +8,36 @@ import Box from "@material-ui/core/Box";
 import { Link } from "react-router-dom";
 import ExpenseForm from "./ExpenseForm";
 import { connect } from "react-redux";
-import { getTodayExpenses } from "../../Redux/Actions/ProfitnExpenses";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
+import { reactLocalStorage } from "reactjs-localstorage";
+import Api from "../../api/api";
+import moment from "moment";
 
 function Expenses(props) {
-  // const [expenses, setExpense] = useState([]);
-  // var expenses = [];
+  const [expenses, setExpense] = useState([]);
+  const [loading, setLoading] = useState([]);
   useEffect(() => {
-    props.getTodayExpenses();
+    var data = {};
+
+    setLoading(true);
+    var dd = new Date().getTime();
+    Api.get(`/profitandexpense.php`, {
+      params: {
+        shopid: reactLocalStorage.getObject("userdata").default_shop,
+        date_time: moment(dd).format("YYYY-MM-DD hh:mm:ss"),
+        action: "all",
+      },
+    })
+      .then((res) => {
+        var response = res.data;
+        setExpense(response);
+        setLoading(false);
+      })
+      .catch((error) => {
+        // your error handling goes here}
+        console.log("error", error);
+      });
   }, []);
 
   function TabPanel(props) {
@@ -74,8 +95,6 @@ function Expenses(props) {
     setValue(newValue);
   };
 
-  console.log("expenses component", props);
-  //   render() {
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -89,13 +108,13 @@ function Expenses(props) {
           <LinkTab label="Today's" href="/trash" {...a11yProps(1)} />
         </Tabs>
       </AppBar>
-      <Loader fullPage loading={props.expenses.profitnexpense.loading} />
+      <Loader fullPage loading={loading} />
       <TabPanel value={value} index={0}>
         <ExpenseForm />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <ul className="collection">
-          {props.expenses.profitnexpense.todayexpenses.map((value, index) => (
+          {expenses.map((value, index) => (
             <Link to="#" className="collection-item avatar" key={index}>
               <div className="col s10">
                 <i className="material-icons circle">folder</i>
@@ -114,9 +133,4 @@ function Expenses(props) {
 const mapStateToProps = (state) => ({
   expenses: state,
 });
-const mapDispacthToProps = (dispatch) => {
-  return {
-    getTodayExpenses: () => dispatch(getTodayExpenses()),
-  };
-};
-export default connect(mapStateToProps, mapDispacthToProps)(Expenses);
+export default connect(mapStateToProps)(Expenses);

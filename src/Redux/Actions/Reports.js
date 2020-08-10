@@ -3,17 +3,22 @@ import Api from "../../api/api";
 import { reactLocalStorage } from "reactjs-localstorage";
 import moment from "moment";
 
-export const getReport = (fromtimeStamp, totimeStamp) => {
+export const getReport = (fromtime, totime) => {
   return (dispatch) => {
     dispatch({
       type: LOADING,
       loading: true,
     });
+    console.log({
+      fromtimeStamp: moment(fromtime).format("YYYY-MM-DD hh:mm:ss"),
+      totimeStamp: moment(totime).format("YYYY-MM-DD hh:mm:ss"),
+      shop: reactLocalStorage.getObject("userdata").default_shop,
+    });
 
     Api.get(`/reports.php`, {
       params: {
-        fromtimeStamp: moment(fromtimeStamp).format("YYYY-MM-DD hh:mm:ss"),
-        totimeStamp: moment(totimeStamp).format("YYYY-MM-DD hh:mm:ss"),
+        fromtimeStamp: moment(fromtime).format("YYYY-MM-DD hh:mm:ss"),
+        totimeStamp: moment(totime).format("YYYY-MM-DD hh:mm:ss"),
         shop: reactLocalStorage.getObject("userdata").default_shop,
       },
     })

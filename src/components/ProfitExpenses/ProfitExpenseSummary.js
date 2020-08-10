@@ -8,11 +8,8 @@ import "react-overlay-loader/styles.css";
 import moment from "moment";
 
 function ProfitExpenseSummary(props) {
-  var fromdate = new Date(props.location.state.date.startDate);
-  var fromtimestamp = fromdate.getTime();
-  var todate = new Date(props.location.state.date.endDate);
-  var totimestamp = todate.getTime();
-  var fromdateString = moment(Date.parse(fromdate)).format("LLLL");
+  var fromtimestamp = props.location.state.fromdate;
+  var totimestamp = props.location.state.todate;
 
   useEffect(() => {
     var item = {};
@@ -23,17 +20,6 @@ function ProfitExpenseSummary(props) {
     item.shopid = reactLocalStorage.getObject("userdata").default_shop;
     props.getEnPSummary(item);
   }, []);
-
-  const goToCashSales = (items) => {
-    console.log("goToCashSales", items);
-
-    props.history.push({
-      pathname: "/cashsaleshistory",
-      state: { items: "test" },
-    });
-  };
-
-  // console.log("sum ", props.loading);
   console.log("pp", props.location.state.date);
   return (
     <>
@@ -57,11 +43,6 @@ function ProfitExpenseSummary(props) {
                     credit: props.profitnexpense.profitnexpense.oncredit,
                   },
                 }}
-                // onClick={() => {
-                //   goToCashSales(
-                //     props.profitnexpense.profitnexpense.cashsalesitems
-                //   );
-                // }}
                 className="collection-item"
               >
                 <div className="row">

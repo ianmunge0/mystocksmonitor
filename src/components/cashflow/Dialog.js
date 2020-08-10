@@ -63,6 +63,7 @@ function NewExpenseDialog(props) {
       expense.attendantid = 0;
       expense.type = 1;
       expense.itemtype = props.type;
+      expense.from = "dialog";
       expense.adminid = reactLocalStorage.getObject("userdata").serialno;
       expense.shopid = reactLocalStorage.getObject("userdata").default_shop;
       var dd = new Date().getTime();

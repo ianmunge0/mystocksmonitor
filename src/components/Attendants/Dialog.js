@@ -16,7 +16,7 @@ import { connect } from "react-redux";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
 import Slide from "@material-ui/core/Slide";
-import { reactLocalStorage } from "reactjs-localstorage";
+import Api from "../../api/api";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -30,11 +30,21 @@ const useStyles = makeStyles((theme) => ({
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-function CountryDialog(props) {
+export default function CountryDialog(props) {
   useEffect(() => {
-    props.getShops();
+    Api.get(`/myprofile.php`, {
+      params: { action: "countries" },
+    })
+      .then((res) => {
+        setCountries(res.data);
+      })
+      .catch((error) => {
+        // your error handling goes here}
+        console.log("error", error);
+      });
   }, []);
   const classes = useStyles();
+  const [countries, setCountries] = useState({});
 
   const changeDefaultShop = (country) => {
     // setCountry(country);
@@ -43,14 +53,12 @@ function CountryDialog(props) {
   };
   // const [country, setCountry] = useState({});
 
-  console.log(props);
-
   return (
     <Dialog
       fullScreen
       open={props.open}
       onClose={props.handleClose}
-      setcountry={props.setdcountry}
+      setdcountry={props.setdcountry}
       TransitionComponent={Transition}
     >
       {/* <Loader fullPage loading={props.shops.loading} /> */}
@@ -70,28 +78,17 @@ function CountryDialog(props) {
         </Toolbar>
       </AppBar>
       <List>
-        {reactLocalStorage.getObject("countries").map((value, index) => (
-          <div key={index}>
-            <ListItem button onClick={() => changeDefaultShop(value)}>
-              <ListItemText primary={value.name} />
-            </ListItem>
-            <Divider />
-          </div>
-        ))}
+        {countries.length > 0
+          ? countries.map((value, index) => (
+              <div key={index}>
+                <ListItem button onClick={() => changeDefaultShop(value)}>
+                  <ListItemText primary={value.name} />
+                </ListItem>
+                <Divider />
+              </div>
+            ))
+          : ""}
       </List>
     </Dialog>
   );
 }
-
-const mapStateToProps = (state) => ({
-  shops: state.shops,
-  error: state.shops,
-});
-
-const mapDispacthToProps = (dispatch) => {
-  return {
-    getShops: (shopid) => dispatch(getShops(shopid)),
-    setDeafultShop: (shopid, props) => dispatch(setDeafultShop(shopid, props)),
-  };
-};
-export default connect(mapStateToProps, mapDispacthToProps)(CountryDialog);

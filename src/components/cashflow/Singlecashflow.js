@@ -34,8 +34,6 @@ function Singlecashflow(props) {
     var option = d.getMonth() + 1;
     const input = getMonth(option) + "-" + d.getFullYear();
     const output = moment(input, "MM-YY");
-    console.log("Start of the month:", output.startOf("month").format("LL"));
-    console.log("End of the month:", output.endOf("month").format("LL"));
 
     expense.fromdate = moment(output.startOf("month").format("LL")).format(
       "YYYY-MM-DD hh:mm:ss"
@@ -78,7 +76,17 @@ function Singlecashflow(props) {
     return new Date(monthStr + "-1-01").getMonth() + 1;
   };
 
+  function isString(obj) {
+    return Object.prototype.toString.call(obj) === "[object String]";
+  }
+
   const handleClosee = (option) => {
+    option = option
+      ? isString(option)
+        ? option
+        : options[d.getMonth()]
+      : options[d.getMonth()];
+
     setAnchorEl(null);
     expense.action = "cashflow";
     const input = getMonth(option) + "-" + d.getFullYear();
@@ -90,11 +98,12 @@ function Singlecashflow(props) {
     expense.todate = moment(output.endOf("month").format("LL")).format(
       "YYYY-MM-DD hh:mm:ss"
     );
+    console.log("month", option);
     setMonth(option);
     props.getTodayExpenses(expense);
   };
 
-  console.log("props", props.expenses.profitnexpense.todayexpenses.cashinlist);
+  console.log("props", props.expenses.profitnexpense.todayexpenses);
 
   if (props.expenses.profitnexpense.loading) {
     return <Loader fullPage loading={props.expenses.profitnexpense.loading} />;
@@ -105,7 +114,7 @@ function Singlecashflow(props) {
       <div className="row  z-depth-3" style={{ paddingBottom: 20 }}>
         <div className="col s12 center">
           <h5>
-            Cash in hand <br />
+            Cash in hand <br />{" "}
             {props.expenses.profitnexpense.todayexpenses.cash_in_hand}/=
           </h5>
         </div>

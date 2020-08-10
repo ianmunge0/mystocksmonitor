@@ -90,9 +90,10 @@ function Profile(props) {
   useEffect(() => {
     // console.log("n", props.profile);
     // setCountry(props.profile.profile.countries);
-
-    getAdminprofile();
+    // getAdminprofile();
   }, []);
+
+  const [countries, setCountries] = useState({});
 
   const getAdminprofile = () => {
     Api.get(`/myprofile.php`, {
@@ -103,14 +104,14 @@ function Profile(props) {
     })
       .then((res) => {
         const profile = res.data;
-        console.log("admin getprofile actions ", profile);
+        console.log("admin getprofile actions ", profile.countries);
+        setProfile(profile.profile);
+        setCountries(profile.countries);
         props.dispatch({
           type: "GET_PROFILE",
           loading: false,
           profile: profile,
         });
-
-        setProfile(profile);
       })
       .catch((error) => {
         // your error handling goes here}
@@ -121,6 +122,8 @@ function Profile(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [error, setError] = useState("");
+  const [passworderror, setPassworderror] = useState("");
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -142,15 +145,20 @@ function Profile(props) {
     setError("");
 
     console.log(profile);
-    // if (profile["username"] === "") {
-    //   setError("you have not changed anything");
-    // } else {
-    //   // profile.id = props.profile.profile.attendatid;
-    //   profile.country = country.code;
-    //   console.log(profile);
-    //   props.updateAdminProfile(profile);
-    // }
+    if (profile["username"] === "") {
+      setError("you have not changed anything");
+    } else {
+      // profile.id = props.profile.profile.attendatid;
+      profile.country = country.code;
+      console.log(profile);
+      profile.action = "update";
+      props.updateAdminProfile(profile);
+    }
   };
+  const [password, setPassword] = useState({
+    password: "",
+    confirmpassword: "",
+  });
 
   const [profile, setProfile] = useState({
     username: "",
@@ -162,22 +170,43 @@ function Profile(props) {
       ...profile,
       [e.target.id]: e.target.value,
     });
-    console.log("handleProfileData", profile);
   };
-  if (!props.profile.profile) {
-    return <Loader fullPage loading={props.profile.loading} />;
-  }
+  // if (!props.profile.profile) {
+  //   return <Loader fullPage loading={props.profile.loading} />;
+  // }
 
-  // setProfile(props.profile.profile);
   const setdcountry = (data) => {
     setCountry(data);
   };
+  const changePassword = (e) => {
+    setPassword({
+      ...password,
+      [e.target.id]: e.target.value,
+    });
+  };
+  const updatePassword = (e) => {
+    e.preventDefault();
+    setPassworderror("");
+    console.log(password);
+    if (password["password"] === "" || password["confirmpassword"] === "") {
+      setPassworderror("password is empty");
+    } else {
+      if (password["password"] !== password["confirmpassword"]) {
+        setPassworderror("password must be the same");
+        return;
+      }
+      password.action = "password";
+      console.log(password);
+      props.updateAdminProfile(password);
+    }
+  };
   // const [country, setCountry] = useState({});
 
-  console.log("country", props.profile.profile.profile.country);
+  console.log("country list", profile);
   // console.log(props.profile.profile.username);
   return (
     <div className={classes.root}>
+      {/* <Loader fullPage loading={props.profile.loading} /> */}
       <AppBar position="static">
         <Tabs
           variant="fullWidth"
@@ -196,27 +225,29 @@ function Profile(props) {
           <div className="row">
             <TextField
               id="standard-select-currency-native"
-              className="col s12 "
-              value={
-                country ? country.name : props.profile.profile.profile.country
-              }
+              className="col s12 profileinputs"
+              value={reactLocalStorage.getObject("userdata").name}
               // onChange={setCountry}
               helperText="Please select your country"
               onClick={() => handleClickOpen()}
             />
-            <Dialog
-              countries={props.profile.profile.countries}
-              fullScreen
-              open={open}
-              setdcountry={setdcountry}
-              handleClose={handleClose}
-            />
+            {profile ? (
+              <Dialog
+                countries={countries}
+                fullScreen
+                open={open}
+                setdcountry={setdcountry}
+                handleClose={handleClose}
+              />
+            ) : (
+              ""
+            )}
 
             <TextField
               id="username"
               className="col s12 profileinputs"
               onChange={handleProfileData}
-              defaultValue={props.profile.profile.profile.username}
+              defaultValue={reactLocalStorage.getObject("userdata").username}
               helperText="Username"
             />
             <TextField
@@ -224,13 +255,15 @@ function Profile(props) {
               className="col s12 profileinputs"
               onChange={handleProfileData}
               defaultValue="Default Value"
-              defaultValue={props.profile.profile.profile.emailaddress}
+              defaultValue={
+                reactLocalStorage.getObject("userdata").emailaddress
+              }
               helperText="Email"
             />
             <TextField
               id="phone"
               className="col s12 profileinputs"
-              defaultValue={props.profile.profile.profile.phoneno}
+              defaultValue={reactLocalStorage.getObject("userdata").phoneno}
               onChange={handleProfileData}
               helperText="Phone number"
             />
@@ -243,7 +276,30 @@ function Profile(props) {
         </form>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Page Two
+        <span className="red-text">{passworderror}</span>
+        <form onSubmit={updatePassword}>
+          <div className="row">
+            <TextField
+              id="password"
+              className="col s12 profileinputs"
+              onChange={changePassword}
+              helperText="Password"
+              onClick={() => handleClickOpen()}
+            />
+            <TextField
+              id="confirmpassword"
+              className="col s12 profileinputs"
+              onChange={changePassword}
+              helperText="New Password"
+              onClick={() => handleClickOpen()}
+            />
+            <div>
+              <button style={{ marginTop: 30 }} className="btn btn-primary">
+                Update
+              </button>
+            </div>
+          </div>
+        </form>
       </TabPanel>
     </div>
   );

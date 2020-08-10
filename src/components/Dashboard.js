@@ -6,8 +6,25 @@ import { Link } from "react-router-dom";
 import { reactLocalStorage } from "reactjs-localstorage";
 import Button from "@material-ui/core/Button";
 import ShopsDialog from "./Shops/SelectDefaultShop";
-
+import Snackbar from "@material-ui/core/Snackbar";
+import { makeStyles } from "@material-ui/core/styles";
+const useStyles = makeStyles((theme) => ({
+  "@global": {
+    body: {
+      backgroundColor: theme.palette.background.paper,
+    },
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  snackbar: {
+    [theme.breakpoints.down("xs")]: {
+      bottom: 30,
+    },
+  },
+}));
 function Dashboard(props) {
+  const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -89,6 +106,23 @@ function Dashboard(props) {
           title="Subscriptions"
           icon="subscriptions"
           route="/"
+        />
+        <Snackbar
+          onClick={handleClickOpen}
+          open={
+            reactLocalStorage.getObject("userdata").default_shop === "" ||
+            reactLocalStorage.getObject("userdata").default_shop === null
+              ? true
+              : false
+          }
+          autoHideDuration={6000}
+          message="Set Default Shop"
+          action={
+            <Button color="inherit" size="small">
+              SetUp
+            </Button>
+          }
+          className={classes.snackbar}
         />
       </div>
     </>

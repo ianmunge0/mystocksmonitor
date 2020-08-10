@@ -4,7 +4,7 @@ import "./App.css";
 import { connect } from "react-redux";
 import { logout } from "./Redux/Actions";
 
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, IndexRedirect } from "react-router-dom";
 import StockSetupold from "./components/StockSetup";
 import EditStock from "./components/Stock/EditStock";
 import NavBar from "./components/Navigations/NavBar";
@@ -40,62 +40,78 @@ import SingleSales from "./components/Sales/SingleSales";
 import StockSetup from "./components/Stocks/StockSetup";
 import Expenses from "./components/ProfitExpenses/Expenses";
 import Profile from "./components/Profile/Profile";
+import InititalPage from "./components/Initial/Initialpage";
+import Reset from "./components/Initial/Reset";
+import ProductsAnalysis from "./components/Analysis/ProductsAnalysis";
+import ProfitandExpenseAnalysis from "./components/Analysis/ProfitandExpenseAnalysis";
 
 function App(props) {
   const loggedin = useSelector((state) => state.login);
 
-  console.log(props);
+  // console.log(props);
   return (
     <React.Fragment>
       <>
-        {/* {loggedin.loggedin ? (
-          <div className=" s12 m4 l4 xl4 side-Wrap hide-on-med-and-down">
-            <SideNavbar />
-          </div>
-        ) : (
-          ""
-        )}
-        <div
-          className={
-            loggedin.loggedin ? " s12 m12 l8 xl8" : " s12 m12 l12 xl12"
-          }
-        > */}
         <Switch>
           {/* <Main /> */}
+          {/* <Route exact path="" component={DefaultPage} /> */}
+          {/* <IndexRedirect to="/" /> */}
           <Route exact path="/" component={DefaultPage} />
-          {/* <Route path="" component={DefaultPage} /> */}
+          <Route path="/initialshopspage" component={InititalPage} />
           <Route path="/login/:type" component={Login} />
+          <Route path="/reset" component={Reset} />
           <Route path="/register" component={Register} />
 
-          <ProtectedRoute path="/stocksetup" component={StockSetup} />
+          <ProtectedRoute
+            title="Stock Setup"
+            path="/stocksetup"
+            component={StockSetup}
+          />
           <ProtectedRoute
             title="Dashboard"
             path="/dashboard"
             component={Dashboard}
           />
-          <ProtectedRoute path="/stocksetupold" component={StockSetupold} />
+          <ProtectedRoute
+            title="Stock Setup"
+            path="/stocksetupold"
+            component={StockSetupold}
+          />
           <ProtectedRoute title="All Shops" path="/shops" component={Shops} />
           <ProtectedRoute path="/shopsettings/:id" component={ShopSettings} />
-          <ProtectedRoute path="/stockinmanager" component={StockInManager} />
+          <ProtectedRoute
+            title="Stock Report"
+            path="/stockinmanager"
+            component={StockInManager}
+          />
           <ProtectedRoute
             path="/salesmanager"
+            backlink="dashboard"
             title="Sales"
             settings="sales"
             component={SalesManager}
           />
-          <ProtectedRoute path="/newsale" component={NewCashSale} />
-          <ProtectedRoute path="/newsale" component={NewCashSale} />
+          <ProtectedRoute
+            backlink="salesmanager"
+            path="/newsale"
+            component={NewCashSale}
+          />
           <Route path="/salesproductlist" component={SalesProductList} />
           <ProtectedRoute path="/salesreceipts" component={SalesReceipts} />
           <ProtectedRoute path="/singlereceipt" component={SingleSales} />
           <ProtectedRoute
             path="/profitexpense"
-            title="Profit & Expenses"
+            title="Profit "
             settings="profitnexpenses"
             component={ProfitExpensesManager}
           />
-          <ProtectedRoute path="/attendants" component={Attendants} />
           <ProtectedRoute
+            title="Attendants"
+            path="/attendants"
+            component={Attendants}
+          />
+          <ProtectedRoute
+            title="Attendant Profile"
             path="/attendantsprofile/:id"
             component={AttendantsProfile}
           />
@@ -119,6 +135,10 @@ function App(props) {
             component={ProfitExpenseSummary}
           />
           <ProtectedRoute
+            path="/profitandexpenseanalysis"
+            component={ProfitandExpenseAnalysis}
+          />
+          <ProtectedRoute
             path="/cashsaleshistory"
             component={CashSalesHistory}
           />
@@ -127,9 +147,12 @@ function App(props) {
           <ProtectedRoute path="/cashflow" component={Singlecashflow} />
           <ProtectedRoute path="/counthistory" component={CountHistory} />
           <ProtectedRoute path="/stockfilter" component={StockFilter} />
-          <Route path="*" component={DefaultPage} />
+          <ProtectedRoute
+            title="Product Analysis"
+            path="/productsanalysis"
+            component={ProductsAnalysis}
+          />
         </Switch>
-        {/* </div> */}
       </>
     </React.Fragment>
   );

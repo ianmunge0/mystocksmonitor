@@ -73,10 +73,25 @@ main {
 .MuiSelect-select {
   padding: 15px 0 !important;
 }
-.profileinputs input,
+.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon
+  .MuiAutocomplete-inputRoot {
+  padding: 0px !important;
+}
+.MuiOutlinedInput-notchedOutline {
+  border: none !important;
+}
+.MuiInputLabel-outlined {
+  transform: translate(-2px, 0px) scale(1) !important;
+}
+.MuiAutocomplete-root.MuiAutocomplete-hasClearIcon.MuiAutocomplete-hasPopupIcon {
+  width: 270px !important;
+  margin-left: 30px;
+}
+/* .profileinputs input,
 .profileinputs input:focus {
   border-bottom: none !important;
-}
+  padding-left: 10px !important;
+} */
 .expensetom .card-content {
   padding: 10px 0;
 }
@@ -237,11 +252,21 @@ body {
     min-height: 40px !important;
   }
 }
-.tabwrap > div input {
+.custominpt {
+  padding: 0 !important;
+  margin: 3px;
+}
+.attendant-tabs .MuiAppBar-colorPrimary {
+  color: #fff;
+  background-color: #f50057;
+  box-shadow: none;
+  border-bottom: 1px solid;
+}
+/* .tabwrap > div input {
   border-bottom: 0px !important;
 
   padding-left: 5px !important;
-}
+} */
 .tabwrap > div {
   padding-left: 5px !important;
   padding-right: 5px !important;

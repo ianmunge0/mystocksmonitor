@@ -41,7 +41,8 @@ export const addShop = (shop, props) => {
           type: ADDED_SHOP,
           shops,
         });
-        props.history.push("/dashboard");
+        window.location = "/dashboard";
+        // props.history.push("/dashboard");
       })
       .catch((error) => {
         // your error handling goes here}
@@ -54,30 +55,39 @@ export const getShops = (id) => {
   return (dispatch) => {
     console.log("getting shops ");
 
+    console.log({
+      id: reactLocalStorage.getObject("userdata").serialno,
+      action: "all",
+    });
+
     dispatch({
       type: LOADING,
       loading: true,
     });
 
-    Api.get(`/shops.php`, {
-      params: {
-        id: reactLocalStorage.getObject("userdata").serialno,
-        action: "all",
-      },
-    })
-      .then((res) => {
-        const shops = res.data;
-        console.log("getShops", shops);
-
-        dispatch({
-          type: GET_SHOPS,
-          shops,
-        });
+    if (reactLocalStorage.getObject("userdata").serialno) {
+      Api.get(`/shops.php`, {
+        params: {
+          id: reactLocalStorage.getObject("userdata").serialno,
+          action: "all",
+        },
       })
-      .catch((error) => {
-        // your error handling goes here}
-        console.log("error", error);
-      });
+        .then((res) => {
+          const shops = res.data;
+          console.log("getShops", shops);
+
+          dispatch({
+            type: GET_SHOPS,
+            shops,
+          });
+        })
+        .catch((error) => {
+          // your error handling goes here}
+          console.log("error", error);
+        });
+    } else {
+      window.location = "/login/admin";
+    }
   };
 };
 

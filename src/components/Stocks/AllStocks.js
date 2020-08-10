@@ -129,6 +129,10 @@ function AllStocks(props) {
     </div>
   );
 
+  if (rows.length === 0) {
+    return <h5>No stock available</h5>;
+  }
+
   return (
     <Paper className={classes.root}>
       <TableContainer className={classes.container}>

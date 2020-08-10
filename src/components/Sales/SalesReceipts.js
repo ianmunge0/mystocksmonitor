@@ -7,14 +7,13 @@ import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
 
 function SalesReceipts(props) {
-  var fromdate = new Date(props.location.state.date.startDate);
-  var fromtimeStamp = fromdate.getTime();
-  var todate = new Date(props.location.state.date.endDate);
-  var totimestamp = todate.getTime();
-  var fromdateString = moment(Date.parse(fromdate)).format("LLLL");
+  var fromtimeStamp = props.location.state.fromdate;
+  var totimestamp = props.location.state.todate;
+  console.log("ss 1", fromtimeStamp);
+  console.log("ss 2", totimestamp);
 
   useEffect(() => {
-    props.getSalesReceipts(fromtimeStamp, totimestamp);
+    props.getSalesReceipts(fromtimeStamp, totimestamp, "");
   }, []);
 
   console.log("list sales", props.receipts.receipts);
@@ -47,7 +46,7 @@ function SalesReceipts(props) {
           Receipt No: #{value}
         </span>
         <p>
-          Items: {props.receipts.receipts[value].items.length}, Total:{" "}
+          {/* Items: {props.receipts.receipts[value].items.length}, Total:{" "} */}
           {props.receipts.receipts[value].total}, Cash:
           {props.receipts.receipts[value].cash}, Credit:
           {props.receipts.receipts[value].credit} <br />
@@ -82,8 +81,8 @@ const mapStateToProps = (state) => ({
 });
 const mapDispacthToProps = (dispatch) => {
   return {
-    getSalesReceipts: (timeStamp, totimestamp) =>
-      dispatch(getSalesReceipts(timeStamp, totimestamp)),
+    getSalesReceipts: (timeStamp, totimestamp, type) =>
+      dispatch(getSalesReceipts(timeStamp, totimestamp, type)),
   };
 };
 export default connect(mapStateToProps, mapDispacthToProps)(SalesReceipts);
