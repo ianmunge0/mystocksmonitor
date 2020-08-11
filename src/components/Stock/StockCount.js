@@ -31,7 +31,6 @@ function StockCount(props) {
 
   return (
     <div>
-      <NavBar titleone="Stock Count" />
       <Loader fullPage loading={props.updateresponse.stock.loading} />
       <ul className="collection">
         <div className="collection-item">
@@ -60,7 +59,7 @@ function StockCount(props) {
                     <div className="col s12">
                       <input
                         type="text"
-                        className="editinput center"
+                        className="editinput center countinput"
                         onChange={(e) => handleCount(item.stockserial_key, e)}
                         defaultValue={item.stock_qty}
                         id={item.stockserial_key}

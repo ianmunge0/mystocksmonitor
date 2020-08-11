@@ -4,8 +4,8 @@ import "./App.css";
 import { connect } from "react-redux";
 import { logout } from "./Redux/Actions";
 
-import { Switch, Route } from "react-router-dom";
-import StockSetup from "./components/StockSetup";
+import { Switch, Route, IndexRedirect } from "react-router-dom";
+import StockSetupold from "./components/StockSetup";
 import EditStock from "./components/Stock/EditStock";
 import NavBar from "./components/Navigations/NavBar";
 import Dashboard from "./components/Dashboard";
@@ -19,7 +19,6 @@ import Attendants from "./components/Attendants/Attendants";
 import AttendantsProfile from "./components/Attendants/Attendantprofile";
 import CountHistory from "./components/Stock/CountHistory";
 import Counts from "./components/Stock/Counts";
-// import Count from "./components/Counts";
 import DefaultPage from "./components/Initial/index";
 import Login from "./components/Initial/Login";
 import { useSelector } from "react-redux";
@@ -33,71 +32,128 @@ import Auth from "./components/AuthCheck";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import Shops from "./components/Shops/Shops";
 import ShopSettings from "./components/Shops/ShopSettings";
+import NewShops from "./components/Shops/NewShop";
+import NewCashSale from "./components/CashSales/NewCashSale";
+import SalesProductList from "./components/CashSales/SalesProductList";
+import SalesReceipts from "./components/Sales/SalesReceipts";
+import SingleSales from "./components/Sales/SingleSales";
+import StockSetup from "./components/Stocks/StockSetup";
+import Expenses from "./components/ProfitExpenses/Expenses";
+import Profile from "./components/Profile/Profile";
+import InititalPage from "./components/Initial/Initialpage";
+import Reset from "./components/Initial/Reset";
+import ProductsAnalysis from "./components/Analysis/ProductsAnalysis";
+import ProfitandExpenseAnalysis from "./components/Analysis/ProfitandExpenseAnalysis";
 
 function App(props) {
   const loggedin = useSelector((state) => state.login);
 
-  console.log("loggedin", props.logoutres.loggedin);
-
+  // console.log(props);
   return (
     <React.Fragment>
-      <div className="row">
-        {loggedin.loggedin ? (
-          <div className=" s12 m4 l4 xl4 side-Wrap hide-on-med-and-down">
-            <SideNavbar />
-          </div>
-        ) : (
-          ""
-        )}
-        <div
-          className={
-            loggedin.loggedin ? " s12 m12 l8 xl8" : " s12 m12 l12 xl12"
-          }
-        >
-          <Switch>
-            <Route exact path="/" component={DefaultPage} />
-            {/* <ProtectedRoute exact path="" component={DefaultPage} /> */}
-            <Route path="/login/:type" component={Login} />
-            <Route path="/register" component={Register} />
+      <>
+        <Switch>
+          {/* <Main /> */}
+          {/* <Route exact path="" component={DefaultPage} /> */}
+          {/* <IndexRedirect to="/" /> */}
+          <Route exact path="/" component={DefaultPage} />
+          <Route path="/initialshopspage" component={InititalPage} />
+          <Route path="/login/:type" component={Login} />
+          <Route path="/reset" component={Reset} />
+          <Route path="/register" component={Register} />
 
-            <ProtectedRoute path="/dashboard" component={Dashboard} />
-            <ProtectedRoute path="/stocksetup" component={StockSetup} />
-            <ProtectedRoute path="/shops" component={Shops} />
-            <ProtectedRoute path="/shopsettings/:id" component={ShopSettings} />
-            <ProtectedRoute path="/stockinmanager" component={StockInManager} />
-            <ProtectedRoute path="/salesmanager" component={SalesManager} />
-            <ProtectedRoute
-              path="/profitexpense"
-              component={ProfitExpensesManager}
-            />
-            <ProtectedRoute path="/attendants" component={Attendants} />
-            <ProtectedRoute
-              path="/attendantsprofile/:id"
-              component={AttendantsProfile}
-            />
-            <ProtectedRoute path="/units" component={Units} />
-            <ProtectedRoute path="/newstock" component={NewStock} />
-            <ProtectedRoute path="/counts/:timestamp" component={Counts} />
-            <ProtectedRoute path="/stockcount" component={StockCount} />
+          <ProtectedRoute
+            title="Stock Setup"
+            path="/stocksetup"
+            component={StockSetup}
+          />
+          <ProtectedRoute
+            title="Dashboard"
+            path="/dashboard"
+            component={Dashboard}
+          />
+          <ProtectedRoute
+            title="Stock Setup"
+            path="/stocksetupold"
+            component={StockSetupold}
+          />
+          <ProtectedRoute title="All Shops" path="/shops" component={Shops} />
+          <ProtectedRoute path="/shopsettings/:id" component={ShopSettings} />
+          <ProtectedRoute
+            title="Stock Report"
+            path="/stockinmanager"
+            component={StockInManager}
+          />
+          <ProtectedRoute
+            path="/salesmanager"
+            backlink="dashboard"
+            title="Sales"
+            settings="sales"
+            component={SalesManager}
+          />
+          <ProtectedRoute
+            backlink="salesmanager"
+            path="/newsale"
+            component={NewCashSale}
+          />
+          <Route path="/salesproductlist" component={SalesProductList} />
+          <ProtectedRoute path="/salesreceipts" component={SalesReceipts} />
+          <ProtectedRoute path="/singlereceipt" component={SingleSales} />
+          <ProtectedRoute
+            path="/profitexpense"
+            title="Profit "
+            settings="profitnexpenses"
+            component={ProfitExpensesManager}
+          />
+          <ProtectedRoute
+            title="Attendants"
+            path="/attendants"
+            component={Attendants}
+          />
+          <ProtectedRoute
+            title="Attendant Profile"
+            path="/attendantsprofile/:id"
+            component={AttendantsProfile}
+          />
+          <ProtectedRoute
+            path="/myprofile"
+            title="My Profile"
+            component={Profile}
+          />
+          <ProtectedRoute path="/units" component={Units} />
+          <ProtectedRoute
+            title="Add Expenses"
+            path="/expenses"
+            component={Expenses}
+          />
+          <ProtectedRoute path="/newstock" component={NewStock} />
+          <ProtectedRoute path="/counts/:timestamp" component={Counts} />
+          <ProtectedRoute path="/stockcount" component={StockCount} />
 
-            <ProtectedRoute
-              path="/profitexpensesummary"
-              component={ProfitExpenseSummary}
-            />
-            <ProtectedRoute
-              path="/cashsaleshistory"
-              component={CashSalesHistory}
-            />
+          <ProtectedRoute
+            path="/profitexpensesummary"
+            component={ProfitExpenseSummary}
+          />
+          <ProtectedRoute
+            path="/profitandexpenseanalysis"
+            component={ProfitandExpenseAnalysis}
+          />
+          <ProtectedRoute
+            path="/cashsaleshistory"
+            component={CashSalesHistory}
+          />
 
-            <ProtectedRoute path="/editstock/:id" component={EditStock} />
-            <ProtectedRoute path="/cashflow" component={Singlecashflow} />
-            <ProtectedRoute path="/counthistory" component={CountHistory} />
-            {/* <ProtectedRoute path="/count" component={Count} /> */}
-            <ProtectedRoute path="/stockfilter" component={StockFilter} />
-            <Route path="*" component={DefaultPage} />
-          </Switch>
-        </div>
-      </div>
+          <ProtectedRoute path="/editstock/:id" component={EditStock} />
+          <ProtectedRoute path="/cashflow" component={Singlecashflow} />
+          <ProtectedRoute path="/counthistory" component={CountHistory} />
+          <ProtectedRoute path="/stockfilter" component={StockFilter} />
+          <ProtectedRoute
+            title="Product Analysis"
+            path="/productsanalysis"
+            component={ProductsAnalysis}
+          />
+        </Switch>
+      </>
     </React.Fragment>
   );
 }

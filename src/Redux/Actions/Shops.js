@@ -1,9 +1,15 @@
-import { GET_SHOPS, ADDED_SHOP, GET_SHOP, LOADING } from "./actions";
+import {
+  GET_SHOPS,
+  ADDED_SHOP,
+  GET_SHOP,
+  LOADING,
+  SET_DEFAULT,
+} from "./actions";
 import Api from "../../api/api";
 import { reactLocalStorage } from "reactjs-localstorage";
 import { Redirect } from "react-router-dom";
 import React from "react";
-export const addShop = (shop) => {
+export const addShop = (shop, props) => {
   return (dispatch) => {
     dispatch({
       type: LOADING,
@@ -20,10 +26,23 @@ export const addShop = (shop) => {
         const shops = res.data;
         console.log("ADDED SHOP", shops);
 
+        if (
+          shop.id === reactLocalStorage.getObject("userdata").default_shop ||
+          reactLocalStorage.getObject("userdata").default_shop == ""
+        ) {
+          var initialdata = reactLocalStorage.getObject("userdata");
+          initialdata.default_shop =
+            shops.shops[shops.shops.length - 1]["serialno"];
+          initialdata.currentshop = shops.shops[shops.shops.length - 1];
+          reactLocalStorage.setObject("userdata", initialdata);
+        }
+        reactLocalStorage.setObject("shops", shops.shops);
         dispatch({
           type: ADDED_SHOP,
           shops,
         });
+        window.location = "/dashboard";
+        // props.history.push("/dashboard");
       })
       .catch((error) => {
         // your error handling goes here}
@@ -34,25 +53,41 @@ export const addShop = (shop) => {
 
 export const getShops = (id) => {
   return (dispatch) => {
-    Api.get(`/shops.php`, {
-      params: {
-        id: reactLocalStorage.getObject("userdata").serialno,
-        action: "all",
-      },
-    })
-      .then((res) => {
-        const shops = res.data;
-        console.log("getShops", shops);
+    console.log("getting shops ");
 
-        dispatch({
-          type: GET_SHOPS,
-          shops,
-        });
+    console.log({
+      id: reactLocalStorage.getObject("userdata").serialno,
+      action: "all",
+    });
+
+    dispatch({
+      type: LOADING,
+      loading: true,
+    });
+
+    if (reactLocalStorage.getObject("userdata").serialno) {
+      Api.get(`/shops.php`, {
+        params: {
+          id: reactLocalStorage.getObject("userdata").serialno,
+          action: "all",
+        },
       })
-      .catch((error) => {
-        // your error handling goes here}
-        console.log("error", error);
-      });
+        .then((res) => {
+          const shops = res.data;
+          console.log("getShops", shops);
+
+          dispatch({
+            type: GET_SHOPS,
+            shops,
+          });
+        })
+        .catch((error) => {
+          // your error handling goes here}
+          console.log("error", error);
+        });
+    } else {
+      window.location = "/login/admin";
+    }
   };
 };
 
@@ -88,10 +123,10 @@ export const deleteShop = (id) => {
 
 export const getShop = (id) => {
   return (dispatch) => {
-    dispatch({
-      type: LOADING,
-      loading: true,
-    });
+    // dispatch({
+    //   type: LOADING,
+    //   loading: true,
+    // });
     console.log({
       params: {
         id,
@@ -137,6 +172,41 @@ export const updateShop = (data) => {
           type: ADDED_SHOP,
           profile,
         });
+      })
+      .catch((error) => {
+        // your error handling goes here}
+        console.log("error", error);
+      });
+  };
+};
+
+export const setDeafultShop = (shopid, props) => {
+  return (dispatch) => {
+    dispatch({
+      type: LOADING,
+      loading: true,
+    });
+    Api.get(`/shops.php`, {
+      params: {
+        shopid,
+        owner: reactLocalStorage.getObject("userdata").serialno,
+        action: "default",
+      },
+    })
+      .then((res) => {
+        const response = res.data;
+        console.log("setDeafultShop actions ", response);
+        var data = reactLocalStorage.getObject("userdata");
+        data.currentshop = response.currentshop;
+        data.default_shop = response.currentshop.serialno;
+        reactLocalStorage.setObject("userdata", data);
+        dispatch({
+          type: SET_DEFAULT,
+          currentshop: response,
+        });
+
+        props.handleClose();
+        props.history.push("/dashboard");
       })
       .catch((error) => {
         // your error handling goes here}

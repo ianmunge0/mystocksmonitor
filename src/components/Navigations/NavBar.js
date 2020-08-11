@@ -92,24 +92,44 @@ function NavBar(props) {
           </a>
         ) : (
           <div className="row">
-            <div className="col s2">
-              <Link
-                to=""
-                onClick={() => {
-                  // console.log(props.history);
+            {reactLocalStorage.getObject("shops").length > 0 ? (
+              <div className="col s2">
+                <Link
+                  to=""
+                  onClick={() => {
+                    // console.log(props.history);
 
-                  props.history.goBack();
-                }}
-              >
-                <i className="material-icons" style={{ fontSize: 60 }}>
-                  keyboard_arrow_left
-                </i>
-              </Link>
-            </div>
+                    props.history.goBack();
+                  }}
+                >
+                  <i className="material-icons" style={{ fontSize: 60 }}>
+                    keyboard_arrow_left
+                  </i>
+                </Link>
+              </div>
+            ) : (
+              ""
+            )}
+
             <div className="col s10 ">
-              <div className="row " style={{ display: "inline-grid" }}>
-                <div className="nolineheight col s12">{props.titleone}</div>
-                <div className="nolineheight  col s12">{props.titletwo}</div>
+              <div className="row ">
+                {props.action ? (
+                  <div className="col s12">
+                    <div className="col s8">{props.titleone}</div>
+                    <div className="col s4">
+                      {props.action === "salesmanager" ? (
+                        <Link to="/newsale">Add +</Link>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="col s12">{props.titleone} </div>
+                    <div className=" col s12">{props.titletwo}</div>
+                  </>
+                )}
               </div>
             </div>
           </div>

@@ -27,7 +27,7 @@ function Counts(props) {
 
   return (
     <>
-      <NavBar titleone="Stock Count" />
+      {/* <NavBar titleone="Stock Count" /> */}
       <div className="nav-wrapper z-depth-3" style={{ padding: 5 }}>
         <Loader fullPage loading={props.loading} />
         <form>

@@ -24,6 +24,12 @@ const Attendants = (state = initialState, action) => {
         addingerror: action.attendants.message,
         loading: false,
       };
+    case "GET_ADMIN_PROFILE":
+      return {
+        ...state,
+        profile: action.profile,
+        loading: false,
+      };
     case GET_PROFILE:
       return {
         ...state,

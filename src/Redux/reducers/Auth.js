@@ -10,9 +10,23 @@ const initialState = {
 const AuthenticationReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOADING:
+      console.log("AuthenticationReducer LOADING", state);
       return {
         ...state,
         loading: true,
+      };
+    case "RESET_PASSWORD":
+      return {
+        ...state,
+        userdata: action.userdata,
+        loading: false,
+      };
+    case "COUNTRIES":
+      console.log("login countries");
+      return {
+        ...state,
+        countries: action.userdata,
+        loading: false,
       };
     case LOG_IN:
       console.log("login dispatch");
@@ -20,9 +34,12 @@ const AuthenticationReducer = (state = initialState, action) => {
         ...state,
         userdata: action.userdata,
         loggedin: action.userdata.status,
+        message:
+          action.userdata.status === false ? "wrong username or password" : "",
         loading: false,
       };
     case REG:
+      console.log("REG", state);
       return {
         ...state,
         userdata: action.userdata,

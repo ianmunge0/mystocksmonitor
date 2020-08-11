@@ -1,236 +1,247 @@
 import React, { useEffect, useState } from "react";
 import M from "materialize-css/dist/js/materialize.min.js";
-import NavBar from "../../components/Navigations/NavBar";
 import { getprofile, updateProfile } from "../../Redux/Actions/Attendants";
 import { connect } from "react-redux";
+import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
+import Checkbox from "@material-ui/core/Checkbox";
+import Badge from "@material-ui/core/Badge";
+import Api from "../../api/api";
+import Box from "@material-ui/core/Box";
+import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
+import Divider from "@material-ui/core/Divider";
+
+import PropTypes from "prop-types";
 
 function Attendantprofile(props) {
   useEffect(() => {
-    M.Tabs.init(document.querySelector(".tabs"), {
-      swipeable: true,
-    });
-
-    document.addEventListener("DOMContentLoaded", function () {
-      M.FormSelect.init(document.querySelectorAll("select"), {});
-    });
-    props.getprofile(props.match.params.id);
+    props.dispatch({ type: "LOADING" });
+    Api.get(`/attendants.php`, {
+      params: {
+        id: props.match.params.id,
+        action: "attendant_profile",
+      },
+    })
+      .then((res) => {
+        const profile = res.data;
+        setAttendant(profile);
+        setRole(profile.roles);
+        props.dispatch({
+          type: "GET_PROFILE",
+          profile,
+        });
+      })
+      .catch((error) => {
+        // your error handling goes here}
+        console.log("error", error);
+      });
   }, []);
+
+  function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        className="tabwrap"
+        id={`nav-tabpanel-${index}`}
+        aria-labelledby={`nav-tab-${index}`}
+        {...other}
+      >
+        {value === index && <Box p={3}>{children}</Box>}
+      </div>
+    );
+  }
+
+  TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
+  };
+
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      flexGrow: 1,
+      backgroundColor: theme.palette.background.paper,
+    },
+  }));
 
   const [error, setError] = useState("");
 
   const updateProfile = (e) => {
     e.preventDefault();
     setError("");
-    console.log(attendant);
-
-    if (attendant["password"] === "" && attendant["username"] === "") {
-      setError("you have not changed anything");
-    } else {
-      attendant.id = props.profile.profile.attendatid;
-      props.updateProfile(attendant);
+    // console.log(attendant);
+    attendantnew.id = attendant.attendantid;
+    if (attendantnew.password !== "") {
+      attendantnew.password = attendant.password;
     }
+    console.log("saving", attendantnew.sales_notifications);
+    if (attendantnew.sales_notifications !== "") {
+      attendantnew.sales_notifications =
+        attendantnew.sales_notifications === "on" ? "1" : "0";
+    }
+    if (attendantnew.blocked !== "") {
+      attendantnew.blocked = attendantnew.blocked === "on" ? "1" : "0";
+    }
+    var newrole = role.filter((t) => t.checked === true);
+    if (newrole.length > 0) {
+      const reducedArray = newrole.reduce(
+        (acc, curr) => `${acc}${curr.id},`,
+        ""
+      );
+      attendantnew.role = reducedArray.replace(/,$/, "");
+      // console.log(reducedArray.replace(/,$/, ""));
+    }
+    // if(role)
+    props.updateProfile(attendantnew);
   };
+
+  const [attendantnew, setNewAttendant] = useState({
+    username: "",
+    password: "",
+    sales_notifications: "",
+    blocked: "",
+  });
 
   const [attendant, setAttendant] = useState({
     username: "",
     password: "",
   });
-  const handleAttendantData = (e) => {
-    setAttendant({
-      ...attendant,
-      [e.target.id]: e.target.value,
+
+  const [role, setRole] = useState([]);
+
+  const setCheckedRole = (v, e) => {
+    role.map((v, i) => {
+      if (v.id === e.target.id && e.target.checked) {
+        role[i].checked = true;
+      }
+      if (v.id === e.target.id && e.target.checked === false) {
+        role[i].checked = false;
+      }
     });
-    console.log(attendant);
+    setRole(role);
   };
 
-  // console.log(props.profile.profile);
+  const handleAttendantData = (e) => {
+    setNewAttendant({
+      ...attendantnew,
+      [e.target.id]: e.target.value,
+    });
+    console.log("handleAttendantData", attendantnew);
+  };
+
+  console.log(attendant);
 
   return (
-    <div className="row">
-      <NavBar titleone="Stock Count" />
-      <div className="col s12 m12">
-        <div className="card">
-          <div className="card-content">
-            <div className="container">
-              <div className="col s12 m12">
-                <span>Last Seen ~ 20 minutes ago</span>
-              </div>
-              <div className="row  valign-wrapper">
-                <div className="col s6 m3">
-                  <img
-                    alt="test"
-                    className="circle left responsive-img"
-                    src="http://demo.geekslabs.com/materialize/v2.3/layout03/images/avatar.jpg"
-                  />
-                </div>
-                <div className="col s6 m3">
-                  <div className="row">
-                    <div className="col s12">
-                      <h6>Total Sales</h6>
-                    </div>
-                    <div className="col s12">
-                      <h6 style={{ fontSize: 12 }}>200</h6>
-                    </div>
-                  </div>
-                </div>
-                <div className="col s6 m3">
-                  <div className="row">
-                    <div className="col s12">
-                      <h6>Stocks</h6>
-                    </div>
-                    <div className="col s12">
-                      <h6 style={{ fontSize: 12 }}>0</h6>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+    <div className="container">
+      <div className="row">
+        <form className="col s12" onSubmit={updateProfile}>
+          <Loader fullPage loading={props.profile.loading} />
+          <div className="col s12">
+            <p className="red-text">{error}</p>
           </div>
-          <div className="card-tabs">
-            <ul className="tabs tabs-fixed-width">
-              <li className="tab">
-                <a href="#test4">Profile</a>
-              </li>
-              <li className="tab">
-                <a href="#test6">Settings</a>
-              </li>
-            </ul>
-          </div>
-          <div className="card-content grey lighten-4">
-            <div id="test4">
-              <div className="container">
-                <div className="row">
-                  <form className="col s12" onSubmit={updateProfile}>
-                    <div className="row">
-                      <div className="col s12">
-                        <p className="red-text">{error}</p>
-                      </div>
-                      <div className="input-field col s12">
-                        <i className="material-icons prefix">account_circle</i>
-                        <input
-                          id="username"
-                          type="text"
-                          placeholder="username"
-                          onChange={handleAttendantData}
-                          defaultValue={
-                            props.profile.profile
-                              ? props.profile.profile.username
-                              : ""
-                          }
-                          className="validate"
-                        />
-                      </div>
+          <div className="input-field col s12">
+            <i className="material-icons prefix">account_circle</i>
 
-                      <div className="input-field col s12">
-                        <i className="material-icons prefix">lock</i>
-                        <input
-                          onChange={handleAttendantData}
-                          id="password"
-                          type="text"
-                          className="validate"
-                        />
-                        <label htmlFor="password">password</label>
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="input-field col s12 center">
-                        <button className="btn btn-primary">
-                          <i className="material-icons left ">save</i>Update
-                        </button>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-            <div id="test6">
-              <form className="col s12">
-                <div className="switch">
-                  <label>
-                    <div className="row valign-wrapper">
-                      <div className="col s8">
-                        <h6>Sales notification </h6>
-                      </div>
-                      <div className="col s4">
-                        <input
-                          type="checkbox"
-                          defaultChecked={
-                            props.profile.profile
-                              ? props.profile.profile.sales_notifications ===
-                                "1"
-                                ? true
-                                : false
-                              : false
-                          }
-                        />
-                        <span className="lever"></span>
-                      </div>
-                    </div>
-                  </label>
-                </div>
-                <div className="switch">
-                  <label>
-                    <div className="row valign-wrapper">
-                      <div className="col s8">
-                        <h6>Block fred </h6>
-                      </div>
-                      <div className="col s4">
-                        <input
-                          defaultChecked={
-                            props.profile.profile
-                              ? props.profile.profile.blocked == "1"
-                                ? true
-                                : false
-                              : false
-                          }
-                          type="checkbox"
-                        />
-                        <span className="lever"></span>
-                      </div>
-                    </div>
-                  </label>
-                </div>
-                <h6>Roles</h6>
-                <div className="container">
-                  <div className="row">
-                    {props.profile.profile
-                      ? props.profile.profile.roles.map((value, key) => (
-                          <label className="col s6" key={key}>
-                            <input
-                              id={value["id"]}
-                              name={value["name"]}
-                              type="checkbox"
-                              defaultChecked={value["action"]}
-                              className="validate"
-                            />
-                            <span>{value["name"].split("_").join(" ")}</span>
-                          </label>
-                        ))
-                      : ""}
+            <input
+              // type="text"
+              id="username"
+              placeholder="username"
+              onChange={handleAttendantData}
+              defaultValue={attendant.username}
+              className="validate"
+            />
+          </div>
 
-                    {/* <label className="col s6">
+          <div className="input-field col s12">
+            <i className="material-icons prefix">lock</i>
+            <input
+              onChange={handleAttendantData}
+              id="password"
+              type="password"
+              className="validate"
+            />
+            <label htmlFor="password">password</label>
+          </div>
+          <div className="col s12">
+            <h6 style={{ marginTop: 30, marginBottom: 20 }}>Roles</h6>
+            <Divider />
+            {role.map((value, key) => (
+              <label className="col s6" key={key}>
+                <Checkbox
+                  id={value.id}
+                  name={value.name}
+                  defaultChecked={value.checked}
+                  // onChange={handleRoleData}
+                  onChange={(e) => setCheckedRole(value.id, e)}
+                  inputProps={{ "aria-label": "primary checkbox" }}
+                />
+
+                <span>{value.name.split("_").join(" ").toUpperCase()}</span>
+              </label>
+            ))}
+          </div>
+
+          <div className="col s12">
+            <h6 style={{ marginTop: 30, marginBottom: 20 }}>Settings</h6>
+            <Divider />
+            <div className="switch">
+              <label>
+                <div className="row valign-wrapper">
+                  <div className="col s8">
+                    <h6>Sales notification </h6>
+                  </div>
+                  {props.profile.profile ? (
+                    <div className="col s4">
+                      <input
+                        type="checkbox"
+                        id="sales_notifications"
+                        onChange={handleAttendantData}
+                        defaultChecked={attendant.sales_notifications}
+                      />
+                      <span className="lever"></span>
+                    </div>
+                  ) : (
+                    <div className="col s4">
                       <input type="checkbox" />
-                      <span>Edit product</span>
-                    </label>
-                    <label className="col s6">
-                      <input type="checkbox" />
-                      <span>Add Stock</span>
-                    </label>
-                    <label className="col s6">
-                      <input type="checkbox" />
-                      <span>Sales</span>
-                    </label>
-                    <label className="col s6">
-                      <input type="checkbox" />
-                      <span>View Sales</span>
-                    </label> */}
+                      <span className="lever"></span>
+                    </div>
+                  )}
+                </div>
+              </label>
+            </div>
+            <div className="switch">
+              <label>
+                <div className="row valign-wrapper">
+                  <div className="col s8">
+                    <h6>Block fred </h6>
+                  </div>
+                  <div className="col s4">
+                    {props.profile.profile ? (
+                      <input
+                        defaultChecked={attendant.blocked}
+                        onChange={handleAttendantData}
+                        id="blocked"
+                        type="checkbox"
+                      />
+                    ) : (
+                      ""
+                      // <input defaultChecked={false} type="checkbox" />
+                    )}
+                    <span className="lever"></span>
                   </div>
                 </div>
-              </form>
+              </label>
             </div>
           </div>
-        </div>
+          <div className="input-field col s12 center">
+            <button className="btn btn-primary col s12">
+              <i className="material-icons left ">save</i>Update
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
@@ -243,6 +254,7 @@ const mapDispacthToProps = (dispatch) => {
   return {
     getprofile: (id) => dispatch(getprofile(id)),
     updateProfile: (data) => dispatch(updateProfile(data)),
+    dispatch,
   };
 };
 export default connect(mapStateToProps, mapDispacthToProps)(Attendantprofile);
