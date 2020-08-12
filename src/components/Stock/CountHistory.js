@@ -5,17 +5,20 @@ import { connect } from "react-redux";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
 import NavBar from "../../components/Navigations/NavBar";
+import { reactLocalStorage } from "reactjs-localstorage";
 
 function CountHistory(props) {
   useEffect(() => {
-    props.getStockCountHistory(34);
+    props.getStockCountHistory(
+      reactLocalStorage.getObject("userdata").default_shop
+    );
   }, []);
 
-  console.log("CountHistory ", props.loading);
+  console.log("CountHistory ", props.stocks);
 
   return (
     <>
-      <NavBar titleone="Stock Count" />
+      {/* <NavBar titleone="Stock Count" /> */}
       <ul className="collection">
         <Loader fullPage loading={props.loading} />
         {props.stocks["items"]

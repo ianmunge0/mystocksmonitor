@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import M from "materialize-css/dist/js/materialize.min.js";
-import { getStock } from "../../Redux/Actions/Stock";
+import { getStock, deleteStock } from "../../Redux/Actions/Stock";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import NavBar from "../../components/Navigations/NavBar";
@@ -10,7 +10,7 @@ import "react-overlay-loader/styles.css";
 
 function AllStocks(props) {
   useEffect(() => {
-    props.getStock(34);
+    props.getStock();
 
     // var elems = document.querySelectorAll('.fixed-action-btn');
     M.FloatingActionButton.init(
@@ -26,6 +26,10 @@ function AllStocks(props) {
   const [editid, setEditid] = useState("");
 
   console.log(props.stocks);
+
+  const deleteProduct = (id) => {
+    props.deleteStock(id);
+  };
 
   return (
     <div>
@@ -47,7 +51,7 @@ function AllStocks(props) {
 
         <tbody>
           <Link to="/stockcount" className="btn" style={{ marginTop: 10 }}>
-            Products Count >>
+            Products Count
           </Link>
           {props.stocks.length > 0 ? (
             props.stocks.map((item, key) => (
@@ -99,9 +103,14 @@ function AllStocks(props) {
               </Link>
             </li>
             <li>
-              <a href="#!" className="modal-trigger " data-target="deletealert">
+              <Link
+                to="#"
+                onClick={() => deleteProduct(editid)}
+                className="modal-trigger "
+                data-target="deletealert"
+              >
                 <i className="material-icons">delete</i>Delete
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
@@ -117,7 +126,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispacthToProps = (dispatch) => {
   return {
-    getStock: (shopid) => dispatch(getStock(shopid)),
+    getStock: () => dispatch(getStock()),
+    deleteStock: (id) => dispatch(deleteStock(id)),
   };
 };
 export default connect(mapStateToProps, mapDispacthToProps)(AllStocks);

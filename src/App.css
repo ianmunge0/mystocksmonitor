@@ -4,11 +4,42 @@
 :root {
   font-family: "Roboto", "Helvetica Neue", sans-serif;
 }
+.MuiTable-root {
+  white-space: pre-wrap;
+}
+.MuiBox-root-7,
+.MuiBox-root-16 {
+  padding: 10px !important;
+}
 .row {
   margin: 0em;
 }
 .unitsmodalcontent {
   padding: 0 !important;
+}
+.card-action {
+  padding: 10px 0 !important;
+}
+.item-custom {
+  padding: 10px 0;
+  font-size: 30px;
+  text-align: center;
+}
+span.MuiButton-label a {
+  color: #ffffff !important;
+  font-weight: bold;
+}
+#deletealert.modal {
+  height: 40%;
+}
+#editmodal.modal {
+  height: 20%;
+}
+.salesinput {
+  border: solid !important;
+  border-width: 0.8px !important;
+  text-align: center;
+  border-radius: 5px !important;
 }
 .stocktxt p {
   font-size: 12px;
@@ -30,12 +61,42 @@ html {
   overflow-x: hidden;
 }
 ::-webkit-scrollbar {
-  width: 0px; /* Remove scrollbar space */
-  background: transparent; /* Optional: just make scrollbar invisible */
+  width: 0px;
+  background: transparent;
 }
-/* Optional: show position indicator in red */
 ::-webkit-scrollbar-thumb {
   background: #ff0000;
+}
+main {
+  padding: 0px !important;
+}
+.MuiSelect-select {
+  padding: 15px 0 !important;
+}
+.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon
+  .MuiAutocomplete-inputRoot {
+  padding: 0px !important;
+}
+.MuiOutlinedInput-notchedOutline {
+  border: none !important;
+}
+.MuiInputLabel-outlined {
+  transform: translate(-2px, 0px) scale(1) !important;
+}
+.MuiAutocomplete-root.MuiAutocomplete-hasClearIcon.MuiAutocomplete-hasPopupIcon {
+  width: 270px !important;
+  margin-left: 30px;
+}
+/* .profileinputs input,
+.profileinputs input:focus {
+  border-bottom: none !important;
+  padding-left: 10px !important;
+} */
+.expensetom .card-content {
+  padding: 10px 0;
+}
+.expensetom .card {
+  margin: 0 0;
 }
 .formcenter {
   display: flex;
@@ -168,13 +229,56 @@ body {
   border-left: none;
   border-right: none;
 }
+.tabwrap > div input.countinput {
+  border-bottom: 1px solid grey !important;
+  border-radius: 5px;
+}
 .side-Wrap {
   background-color: #f6a2ad;
 }
 .side-Wrapper {
   height: 500px;
 }
+@media only screen and (max-width: 600px) {
+  nav {
+    width: 0px;
+  }
+  .makeStyles-toolbar-5 {
+    min-height: 32px !important;
+  }
+}
+@media screen and (min-width: 600px) {
+  .makeStyles-toolbar-5 {
+    min-height: 40px !important;
+  }
+}
+.custominpt {
+  padding: 0 !important;
+  margin: 3px;
+}
+.attendant-tabs .MuiAppBar-colorPrimary {
+  color: #fff;
+  background-color: #f50057;
+  box-shadow: none;
+  border-bottom: 1px solid;
+}
+/* .tabwrap > div input {
+  border-bottom: 0px !important;
 
+  padding-left: 5px !important;
+} */
+.tabwrap > div {
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+}
+
+.makeStyles-content-7 {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+.tabwrap > div {
+  padding-top: 0px !important;
+}
 @media screen and (max-width: 40em) {
   .container {
     width: 100%;

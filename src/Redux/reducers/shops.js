@@ -1,8 +1,15 @@
-import { GET_SHOPS, ADDED_SHOP, LOADING, GET_SHOP } from "../Actions/actions";
+import {
+  GET_SHOPS,
+  ADDED_SHOP,
+  LOADING,
+  GET_SHOP,
+  SET_DEFAULT,
+} from "../Actions/actions";
 const initialState = {
   shops: [],
   loading: true,
   addingerror: "",
+  currentshop: null,
 };
 
 const Shops = (state = initialState, action) => {
@@ -15,7 +22,7 @@ const Shops = (state = initialState, action) => {
 
     case GET_SHOP:
       return {
-        ...state,
+        // ...state,
         shop: action.shop,
         loading: false,
       };
@@ -24,6 +31,18 @@ const Shops = (state = initialState, action) => {
         ...state,
         shops: action.shops.shops,
         addingerror: action.shops.error,
+        loading: false,
+      };
+    case SET_DEFAULT:
+      return {
+        ...state,
+        loading: false,
+        currentshop: action.currentshop,
+      };
+    case GET_SHOPS:
+      return {
+        ...state,
+        shops: action.shops,
         loading: false,
       };
     case GET_SHOPS:

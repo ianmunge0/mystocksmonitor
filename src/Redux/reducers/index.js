@@ -3,7 +3,9 @@ import stockReducer from "./Stock";
 import reportReducer from "./Reports";
 import attendantsReducer from "./Attendants";
 import attendantsShops from "./shops";
-import getCashAtHand from './ProfitExpenseReducer';
+import addSales from "./sales";
+import SalesReceipts from "./SalesReceipts";
+import ProfitnExpenses from "./ProfitnExpenses";
 
 import { combineReducers } from "redux";
 
@@ -13,7 +15,9 @@ const allReducers = combineReducers({
   reports: reportReducer,
   attendants: attendantsReducer,
   shops: attendantsShops,
-  cashAtHand: getCashAtHand
+  sales: addSales,
+  receipts: SalesReceipts,
+  profitnexpense: ProfitnExpenses,
 });
 
 export default allReducers;

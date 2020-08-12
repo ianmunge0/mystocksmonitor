@@ -6,6 +6,9 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
+import { Redirect } from "react-router-dom";
+import Api from "../../api/api";
+import { reactLocalStorage } from "reactjs-localstorage";
 
 function ShopSettings(props) {
   useEffect(() => {
@@ -18,34 +21,114 @@ function ShopSettings(props) {
     });
     console.log(props.match.params.id);
 
-    props.getShop(props.match.params.id);
+    getShop(props.match.params.id);
   }, []);
+
+  const [loading, setLoading] = useState(false);
+  const [shop, setShop] = useState({});
+
+  const getShop = (id) => {
+    console.log({
+      id,
+      action: "single",
+    });
+    setLoading(true);
+    Api.get(`/shops.php`, {
+      params: {
+        id,
+        action: "single",
+      },
+    })
+      .then((res) => {
+        const shop = res.data;
+        setLoading(false);
+        setShop(shop);
+      })
+      .catch((error) => {
+        // your error handling goes here}
+        console.log("error", error);
+      });
+  };
 
   const [error, setError] = useState("");
 
   const updateShop = (e) => {
     e.preventDefault();
-    setError("");
+    setLoading(true);
+    console.log(shop);
+    shop.action = "update";
+    Api.get(`/shops.php`, {
+      params: shop,
+    })
+      .then((res) => {
+        const profile = res.data;
+        setLoading(false);
+        console.log("updateShop actions ", profile);
+      })
+      .catch((error) => {
+        // your error handling goes here}
+        console.log("error", error);
+      });
+
+    // setError("");
     console.log(shop);
 
-    if (shop["password"] === "" && shop["shopname"] === "") {
-      setError("you have not changed anything");
-    } else {
-      shop.id = props.shop.shop.serialno;
-      props.updateShop(shop);
-    }
+    // if (shop["password"] === "" && shop["shopname"] === "") {
+    //   setError("you have not changed anything");
+    // } else {
+    //   shop.id = props.shop.shop.serialno;
+    //   props.updateShop(shop);
+    // }
   };
 
-  const deleteShop = () => {
-    props.deleteShop(props.shop.shop.shopid);
+  const deleteShop = (id) => {
+    var para = {
+      id,
+      admin: reactLocalStorage.getObject("userdata").serialno,
+      action: "delete",
+    };
+    console.log("para", para);
+    Api.get(`/shops.php`, {
+      params: para,
+    })
+      .then((res) => {
+        const shop = res.data;
+        console.log("shops deleted", shop);
 
-    props.history.push("/shops");
+        //redirect to initialshopspage if all shops has been deleted
+        //or to remain in shops page if there are still more shops in this account
+        if (shop.length == 0) {
+          reactLocalStorage.setObject("shops", "");
+          var initialdata = reactLocalStorage.getObject("userdata");
+          initialdata.default_shop = "";
+          initialdata.currentshop = "";
+          reactLocalStorage.setObject("userdata", initialdata);
+          props.history.push("/initialshopspage");
+        } else {
+          //remove this shop from admin default in the localstorage if its has been deleted
+          if (
+            id === reactLocalStorage.getObject("userdata").default_shop ||
+            reactLocalStorage.getObject("userdata").default_shop == ""
+          ) {
+            var initialdata = reactLocalStorage.getObject("userdata");
+            initialdata.default_shop = shop[0]["serialno"];
+            initialdata.currentshop = shop[0];
+            reactLocalStorage.setObject("userdata", initialdata);
+          }
+          reactLocalStorage.setObject("shops", shop);
+          props.history.push("/shops");
+        }
+      })
+      .catch((error) => {
+        // your error handling goes here}
+        console.log("error", error);
+      });
   };
 
-  const [shop, setShop] = useState({
-    shopname: "",
-    password: "",
-  });
+  // const [shop, setShop] = useState({
+  //   shopname: "",
+  //   password: "",
+  // });
   const handleShopData = (e) => {
     setShop({
       ...shop,
@@ -53,54 +136,53 @@ function ShopSettings(props) {
     });
     console.log(shop);
   };
-  console.log("settings", props);
+  console.log("settings", shop);
 
   return (
     <div>
       <div className="row">
-        <NavBar titleone="Shop settings" />
-        <Loader fullPage loading={props.shop.loading} />
+        <Loader fullPage loading={loading} />
         <div className="col s12 m12">
           <form className="col s12" onSubmit={updateShop}>
             <div className="row">
               <div className="col s12">
                 <p className="red-text">{error}</p>
               </div>
-              <div className="input-field col s12">
-                <i className="material-icons prefix">account_circle</i>
+              <div className="input-field custominpt col s12">
+                <p>Shop name</p>
                 <input
                   id="shopname"
                   type="text"
                   placeholder="shopname"
                   onChange={handleShopData}
-                  defaultValue={props.shop.shop ? props.shop.shop.shopname : ""}
+                  defaultValue={shop.shopname}
                   className="validate"
                 />
               </div>
-              <div className="input-field col s12">
-                <i className="material-icons prefix">account_circle</i>
+              <div className="input-field custominpt col s12">
+                <p>Location</p>
                 <input
                   id="region"
                   type="text"
                   placeholder="region"
                   onChange={handleShopData}
-                  defaultValue={props.shop.shop ? props.shop.shop.region : ""}
+                  defaultValue={shop.region}
                   className="validate"
                 />
               </div>
 
-              <div className="input-field col s12">
-                <i className="material-icons prefix">account_circle</i>
+              <div className="input-field custominpt col s12">
+                <p>Type</p>
                 <input
                   id="shoptype"
                   type="text"
                   placeholder="shoptype"
                   onChange={handleShopData}
-                  defaultValue={props.shop.shop ? props.shop.shop.shoptype : ""}
+                  defaultValue={shop.shoptype}
                   className="validate"
                 />
               </div>
-              <div className="input-field col s12">
+              <div className="input-field custominpt col s12">
                 <h5>Settings</h5>
 
                 <div className="switch">
@@ -113,11 +195,7 @@ function ShopSettings(props) {
                         <input
                           type="checkbox"
                           defaultChecked={
-                            props.shop.shop
-                              ? props.shop.shop.backup === "1"
-                                ? true
-                                : false
-                              : false
+                            shop ? (shop.backup === "1" ? true : false) : false
                           }
                         />
                         <span className="lever"></span>
@@ -127,32 +205,30 @@ function ShopSettings(props) {
                 </div>
               </div>
 
-              <div className="input-field col s12">
+              <div className="input-field custominpt col s12">
+                <div>Backup email</div>
                 <input
                   id="shoptype"
                   type="text"
                   placeholder="shoptype"
                   onChange={handleShopData}
-                  defaultValue={
-                    props.shop.shop ? props.shop.shop.emailaddress : ""
-                  }
+                  defaultValue={shop.emailaddress}
                   className="validate"
                 />
-                <label>Backup email</label>
               </div>
             </div>
 
             <Link
               to="#"
               onClick={() => {
-                deleteShop();
+                deleteShop(props.match.params.id);
               }}
               className="collection-item"
             >
               <h5 className="red-text">Delete Shop</h5>
             </Link>
             <div className="row">
-              <div className="input-field col s12 center">
+              <div className="input-field custominpt col s12 center">
                 <button className="btn btn-primary">
                   <i className="material-icons left ">save</i>Update
                 </button>
@@ -165,15 +241,17 @@ function ShopSettings(props) {
   );
 }
 
-const mapStateToProps = (state) => ({
-  shop: state.shops,
-});
+export default ShopSettings;
 
-const mapDispacthToProps = (dispatch) => {
-  return {
-    getShop: (id) => dispatch(getShop(id)),
-    updateShop: (data) => dispatch(updateShop(data)),
-    deleteShop: (shopid) => dispatch(deleteShop(shopid)),
-  };
-};
-export default connect(mapStateToProps, mapDispacthToProps)(ShopSettings);
+// const mapStateToProps = (state) => ({
+//   shop: state.shops,
+// });
+
+// const mapDispacthToProps = (dispatch) => {
+//   return {
+//     getShop: (id) => dispatch(getShop(id)),
+//     updateShop: (data) => dispatch(updateShop(data)),
+//     deleteShop: (shopid) => dispatch(deleteShop(shopid)),
+//   };
+// };
+// export default connect(mapStateToProps, mapDispacthToProps)(ShopSettings);

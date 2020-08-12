@@ -27,11 +27,8 @@ export const GET_PROFILE = "GET_PROFILE";
 export const GET_SHOPS = "GET_SHOPS";
 export const ADDED_SHOP = "ADDED_SHOP";
 export const GET_SHOP = "GET_SHOP";
+export const SET_DEFAULT = "SET_DEFAULT";
 
-export var CASH_AT_HAND = "CASH_AT_HAND";
-export var PROFIT = "PROFIT";
-export var TOTAL_SALES = "TOTAL_SALES";
-export var TOTAL_PURCHASES = "TOTAL_PURCHASES";
-export var TOTAL_EXPENSES = "TOTAL_EXPENSES";
-export var TOTAL_BAD_STOCK = "TOTAL_BAD_STOCK";
-export var SALES_DETAILS = "SALES_DETAILS";
+export const ADD_SALES = "ADD_SALES";
+export const GET_SALES = "GET_SALES";
+export const GET_RECEIPTS = "GET_RECEIPTS";

@@ -1,122 +1,121 @@
-import React, { Component } from "react";
-import {connect} from 'react-redux';
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import {getCashAtHand} from '../../Redux/Actions/profitAndExpenseActions'
-import {sendSalesDetails} from '../../Redux/Actions/profitAndExpenseActions'
+import { getEnPSummary } from "../../Redux/Actions/ProfitnExpenses";
+import { connect } from "react-redux";
+import { reactLocalStorage } from "reactjs-localstorage";
+import { Loader } from "react-overlay-loader";
+import "react-overlay-loader/styles.css";
+import moment from "moment";
 
-class ProfitExpenseSummary extends Component {
-  state = {
-    startDate: '',
-    endDate: '',
-    profit: '',
-    sales: '',
-    purchases: '',
-    expenses: '',
-    badstock: '',
-  }
-  componentDidMount() {
-    window.scrollTo(0, 0);
-    
-    console.log("pesummaryprops",this.props.location.state.date);
-    
-    var cashathandcreds = {
-      startDate: this.props.location.state.date.startDate,
-      endDate: this.props.location.state.date.endDate
-    }
-    this.props.getCashAtHand(cashathandcreds);
-  }
-  dispatchingSales(salesdetails){
-    console.log("salestodispatch",this.props);
-    //this.props.sendSalesDetails();
-    
-  }
-  render() {
+function ProfitExpenseSummary(props) {
+  var fromtimestamp = props.location.state.fromdate;
+  var totimestamp = props.location.state.todate;
 
-    return (
-      <>
-        <div class="card blue-grey darken-1">
-          <div class="card-content white-text center">
-          <p>Profit Today{/*ofperiod */}</p>
-            <h5>{this.props.profit}/=</h5>
+  useEffect(() => {
+    var item = {};
+    item.action = "profitexpense";
+
+    item.fromtimestamp = moment(fromtimestamp).format("YYYY-MM-DD hh:mm:ss");
+    item.totimestamp = moment(totimestamp).format("YYYY-MM-DD hh:mm:ss");
+    item.shopid = reactLocalStorage.getObject("userdata").default_shop;
+    props.getEnPSummary(item);
+  }, []);
+  console.log("pp", props.location.state.date);
+  return (
+    <>
+      <Loader fullPage loading={props.loading} />
+      {props.profitnexpense.profitnexpense ? (
+        <div className="expensetom">
+          <div className="card blue-grey darken-1">
+            <div className="card-content white-text center">
+              <p>Profit Today</p>
+              <h5>{props.profitnexpense.profitnexpense.generalprofit}/=</h5>
+            </div>
           </div>
-        </div>
-        <div className="container">
           <div className="row">
-            <h6 align="center">Profit/Loss = (Total Sales - Total Purchase) - Total Expenses - Total Bad Stock</h6>
-          </div>
-        </div>
-        <div className="container">
-          <div className="row">
-            <ul class="collection">
-              <Link to="cashsaleshistory" class="collection-item" onClick={() => this.dispatchingSales(this.props)}>
+            <ul className="collection">
+              <Link
+                to={{
+                  pathname: "/cashsaleshistory",
+                  state: {
+                    items: props.profitnexpense.profitnexpense.cashsalesitems,
+                    cash: props.profitnexpense.profitnexpense.oncash,
+                    credit: props.profitnexpense.profitnexpense.oncredit,
+                  },
+                }}
+                className="collection-item"
+              >
                 <div className="row">
                   <div className="col s6">
                     <h5>Cash sales</h5>
                     <p>sales summary</p>
                   </div>
                   <div className="col s6">
-                    <h5 className="right">{this.props.sales}/=</h5>
+                    <h5 className="right">
+                      {props.profitnexpense.profitnexpense.cashsales}/=
+                    </h5>
                   </div>
                 </div>
               </Link>
-              <Link to="purchases" class="collection-item">
+              <li className="collection-item">
                 <div className="row">
                   <div className="col s6">
                     <h5>Total Purchases</h5>
                     <p>Total Purchases</p>
                   </div>
                   <div className="col s6">
-                    <h5 className="right">{this.props.purchases}/=</h5>
+                    <h5 className="right">
+                      {props.profitnexpense.profitnexpense.salesprofit}/=
+                    </h5>
                   </div>
                 </div>
-              </Link>
-              
-              <Link to="expenses" class="collection-item">
+              </li>
+              <li className="collection-item">
                 <div className="row">
                   <div className="col s6">
                     <h5>Expenses</h5>
                   </div>
                   <div className="col s6">
-                    <h5 className="right">{this.props.expenses}/=</h5>
+                    <h5 className="right">
+                      {props.profitnexpense.profitnexpense.badstockvalue}/=
+                    </h5>
                   </div>
                 </div>
-              </Link>
-              <Link to="badstock" class="collection-item">
+              </li>
+              <li className="collection-item">
                 <div className="row">
                   <div className="col s6">
                     <h5>Bad Stock</h5>
                   </div>
                   <div className="col s6">
-                    <h5 className="right">{this.props.badstock}/=</h5>
+                    <h5 className="right">
+                      {props.profitnexpense.profitnexpense.expense}/=
+                    </h5>
                   </div>
                 </div>
-              </Link>
+              </li>
               
             </ul>
           </div>
         </div>
-      </>
-    );
-  }
-
+      ) : (
+        ""
+      )}
+    </>
+  );
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapStateToProps = (state) => ({
+  profitnexpense: state.profitnexpense,
+  loading: state.profitnexpense.loading,
+});
+
+const mapDispacthToProps = (dispatch) => {
   return {
-    getCashAtHand: (cashathandcreds) => dispatch(getCashAtHand(cashathandcreds)),
-    sendSalesDetails: () => dispatch(sendSalesDetails())
-  }
-}
-
-const mapStateToProps = (state) => {
-  console.log('mappedstatestoprops',state);
-  return {
-    profit: state.cashAtHand.profit,
-    sales: state.cashAtHand.sales,
-    purchases: state.cashAtHand.purchases,
-    expenses: state.cashAtHand.expenses,
-    badstock: state.cashAtHand.badstock,
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ProfitExpenseSummary);
+    getEnPSummary: (payload) => dispatch(getEnPSummary(payload)),
+  };
+};
+export default connect(
+  mapStateToProps,
+  mapDispacthToProps
+)(ProfitExpenseSummary);
