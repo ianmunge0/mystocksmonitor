@@ -5,6 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Icon from "@material-ui/core/Icon";
 import Alert from "@material-ui/lab/Alert";
+import Dexie from "dexie";
 
 import {
   addStock,
@@ -17,6 +18,7 @@ import { connect } from "react-redux";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
 // import { reactLocalStorage } from "reactjs-localstorage";
+import { Offline, Online, Detector } from "react-detect-offline";
 
 const useStyles = makeStyles((theme) => ({
   //   root: {
@@ -68,6 +70,8 @@ function NewStock(props) {
     supplier_name: "",
   });
 
+  const [networkstate, setNetworkState] = useState("");
+
   const handleUnitData = (e) => {
     setUnit({
       ...unit,
@@ -94,6 +98,7 @@ function NewStock(props) {
 
     setError("");
     console.log(stock);
+    console.log("form submitted when ",networkstate);
     var send = true;
     Object.keys(stock).map((key) => {
       if (stock[key] === "") {
@@ -137,6 +142,15 @@ function NewStock(props) {
 
   return (
     <form noValidate autoComplete="off" onSubmit={addNewStock}>
+      <Detector
+        render={({ online }) => (
+          <div className={online ? "normal" : "warning"}>
+            You are currently {online ? "online" : "offline"}
+            {online ? setNetworkState("online") : setNetworkState("offline")}
+          </div>
+          
+        )}
+      />
       <Grid container spacing={3}>
         <Loader fullPage loading={props.stockresponse.loading} />
         <Grid item xs={12}>

@@ -44,117 +44,14 @@ import InititalPage from "./components/Initial/Initialpage";
 import Reset from "./components/Initial/Reset";
 import ProductsAnalysis from "./components/Analysis/ProductsAnalysis";
 import ProfitandExpenseAnalysis from "./components/Analysis/ProfitandExpenseAnalysis";
+import Appcopy from "./Appcopy";
 
 function App(props) {
   const loggedin = useSelector((state) => state.login);
 
   // console.log(props);
   return (
-    <React.Fragment>
-      <>
-        <Switch>
-          {/* <Main /> */}
-          {/* <Route exact path="" component={DefaultPage} /> */}
-          {/* <IndexRedirect to="/" /> */}
-          <Route exact path="/" component={DefaultPage} />
-          <Route path="/initialshopspage" component={InititalPage} />
-          <Route path="/login/:type" component={Login} />
-          <Route path="/reset" component={Reset} />
-          <Route path="/register" component={Register} />
-
-          <ProtectedRoute
-            title="Stock Setup"
-            path="/stocksetup"
-            component={StockSetup}
-          />
-          <ProtectedRoute
-            title="Dashboard"
-            path="/dashboard"
-            component={Dashboard}
-          />
-          <ProtectedRoute
-            title="Stock Setup"
-            path="/stocksetupold"
-            component={StockSetupold}
-          />
-          <ProtectedRoute title="All Shops" path="/shops" component={Shops} />
-          <ProtectedRoute path="/shopsettings/:id" component={ShopSettings} />
-          <ProtectedRoute
-            title="Stock Report"
-            path="/stockinmanager"
-            component={StockInManager}
-          />
-          <ProtectedRoute
-            path="/salesmanager"
-            backlink="dashboard"
-            title="Sales"
-            settings="sales"
-            component={SalesManager}
-          />
-          <ProtectedRoute
-            backlink="salesmanager"
-            path="/newsale"
-            component={NewCashSale}
-          />
-          <Route path="/salesproductlist" component={SalesProductList} />
-          <ProtectedRoute path="/salesreceipts" component={SalesReceipts} />
-          <ProtectedRoute path="/singlereceipt" component={SingleSales} />
-          <ProtectedRoute
-            path="/profitexpense"
-            title="Profit "
-            settings="profitnexpenses"
-            component={ProfitExpensesManager}
-          />
-          <ProtectedRoute
-            title="Attendants"
-            path="/attendants"
-            component={Attendants}
-          />
-          <ProtectedRoute
-            title="Attendant Profile"
-            path="/attendantsprofile/:id"
-            component={AttendantsProfile}
-          />
-          <ProtectedRoute
-            path="/myprofile"
-            title="My Profile"
-            component={Profile}
-          />
-          <ProtectedRoute path="/units" component={Units} />
-          <ProtectedRoute
-            title="Add Expenses"
-            path="/expenses"
-            component={Expenses}
-          />
-          <ProtectedRoute path="/newstock" component={NewStock} />
-          <ProtectedRoute path="/counts/:timestamp" component={Counts} />
-          <ProtectedRoute path="/stockcount" component={StockCount} />
-
-          <ProtectedRoute
-            path="/profitexpensesummary"
-            component={ProfitExpenseSummary}
-          />
-          <ProtectedRoute
-            path="/profitandexpenseanalysis"
-            component={ProfitandExpenseAnalysis}
-          />
-          <ProtectedRoute
-            path="/cashsaleshistory"
-            component={CashSalesHistory}
-          />
-
-          <ProtectedRoute path="/editstock/:id" component={EditStock} />
-          <ProtectedRoute path="/cashflow" component={Singlecashflow} />
-          <ProtectedRoute path="/counthistory" component={CountHistory} />
-          <ProtectedRoute path="/stockfilter" component={StockFilter} />
-          <ProtectedRoute
-            title="Product Analysis"
-            path="/productsanalysis"
-            component={ProductsAnalysis}
-          />
-        </Switch>
-      </>
-    </React.Fragment>
+    <Appcopy/>
   );
 }
 
