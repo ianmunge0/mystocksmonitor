@@ -1,10 +1,35 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import Link from "@material-ui/core/Link";
 import { addSales, saveSales } from "../../Redux/Actions/Sales";
 import { connect } from "react-redux";
 import SalesDialog from "../CashSales/SalesDialog";
+import Grid from "@material-ui/core/Grid";
+import { Button, Typography, Divider } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
+import TextField from "@material-ui/core/TextField";
+import CancelIcon from "@material-ui/icons/Cancel";
 
+import Card from "@material-ui/core/Card";
+import CardActionArea from "@material-ui/core/CardActionArea";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import Customers from "./Customers";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+    padding: theme.spacing(2),
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: "center",
+    color: theme.palette.text.secondary,
+  },
+}));
 function NewCashSale(props) {
+  useEffect(() => {}, []);
   console.log(props.sales);
 
   const [items, setItems] = useState([]);
@@ -35,14 +60,19 @@ function NewCashSale(props) {
   };
 
   const changeType = (item, e) => {
-    console.log(item, e.target.id);
+    console.log(e.target.id);
     item.type = e.target.id;
     props.dispatch({ type: "CHANGE_TYPE", sales: item });
     setType(e.target.id);
+    if (e.target.id === "credit" && customer.name === "") {
+      handleClickOpenCustomer();
+    }
   };
 
   const saveSales = () => {
-    props.saveSales(props.sales.sales);
+    // props.sales.sales.customer = customer;
+    console.log(customer);
+    props.saveSales(props.sales.sales, customer);
   };
 
   const [open, setOpen] = React.useState(false);
@@ -55,217 +85,259 @@ function NewCashSale(props) {
     setOpen(false);
   };
 
+  const [opencustomer, setOpenCustomer] = React.useState(false);
+
+  const handleClickOpenCustomer = () => {
+    console.log("vv");
+    setOpenCustomer(true);
+  };
+
+  const handleCloseCustomer = () => {
+    setOpenCustomer(false);
+  };
+  const [customer, setCustomer] = useState({
+    name: "",
+  });
+
+  const getCustomer = (name) => {
+    setCustomer(name);
+  };
+
   console.log("all items", props.sales);
+  const classes = useStyles();
 
   return (
-    <div>
-      {/* <NavBar titleone="New Sale" action="sales" /> */}
-
-      <div className="container">
-        <SalesDialog fullScreen open={open} handleClose={handleClose} />
-        <div className="row" style={{ paddingLeft: 10, paddingRight: 10 }}>
-          <h5>Enter New Sale</h5>
-          <p>2020-08-12 5:56:00 am</p>
-          <div className="col s6">
-            <Link onClick={handleClickOpen} to="#" className="btn col s12">
+    <div className="cashsalewarp">
+      <SalesDialog fullScreen open={open} handleClose={handleClose} />
+      <span className="red-text"> {error}</span>
+      <div className={classes.root}>
+        <Grid container spacing={3}>
+          <Grid item xs={6}>
+            <Button
+              fullWidth
+              variant="contained"
+              color="primary"
+              onClick={handleClickOpen}
+            >
               Add +
-            </Link>
-          </div>
-          <div className="col s6">
-            <Link
-              to="#"
+            </Button>
+          </Grid>
+          <Grid item xs={6}>
+            <Button
+              fullWidth
+              variant="contained"
+              color="primary"
               onClick={saveSales}
               disabled={props.sales.sales.length > 0 ? false : true}
-              className="btn col s12"
             >
               Save
-            </Link>
-          </div>
-        </div>
-        <div className="row" style={{ marginTop: 10 }}>
-          <div className="col s3 center">
-            Total: <br />
+            </Button>
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={3}>
+          <Grid item xs={3} align="center">
+            Total:
+            <br />
             {props.sales.total}
-          </div>
-          <div className="col s3 center">
+          </Grid>
+          <Grid item xs={3} align="center">
             Items: <br />
             {props.sales.sales.length}
-          </div>
-          <div className="col s3 center">
-            On Credit: <br />
+          </Grid>
+          <Grid item xs={3} align="center">
+            Credit: <br />
             {props.sales.credit}
-          </div>
-          <div className="col s3 center">
-            On Cash: <br />
+          </Grid>
+          <Grid item xs={3} align="center">
+            Cash: <br />
             {props.sales.cash}
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col s12 m12">
-            <span className="red-text"> {error}</span>
-            {props.sales.sales
-              ? props.sales.sales.map((value, index) => (
-                  <div
-                    className="card sticky-action"
-                    style={{ padding: 5 }}
-                    key={index}
-                  >
-                    <h5>{value.name}</h5>
-                    <div
-                      className="card-action"
-                      style={{ padding: 0, margin: 0 }}
-                    >
-                      <div className="row">
-                        <div className="col s12" style={{ marginBottom: 10 }}>
-                          <div className="col s6">
-                            <div className="center">
-                              Total Qty: {value.stock_qty}
-                            </div>
-                          </div>
-                          <div className="col s6">
-                            <div className="center">
-                              Selling price:
-                              {value.salessellingprice
-                                ? value.salessellingprice
-                                : value.sellingprice}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        className="row "
-                        style={{ display: "flex", lineHeight: "40px" }}
-                      >
-                        <div className="col s8">
-                          <div className="row ">
-                            <Link
-                              to="#"
-                              className="col s3 item-custom"
-                              onClick={() =>
-                                props.dispatch({
-                                  type: "REMOVE_QTY",
-                                  sales: value,
-                                })
-                              }
-                              style={{ margin: 0 }}
-                            >
-                              -
-                            </Link>
-                            <input
-                              type="text"
-                              className="col s4 salesinput"
-                              // defaultValue={value.quantity}
-                              value={value.quantity}
-                              onChange={(e) => {
-                                changeQty(value, e);
-                              }}
-                              placeholder="0"
-                            />
-                            <Link
-                              to="#"
-                              onClick={() =>
-                                props.dispatch({
-                                  type: "ADD_QTY",
-                                  sales: value,
-                                })
-                              }
-                              className="col s3 item-custom"
-                              style={{ margin: 0 }}
-                            >
-                              +
-                            </Link>
-                          </div>
-                        </div>
-                        <div className="col s3">
-                          <input
-                            type="text"
-                            className="salesinput"
-                            defaultValue={
-                              value.salessellingprice
-                                ? value.salessellingprice
-                                : value.sellingprice
-                            }
-                            onChange={(e) => {
-                              changePrice(value, e);
-                            }}
-                            placeholder="0"
-                          />
-                        </div>
-                        <div className="col s1">
-                          <i
-                            onClick={() =>
-                              props.dispatch({
-                                type: "REMOVE_ITEM",
-                                sales: value,
-                              })
-                            }
-                            className="material-icons right"
-                          >
-                            cancel
-                          </i>
-                          {/* <Link
-                            onClick={() =>
-                              props.dispatch({
-                                type: "REMOVE_ITEM",
-                                sales: value,
-                              })
-                            }
-                            className="right"
-                          >
-                            <i className="material-icons right">cancel</i>
-                          </Link> */}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="row">
-                      <div className="col s6">
-                        <div className="row">
-                          <p>{console.log(value.serialno, value.type)}</p>
-                          <div className="col s6">
-                            <label>
-                              <input
-                                className="with-gap"
-                                name={value.serialno}
-                                value="credit"
-                                id="credit"
-                                onChange={(e) => changeType(value, e)}
-                                type="radio"
-                              />
-                              <span>Credit</span>
-                            </label>
-                          </div>
-                          <div className="col s6">
-                            <label>
-                              <input
-                                className="with-gap"
-                                onChange={(e) => changeType(value, e)}
-                                name={value.serialno}
-                                defaultChecked
-                                value="cash"
-                                id="cash"
-                                type="radio"
-                              />
-                              <span>Cash</span>
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col s6">
-                        <div className="row">
-                          <div className="col s12">
-                            <span className="right">{value.total}/=</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              : ""}
-          </div>
-        </div>
+          </Grid>
+        </Grid>
       </div>
+      {customer.name ? (
+        <Grid
+          style={{
+            marginLeft: 10,
+            marginRight: 10,
+          }}
+          container
+        >
+          <Grid item xs={6}>
+            <Typography
+              style={{
+                color: "blue",
+                fontSize: 12,
+                padding: 5,
+              }}
+              onClick={() => {
+                handleClickOpenCustomer();
+              }}
+            >
+              Customer: {customer.name}
+            </Typography>
+          </Grid>
+          <Grid item xs={6} align="center">
+            <CancelIcon
+              onClick={() => {
+                setCustomer({ name: "" });
+              }}
+            />
+          </Grid>
+        </Grid>
+      ) : (
+        <Grid
+          style={{
+            marginLeft: 10,
+            marginRight: 10,
+            color: "blue",
+            fontSize: 12,
+            padding: 5,
+          }}
+          onClick={() => {
+            handleClickOpenCustomer();
+          }}
+        >
+          + Add Customer
+        </Grid>
+      )}
+
+      {props.sales.sales
+        ? props.sales.sales.map((value, index) => (
+            <Card className={classes.root} key={index}>
+              <Typography variant="h6">{value.name}</Typography>
+              <Divider />
+              <Grid container xs={12} style={{ marginTop: 10 }}>
+                <Grid container xs={12}>
+                  <Grid item xs={6}>
+                    Total Qty: {value.stock_qty}
+                  </Grid>
+                  <Grid item xs={6}>
+                    Selling price:
+                    {value.salessellingprice
+                      ? value.salessellingprice
+                      : value.sellingprice}
+                  </Grid>
+                </Grid>
+
+                <Grid container xs={12} style={{ marginTop: 10 }}>
+                  <Grid container xs={10} style={{ marginTop: 10 }}>
+                    <Grid item align="center" xs={3}>
+                      <Link
+                        to="#"
+                        className="col s3 item-custom"
+                        onClick={() =>
+                          props.dispatch({
+                            type: "REMOVE_QTY",
+                            sales: value,
+                          })
+                        }
+                        style={{ margin: 0 }}
+                      >
+                        <RemoveCircleIcon />
+                      </Link>
+                    </Grid>
+                    <Grid align="center" item xs={3}>
+                      <TextField
+                        placeholder="0"
+                        id="outlined-basic"
+                        label="New Qty"
+                        variant="outlined"
+                        value={value.quantity}
+                        onChange={(e) => {
+                          changeQty(value, e);
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid align="center" item xs={3}>
+                      <Link
+                        to="#"
+                        onClick={() =>
+                          props.dispatch({
+                            type: "ADD_QTY",
+                            sales: value,
+                          })
+                        }
+                        className="col s3 item-custom"
+                        style={{ margin: 0 }}
+                      >
+                        <AddCircleIcon />
+                      </Link>
+                    </Grid>
+                    <Grid align="center" item xs={3}>
+                      <TextField
+                        placeholder="0"
+                        className="salesinput"
+                        variant="outlined"
+                        defaultValue={
+                          value.salessellingprice
+                            ? value.salessellingprice
+                            : value.sellingprice
+                        }
+                        onChange={(e) => {
+                          changePrice(value, e);
+                        }}
+                      />
+                    </Grid>
+                  </Grid>
+
+                  <Grid container xs={2} style={{ marginTop: 10 }}>
+                    <Typography align="center" style={{ width: "100%" }}>
+                      <CancelIcon
+                        onClick={() =>
+                          props.dispatch({
+                            type: "REMOVE_ITEM",
+                            sales: value,
+                          })
+                        }
+                      />
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid container xs={12} style={{ marginTop: 10 }}>
+                  <Grid align="center" item xs={4}>
+                    <label>
+                      <input
+                        className="with-gap"
+                        name={value.serialno}
+                        value="credit"
+                        id="credit"
+                        onChange={(e) => changeType(value, e)}
+                        type="radio"
+                      />
+                      <span>Credit</span>
+                    </label>
+                    <Customers
+                      fullScreen
+                      getCustomer={getCustomer}
+                      open={opencustomer}
+                      type={type}
+                      handleClose={handleCloseCustomer}
+                    />
+                  </Grid>
+                  <Grid align="center" item xs={4}>
+                    <label>
+                      <input
+                        className="with-gap"
+                        onChange={(e) => changeType(value, e)}
+                        name={value.serialno}
+                        defaultChecked
+                        value="cash"
+                        id="cash"
+                        type="radio"
+                      />
+                      <span>Cash</span>
+                    </label>
+                  </Grid>
+                  <Grid align="center" item xs={4}>
+                    <span className="right">{value.total}/=</span>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Card>
+          ))
+        : ""}
     </div>
   );
 }
@@ -281,7 +353,7 @@ const mapStateToProps = (state) => ({
 // };
 
 const mapDispacthToProps = (dispatch) => ({
-  saveSales: (sales) => dispatch(saveSales(sales)),
+  saveSales: (sales, customer) => dispatch(saveSales(sales, customer)),
   dispatch, // ← Add this
 });
 

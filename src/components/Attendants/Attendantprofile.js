@@ -8,8 +8,13 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Badge from "@material-ui/core/Badge";
 import Api from "../../api/api";
 import Box from "@material-ui/core/Box";
-import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Divider from "@material-ui/core/Divider";
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import Icon from "@material-ui/core/Icon";
 
 import PropTypes from "prop-types";
 
@@ -65,7 +70,13 @@ function Attendantprofile(props) {
       flexGrow: 1,
       backgroundColor: theme.palette.background.paper,
     },
+    inputs: {
+      width: "100%",
+      float: "left",
+    },
   }));
+
+  const classes = useStyles();
 
   const [error, setError] = useState("");
 
@@ -137,34 +148,36 @@ function Attendantprofile(props) {
   return (
     <div className="container">
       <div className="row">
-        <form className="col s12" onSubmit={updateProfile}>
+        <form
+          className="col s12"
+          onSubmit={updateProfile}
+          style={{ margin: 10 }}
+        >
           <Loader fullPage loading={props.profile.loading} />
           <div className="col s12">
             <p className="red-text">{error}</p>
           </div>
-          <div className="input-field col s12">
-            <i className="material-icons prefix">account_circle</i>
-
-            <input
-              // type="text"
-              id="username"
-              placeholder="username"
-              onChange={handleAttendantData}
-              defaultValue={attendant.username}
-              className="validate"
-            />
-          </div>
-
-          <div className="input-field col s12">
-            <i className="material-icons prefix">lock</i>
-            <input
-              onChange={handleAttendantData}
-              id="password"
-              type="password"
-              className="validate"
-            />
-            <label htmlFor="password">password</label>
-          </div>
+          <Grid container spacing={3}>
+            <Grid item xs>
+              <TextField
+                className={classes.inputs}
+                id="username"
+                label="Username"
+                onChange={handleAttendantData}
+                defaultValue={attendant.username}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs>
+              <TextField
+                className={classes.inputs}
+                id="password"
+                label="Password"
+                onChange={handleAttendantData}
+                variant="outlined"
+              />
+            </Grid>
+          </Grid>
           <div className="col s12">
             <h6 style={{ marginTop: 30, marginBottom: 20 }}>Roles</h6>
             <Divider />
@@ -183,64 +196,45 @@ function Attendantprofile(props) {
               </label>
             ))}
           </div>
-
-          <div className="col s12">
-            <h6 style={{ marginTop: 30, marginBottom: 20 }}>Settings</h6>
-            <Divider />
-            <div className="switch">
-              <label>
-                <div className="row valign-wrapper">
-                  <div className="col s8">
-                    <h6>Sales notification </h6>
-                  </div>
-                  {props.profile.profile ? (
-                    <div className="col s4">
-                      <input
-                        type="checkbox"
-                        id="sales_notifications"
-                        onChange={handleAttendantData}
-                        defaultChecked={attendant.sales_notifications}
-                      />
-                      <span className="lever"></span>
-                    </div>
-                  ) : (
-                    <div className="col s4">
-                      <input type="checkbox" />
-                      <span className="lever"></span>
-                    </div>
-                  )}
-                </div>
-              </label>
-            </div>
-            <div className="switch">
-              <label>
-                <div className="row valign-wrapper">
-                  <div className="col s8">
-                    <h6>Block fred </h6>
-                  </div>
-                  <div className="col s4">
-                    {props.profile.profile ? (
-                      <input
-                        defaultChecked={attendant.blocked}
-                        onChange={handleAttendantData}
-                        id="blocked"
-                        type="checkbox"
-                      />
-                    ) : (
-                      ""
-                      // <input defaultChecked={false} type="checkbox" />
-                    )}
-                    <span className="lever"></span>
-                  </div>
-                </div>
-              </label>
-            </div>
-          </div>
-          <div className="input-field col s12 center">
-            <button className="btn btn-primary col s12">
-              <i className="material-icons left ">save</i>Update
-            </button>
-          </div>
+          <h6 style={{ marginTop: 30, marginBottom: 20 }}>Settings</h6>
+          <Divider />
+          <Grid container spacing={3}>
+            <Grid item xs>
+              <Typography variant="h6">Sales notification </Typography>
+            </Grid>
+            <Grid item xs>
+              <input
+                type="checkbox"
+                id="sales_notifications"
+                onChange={handleAttendantData}
+                defaultChecked={attendant.sales_notifications}
+              />{" "}
+            </Grid>
+          </Grid>
+          <Grid container spacing={3}>
+            <Grid item xs>
+              <Typography variant="h6">Block</Typography>
+            </Grid>
+            <Grid item xs>
+              <input
+                type="checkbox"
+                id="blocked"
+                onChange={handleAttendantData}
+                defaultChecked={attendant.blocked}
+              />{" "}
+            </Grid>
+          </Grid>
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            style={{ marginTop: 20, padding: 15 }}
+            className={classes.button}
+            type="submit"
+            endIcon={<Icon>send</Icon>}
+          >
+            Update
+          </Button>
         </form>
       </div>
     </div>

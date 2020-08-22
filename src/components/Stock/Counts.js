@@ -4,7 +4,9 @@ import { getCountHistory, filter } from "../../Redux/Actions/Stock";
 import { connect } from "react-redux";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
-import NavBar from "../../components/Navigations/NavBar";
+import TextField from "@material-ui/core/TextField";
+import Grid from "@material-ui/core/Grid";
+import { Divider } from "@material-ui/core";
 
 function Counts(props) {
   const timestamp = props.match.params.timestamp;
@@ -31,80 +33,64 @@ function Counts(props) {
       <div className="nav-wrapper z-depth-3" style={{ padding: 5 }}>
         <Loader fullPage loading={props.loading} />
         <form>
-          <div className="input-field">
-            <input
-              placeholder="quick search"
-              id="search"
-              onChange={onText}
-              type="search"
-              required
-            />
-            <label className="label-icon" htmlFor="search">
-              <i className="material-icons">search</i>
-            </label>
-            <i className="material-icons">close</i>
-          </div>
+          <TextField
+            onChange={onText}
+            variant="outlined"
+            fullWidth
+            type="search"
+            placeholder="quick search"
+          />
         </form>
       </div>
 
-      <h5 style={{ padding: 15, background: "#F4F5F8" }}>
-        {props.stocks.title ? props.stocks.title : "vv"}
-        <ul className="row">
-          <li className="col s4" style={{ fontSize: 10 }}>
-            Over Stocked: {props.stocks.over_stocked}
-          </li>
-          <li className="col s4" style={{ fontSize: 10 }}>
-            Under Stocked: {props.stocks.under_stocked}
-          </li>
-          <li className="col s4" style={{ fontSize: 10 }}>
-            Balanced: {props.stocks.balanced}
-          </li>
-        </ul>
-      </h5>
-      <ul className="collection">
+      <div style={{ padding: 15, background: "#F4F5F8" }}>
+        <Grid item xs={12}>
+          <h4 style={{ margin: 7 }}>{props.stocks.title}</h4>
+        </Grid>
+        <Grid container>
+          <Grid item xs align="center">
+            Over Stocked: <br />
+            {props.stocks.over_stocked}
+          </Grid>
+          <Grid item xs align="center">
+            Under Stocked: <br />
+            {props.stocks.under_stocked}
+          </Grid>
+          <Grid item xs align="center">
+            Balanced: <br />
+            {props.stocks.balanced}
+          </Grid>
+        </Grid>
+      </div>
+      <div style={{ marginLeft: 10, marginRight: 10 }}>
         {data
           ? data.map((item, key) => (
-              <li className="collection-item countitem" key={key}>
-                <div className="row">
-                  <div className="col s6">
-                    <div className="row">
-                      <div className="col s12">
-                        <span className="title left ">{item.name}</span>
-                        <br />
-                        <div className="left">
-                          Previous count {item.previouscount}, current count{" "}
-                          {item.currentcount},
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col s6">
-                    <Link to="count" className="secondary-content right">
-                      <i className="material-icons">remove_red_eye</i>
-                    </Link>
-                  </div>
-
-                  <div className="col s12">
-                    Status:
-                    {item.currentcount < item.previouscount ? (
-                      <span className="orange-text">
-                        {" "}
-                        overstocked - {item.quantitysupplied}
-                      </span>
-                    ) : item.currentcount === item.previouscount ? (
-                      <span className="green-text"> balanced</span>
-                    ) : (
-                      <span className="red-text">
-                        {" "}
-                        under stocked - {item.quantitysupplied}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </li>
+              <div key={key}>
+                <Grid container style={{ marginTop: 10, marginBottom: 10 }}>
+                  <Grid item xs={12}>
+                    <h3 style={{ margin: 5 }}>{item.name}</h3>
+                  </Grid>
+                  Previous count ~ {item.previouscount}, current count ~{" "}
+                  {item.currentcount}, Status ~
+                  {item.currentcount < item.previouscount ? (
+                    <span className="orange-text">
+                      {" "}
+                      overstocked - {item.quantitysupplied}
+                    </span>
+                  ) : item.currentcount === item.previouscount ? (
+                    <span className="green-text"> balanced</span>
+                  ) : (
+                    <span className="red-text">
+                      {" "}
+                      under stocked - {item.quantitysupplied}
+                    </span>
+                  )}
+                </Grid>
+                <Divider />
+              </div>
             ))
           : ""}
-      </ul>
+      </div>
     </>
   );
 }

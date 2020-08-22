@@ -5,29 +5,19 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Icon from "@material-ui/core/Icon";
 import Alert from "@material-ui/lab/Alert";
+import Link from "@material-ui/core/Link";
+import Typography from "@material-ui/core/Typography";
 
-import {
-  addStock,
-  saveUnit,
-  getUnits,
-  saveSupplier,
-  getSuppliers,
-} from "../../Redux/Actions/Stock";
+import { addStock, saveUnit } from "../../Redux/Actions/Stock";
 import { connect } from "react-redux";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
-// import { reactLocalStorage } from "reactjs-localstorage";
+import SupplierDialog from "./SupplierDialog";
+import UnitDialog from "./UnitDialog";
 
 const useStyles = makeStyles((theme) => ({
-  //   root: {
-  //     "& > *": {
-  //       margin: theme.spacing(1),
-  //       width: "100%",
-  //     },
-  //   },
   inputs: {
     width: "100%",
-    float: "left",
   },
   space: {
     width: "20",
@@ -42,14 +32,6 @@ const useStyles = makeStyles((theme) => ({
 function NewStock(props) {
   const classes = useStyles();
 
-  useEffect(() => {
-    props.getUnits();
-    props.getSuppliers();
-
-    // setStock(props.stock);
-    console.log("all ", props.stock);
-  }, [props.stock]);
-
   const [error, setError] = useState("");
   const [modalerror, setModalerror] = useState("");
 
@@ -60,26 +42,6 @@ function NewStock(props) {
     sellingprice: "",
     reorder_level: "",
   });
-
-  const [unit, setUnit] = useState({
-    unit_name: "",
-  });
-  const [supplier, setSupplier] = useState({
-    supplier_name: "",
-  });
-
-  const handleUnitData = (e) => {
-    setUnit({
-      ...unit,
-      [e.target.id]: e.target.value,
-    });
-  };
-  const handleSupplierData = (e) => {
-    setSupplier({
-      ...supplier,
-      [e.target.id]: e.target.value,
-    });
-  };
 
   const handleStockData = (e) => {
     setStock({
@@ -110,131 +72,198 @@ function NewStock(props) {
       send = false;
     }
     if (send) {
+      stock.supplier = supplier.id;
+      stock.unit = unit.id;
+      console.log("adding stock ", stock);
       props.addStock(stock, e.target);
     }
   };
+  const [openunit, setOpenUnit] = React.useState(false);
 
-  const addUnit = (e) => {
-    e.preventDefault();
-    setModalerror("");
-    if (unit.unit_name !== "") {
-      props.saveUnit(unit);
-    } else {
-      setModalerror("Enter unit to add");
-    }
+  const handleClickOpenUnit = () => {
+    console.log("vv");
+    setOpenUnit(true);
   };
 
-  const addSupplier = (e) => {
-    e.preventDefault();
-    // console.log(supplier);
-    setModalerror("");
-    if (supplier.supplier_name !== "") {
-      props.saveSupplier(supplier.supplier_name);
-    } else {
-      setModalerror("Enter supplier name");
-    }
+  const handleCloseUnit = () => {
+    setOpenUnit(false);
+  };
+  const [unit, setUnit] = useState({});
+
+  const getUnit = (unit) => {
+    console.log("set ", unit);
+    setUnit(unit);
   };
 
+  const [opensupplier, setOpenSupplier] = React.useState(false);
+
+  const handleClickOpenSupplier = () => {
+    console.log("vv");
+    setOpenSupplier(true);
+  };
+
+  const handleCloseSupplier = () => {
+    setOpenSupplier(false);
+  };
+  const [supplier, setSupplier] = useState({});
+
+  const getSupplier = (supplier) => {
+    console.log("set ", supplier);
+    setSupplier(supplier);
+  };
+
+  const preventDefault = (event) => event.preventDefault();
   return (
-    <form noValidate autoComplete="off" onSubmit={addNewStock}>
-      <Grid container spacing={3}>
-        <Loader fullPage loading={props.stockresponse.loading} />
-        <Grid item xs={12}>
-          {props.stockresponse.stockresponse ? (
-            props.stockresponse.stockresponse.response ? (
-              <Alert severity="error">
-                {props.stockresponse.stockresponse.response}
-              </Alert>
+    <>
+      <form noValidate autoComplete="off" onSubmit={addNewStock}>
+        <Grid container spacing={3}>
+          <Loader fullPage loading={props.stockresponse.loading} />
+          <Grid item xs={12}>
+            {props.stockresponse.stockresponse ? (
+              props.stockresponse.stockresponse.response ? (
+                <Alert severity="error">
+                  {props.stockresponse.stockresponse.response}
+                </Alert>
+              ) : (
+                ""
+              )
             ) : (
               ""
-            )
-          ) : (
-            ""
-          )}
-          {error ? <Alert severity="error">{error}</Alert> : ""}
+            )}
+            {error ? <Alert severity="error">{error}</Alert> : ""}
+          </Grid>
+          <Grid item xs>
+            <TextField
+              className={classes.inputs}
+              id="name"
+              label="Product Name"
+              defaultValue={props.item ? props.item.name : ""}
+              variant="outlined"
+              onChange={handleStockData}
+            />
+            <TextField
+              className={classes.inputs}
+              style={{ marginTop: 10 }}
+              id="stock_qty"
+              defaultValue={props.stock ? props.stock.stock_qty : ""}
+              label="Quantity"
+              variant="outlined"
+              onChange={handleStockData}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs>
-          <TextField
-            className={classes.inputs}
-            id="name"
-            label="Product Name"
-            defaultValue={props.item ? props.item.name : ""}
-            variant="outlined"
-            onChange={handleStockData}
-          />
+        <Grid container spacing={3}>
+          <Grid item xs>
+            <TextField
+              className={classes.inputs}
+              id="buyingprice"
+              label="Buying Price"
+              onChange={handleStockData}
+              defaultValue={props.stock ? props.stock.buyingprice : ""}
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item xs>
+            <TextField
+              className={classes.inputs}
+              id="sellingprice"
+              label="Selling Price"
+              onChange={handleStockData}
+              defaultValue={props.stock ? props.stock.sellingprice : ""}
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              className={classes.inputs}
+              id="reorder_level"
+              label="Re-order level"
+              onChange={handleStockData}
+              defaultValue={props.stock ? props.stock.reorder_level : ""}
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Typography className={classes.root}>
+              <Link
+                href="#"
+                onClick={handleClickOpenSupplier}
+                style={{ float: "left" }}
+              >
+                {supplier.supplier_name}
+              </Link>
+
+              <Link
+                href="#"
+                onClick={handleClickOpenSupplier}
+                variant="body2"
+                style={{ float: "right" }}
+              >
+                {supplier.supplier_name ? " Change Supplier " : "Add Supplier"}
+              </Link>
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography className={classes.root}>
+              <Link
+                href="#"
+                onClick={handleClickOpenSupplier}
+                style={{ float: "left" }}
+              >
+                {unit.unit_name}
+              </Link>
+
+              <Link
+                href="#"
+                onClick={handleClickOpenUnit}
+                variant="body2"
+                style={{ float: "right" }}
+              >
+                {unit.unit_name ? " Change Unit " : "Add Unit"}
+              </Link>
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              style={{ marginTop: 20, padding: 15 }}
+              className={classes.button}
+              type="submit"
+              endIcon={<Icon>send</Icon>}
+            >
+              Save
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item xs>
-          <TextField
-            className={classes.inputs}
-            id="stock_qty"
-            defaultValue={props.stock ? props.stock.stock_qty : ""}
-            label="Quantity"
-            variant="outlined"
-            onChange={handleStockData}
-          />
-        </Grid>
-      </Grid>
-      <Grid container spacing={3}>
-        <Grid item xs>
-          <TextField
-            className={classes.inputs}
-            id="buyingprice"
-            label="Buying Price"
-            onChange={handleStockData}
-            defaultValue={props.stock ? props.stock.buyingprice : ""}
-            variant="outlined"
-          />
-        </Grid>
-        <Grid item xs>
-          <TextField
-            className={classes.inputs}
-            id="sellingprice"
-            label="Selling Price"
-            onChange={handleStockData}
-            defaultValue={props.stock ? props.stock.sellingprice : ""}
-            variant="outlined"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            className={classes.inputs}
-            id="reorder_level"
-            label="Re-order level"
-            onChange={handleStockData}
-            defaultValue={props.stock ? props.stock.reorder_level : ""}
-            variant="outlined"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            type="submit"
-            endIcon={<Icon>send</Icon>}
-          >
-            Send
-          </Button>
-        </Grid>
-      </Grid>
-    </form>
+      </form>
+
+      <SupplierDialog
+        fullScreen
+        getSupplier={getSupplier}
+        open={opensupplier}
+        handleClose={handleCloseSupplier}
+      />
+
+      <UnitDialog
+        fullScreen
+        getUnit={getUnit}
+        open={openunit}
+        handleClose={handleCloseUnit}
+      />
+    </>
   );
 }
 
 const mapStateToProps = (state) => ({
   stockresponse: state.stock,
   waiting: state.loading,
-  units: state.stock.units,
-  suppliers: state.stock.suppliers,
 });
 
 const mapDispacthToProps = (dispatch) => {
   return {
     addStock: (stock, e) => dispatch(addStock(stock, e)),
-    saveUnit: (unit) => dispatch(saveUnit(unit)),
-    getUnits: () => dispatch(getUnits()),
-    saveSupplier: (supplier) => dispatch(saveSupplier(supplier)),
-    getSuppliers: () => dispatch(getSuppliers()),
   };
 };
 export default connect(mapStateToProps, mapDispacthToProps)(NewStock);

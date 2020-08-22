@@ -4,24 +4,21 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import { Link } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 
 import { connect } from "react-redux";
-import { login, logout } from "../../Redux/Actions";
-import { reactLocalStorage } from "reactjs-localstorage";
+import { login } from "../../Redux/Actions";
 import auth from "../auth";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
 import { useSelector } from "react-redux";
 import NormalAppBar from "../Navigations/NormalAppBar";
+import Messages from "../Common/Messages";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -43,6 +40,11 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+    padding: 15,
+  },
+  links: {
+    textDecoration: "none",
+    fontSize: 14,
   },
 }));
 function Login(props) {
@@ -97,9 +99,14 @@ function Login(props) {
           Sign in as an{" "}
           {props.match.params.type === "admin" ? "Admin" : "Attendant"}
         </Typography>
-        <form className={classes.form} noValidate onSubmit={handleSubmit}>
-          <span className="red-text">{error}</span>
-          <span className="red-text">{props.message}</span>
+        <form
+          className={classes.form}
+          noValidate
+          onSubmit={handleSubmit}
+          autoComplete="off"
+        >
+          <Messages type="error" text={error} />
+          <Messages type="success" text={props.message} />
 
           <Loader fullPage loading={loggedin.login.loading} />
           <TextField
@@ -107,6 +114,7 @@ function Login(props) {
             margin="normal"
             required
             onChange={handleChange}
+            className={classes.customfieldinput}
             value={username}
             fullWidth
             id="username"
@@ -138,12 +146,12 @@ function Login(props) {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link to={"/reset"} variant="body2">
+              <Link to={"/reset"} variant="body2" className={classes.links}>
                 Forgot password?
               </Link>
             </Grid>
             <Grid item>
-              <Link to={`/register`} variant="body2">
+              <Link to={`/register`} variant="body2" className={classes.links}>
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>

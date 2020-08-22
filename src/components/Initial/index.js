@@ -8,6 +8,7 @@ import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Avatar from "@material-ui/core/Avatar";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -51,28 +52,39 @@ function Initial(props) {
         <Typography component="h1" variant="h5">
           Continue as:
         </Typography>
-        <div className="container center-align">
-          <div className="row ">
-            <div className="col s12">
-              <Link
-                to={`/login/attendant`}
-                className="btn btn-primary"
-                style={{ marginTop: 30, marginBottom: 30 }}
-              >
-                Attendant
-              </Link>
-            </div>
-            <div className="col s12">
-              <Link to={`/login/admin`}>
-                <button
-                  className="btn btn-primary"
-                  style={{ marginTop: 10, marginBottom: 30 }}
-                >
-                  Admin
-                </button>
-              </Link>
-            </div>
-          </div>
+        <div>
+          <Button
+            variant="contained"
+            color="primary"
+            disableElevation
+            style={{
+              marginTop: 30,
+              marginBottom: 30,
+              padding: 20,
+              width: "100%",
+            }}
+            onClick={() => {
+              props.history.push({ pathname: `/login/attendant` });
+            }}
+          >
+            Attendant
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            disableElevation
+            style={{
+              marginTop: 30,
+              marginBottom: 30,
+              padding: 20,
+              width: "100%",
+            }}
+            onClick={() => {
+              props.history.push({ pathname: `/login/admin` });
+            }}
+          >
+            Admin
+          </Button>
         </div>
       </div>
     </Container>

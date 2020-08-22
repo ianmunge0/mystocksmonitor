@@ -1,19 +1,13 @@
 import React, { useEffect, useState } from "react";
-import M from "materialize-css/dist/js/materialize.min.js";
 import { getShops, addShop } from "../../Redux/Actions/Shops";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import NavBar from "../../components/Navigations/NavBar";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
 import { reactLocalStorage } from "reactjs-localstorage";
 
 function NewShop(props) {
   useEffect(() => {
-    M.Tabs.init(document.querySelector(".tabs"), {
-      swipeable: true,
-    });
-    M.FormSelect.init(document.querySelectorAll("select"), {});
     props.getShops();
   }, []);
 

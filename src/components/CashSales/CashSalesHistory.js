@@ -1,6 +1,23 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
+import Grid from "@material-ui/core/Grid";
+import SearchBar from "material-ui-search-bar";
+import { Divider } from "@material-ui/core";
 
+import { makeStyles } from "@material-ui/core/styles";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
+
+const useStyles = makeStyles({
+  // table: {
+  //   minWidth: 650,
+  // },
+});
 function CashSalesHistory(props) {
   var items = props.location.state.items;
   useEffect(() => {
@@ -21,99 +38,71 @@ function CashSalesHistory(props) {
       },
     });
   };
+  const classes = useStyles();
   console.log("profitnexpense", props.profitnexpense);
   return (
-    <div className="row">
-      <div className="nav-wrapper z-depth-3" style={{ padding: 5 }}>
-        <form>
-          <div className="input-field">
-            <input
-              placeholder="quick search"
-              id="search"
-              autoComplete="off"
-              onChange={filterStock}
-              type="search"
-              required
-            />
-            <label className="label-icon" htmlFor="search">
-              <i className="material-icons">search</i>
-            </label>
-            <i className="material-icons">close</i>
-          </div>
-        </form>
-      </div>
+    <div className="row" style={{ margin: 10 }}>
+      <SearchBar onChange={filterStock} />
       {props.profitnexpense.profitnexpense.length > 0 ? (
         <>
-          <div className="container">
-            <div className="row">
-              <div className="col s3">
-                <h6 className="center">Entries</h6>
-                <h6 className="center">
-                  {props.profitnexpense.profitnexpense.length}
-                </h6>
-              </div>
-              <div className="col s5">
-                <h6 className="center">On Credit</h6>
-                <h6 className="center">
-                  {props.profitnexpense.profitnexpense.length > 0
-                    ? props.profitnexpense.profitnexpense.filter((p) =>
-                        p.cashorcredit.includes("credit")
-                      ).length
-                    : "0"}
-                </h6>
-              </div>
-              <div className="col s4 center">
-                <h6 className="center">cash Sales</h6>
-                <h6 className="center">
-                  {props.profitnexpense.profitnexpense.length > 0
-                    ? props.profitnexpense.profitnexpense.filter((p) =>
-                        p.cashorcredit.includes("cash")
-                      ).length
-                    : "0"}
-                </h6>
-              </div>
-            </div>
-          </div>
-          <table className="highlight">
-            <thead>
-              <tr>
-                <th>
-                  Name <br /> Qty @ item cost = total
-                </th>
-                <th className="right">
-                  <span className="right">Served By </span>
-                  <br />
-                  Date
-                </th>
-              </tr>
-            </thead>
-
-            <tbody>
+          <Grid container style={{ margin: 10 }}>
+            <Grid item xs={4} align="center">
+              Entries:
+              <br />
+              {props.profitnexpense.profitnexpense.length}
+            </Grid>
+            <Grid item xs={4} align="center">
+              On Credit: <br />
               {props.profitnexpense.profitnexpense.length > 0
-                ? props.profitnexpense.profitnexpense.map((value, index) => (
-                    <tr
-                      className="modal-trigger "
-                      data-target="editmodal"
-                      key={index}
-                    >
-                      <td>
-                        Name: {value.name} <br />
-                        {value.qtysold} @ {value.onsalesellprice} ={" "}
-                        {parseInt(value.qtysold) *
-                          parseInt(value.onsalesellprice)}{" "}
-                        /=
-                      </td>
-                      <td className="right">
-                        <div>
-                          Served by: {value.username}
+                ? props.profitnexpense.profitnexpense.filter((p) =>
+                    p.cashorcredit.includes("credit")
+                  ).length
+                : "0"}
+            </Grid>
+            <Grid item xs={4} align="center">
+              Cash Sales: <br />
+              {props.profitnexpense.profitnexpense.length > 0
+                ? props.profitnexpense.profitnexpense.filter((p) =>
+                    p.cashorcredit.includes("cash")
+                  ).length
+                : "0"}
+            </Grid>
+          </Grid>
+          <TableContainer component={Paper}>
+            <Table className={classes.table} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell style={{ fontWeight: "bold" }}>
+                    Name <br /> Qty @ item cost = total
+                  </TableCell>
+                  <TableCell align="right" style={{ fontWeight: "bold" }}>
+                    <span>Served By </span>
+                    <br />
+                    Date
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {props.profitnexpense.profitnexpense.length > 0
+                  ? props.profitnexpense.profitnexpense.map((value, index) => (
+                      <TableRow key={index}>
+                        <TableCell component="th" scope="row">
+                          {value.name} <br />
+                          {value.qtysold} @ {value.onsalesellprice} ={" "}
+                          {parseInt(value.qtysold) *
+                            parseInt(value.onsalesellprice)}{" "}
+                          /=
+                        </TableCell>
+                        <TableCell align="right">
+                          {value.username}
                           <br />3 days ago
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                : ""}
-            </tbody>
-          </table>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  : ""}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </>
       ) : (
         <h6 className="center" style={{ padding: 20 }}>

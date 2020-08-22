@@ -25,6 +25,7 @@ const initialState = {
 const Stock = (state = initialState, action) => {
   switch (action.type) {
     case LOADING:
+      console.log("calling loading reducer");
       return {
         ...state,
         loading: true,
@@ -97,6 +98,12 @@ const Stock = (state = initialState, action) => {
         suppliers: action.suppliers,
         loading: false,
       };
+    case "EXPORT_ITEMS":
+      return {
+        ...state,
+        exporteditems: action.exporteditems,
+        loading: false,
+      };
     case GET_UNITS:
       return {
         ...state,
@@ -104,8 +111,6 @@ const Stock = (state = initialState, action) => {
         loading: false,
       };
     case ADDING_STOCK:
-      // console.log("dd ", action.loading);
-
       return { ...state, loading: action.loading };
     default:
       return state;

@@ -16,6 +16,7 @@ import Slide from "@material-ui/core/Slide";
 import { Grid } from "@material-ui/core";
 import { reactLocalStorage } from "reactjs-localstorage";
 import moment from "moment";
+import Icon from "@material-ui/core/Icon";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -24,6 +25,9 @@ const useStyles = makeStyles((theme) => ({
   title: {
     marginLeft: theme.spacing(2),
     flex: 1,
+  },
+  inputs: {
+    width: "100%",
   },
 }));
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -100,30 +104,43 @@ function NewExpenseDialog(props) {
           <div className="col s12">
             <h6 className="red-text">{error}</h6>
           </div>
-          <div className="col s12">
-            <input
-              onChange={handleData}
-              id="description"
-              type="text"
-              className="validate"
-            />
-            <label htmlFor="description">Description</label>
-          </div>
-          <div className="col s12">
-            <input
-              onChange={handleData}
-              id="amount"
-              type="text"
-              className="validate"
-            />
-            <label htmlFor="amount">Amount</label>
-          </div>
-
-          <div className="row">
-            <div className="col s12">
-              <button className="btn btn-primary">Save</button>
-            </div>
-          </div>
+          <Grid
+            style={{
+              marginRight: 10,
+              marginLeft: 10,
+            }}
+          >
+            <Grid item xs={12}>
+              <TextField
+                className={classes.inputs}
+                id="description"
+                label="Description"
+                onChange={handleData}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                className={classes.inputs}
+                id="amount"
+                style={{ marginTop: 20 }}
+                label="Amount"
+                onChange={handleData}
+                variant="outlined"
+              />
+            </Grid>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              style={{ marginTop: 20, padding: 15 }}
+              className={classes.button}
+              type="submit"
+              endIcon={<Icon>send</Icon>}
+            >
+              Update
+            </Button>
+          </Grid>
         </div>
       </form>
     </Dialog>

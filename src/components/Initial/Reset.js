@@ -4,27 +4,21 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import { Link } from "react-router-dom";
-import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import NormalAppBar from "../Navigations/NormalAppBar";
 
 import { connect } from "react-redux";
-import { login, reset } from "../../Redux/Actions";
+import { reset } from "../../Redux/Actions";
 import { reactLocalStorage } from "reactjs-localstorage";
-import auth from "../auth";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
 import { useSelector } from "react-redux";
-import M from "materialize-css/dist/js/materialize.min.js";
-import AppBarComponent from "../../components/Navigations/AppBarComponent";
 import Api from "../../api/api";
 import moment from "moment";
+import Messages from "../Common/Messages";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -46,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+    padding: 15,
   },
 }));
 function Reset(props) {
@@ -71,19 +66,14 @@ function Reset(props) {
   };
   const resetPassword = (event) => {
     event.preventDefault();
-    setLoading(true);
     var params = {};
     setError("");
-    console.log(reactLocalStorage.getObject("user_reset_data").otp);
     if (reactLocalStorage.getObject("user_reset_data").otp) {
-      setLoading(false);
       params.action = "update";
       if (reactLocalStorage.getObject("user_reset_data").otp !== otp) {
         setError("otp must be the valid");
         return;
       }
-
-      console.log(newpassword, confirmedpassword);
 
       if (newpassword === "" || newpassword !== confirmedpassword) {
         setError("passord must be the same");
@@ -100,13 +90,14 @@ function Reset(props) {
       params.emailorphonekey = email;
     }
 
-    console.log(params);
     if (params.action === "reset" && email === "") {
       setError("you must enter email to send otp to");
+      return;
     }
     if (error) {
       return;
     }
+    setLoading(true);
     // if (params.action === "reset" && email ==="") {
     Api.get(`/reset.php`, {
       params: params,
@@ -127,16 +118,11 @@ function Reset(props) {
         // your error handling goes here}
         console.log("error", error);
       });
-    // } else {
-    //   setError("you must enter username and password");
-    // }
   };
-
-  console.log("lohin", props.userdata.status);
 
   return (
     <Container component="main" maxWidth="xs">
-      <AppBarComponent title="Reset Password" />
+      <NormalAppBar backlink="/" title="Login" />
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -151,7 +137,7 @@ function Reset(props) {
           onSubmit={resetPassword}
           autoComplete="off"
         >
-          <span className="red-text">{error}</span>
+          <Messages type="error" text={error} />
           <span className="red-text">{props.message}</span>
 
           <Loader fullPage loading={loading} />
