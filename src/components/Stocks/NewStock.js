@@ -56,7 +56,6 @@ function NewStock(props) {
 
     setError("");
     console.log(stock);
-    console.log("form submitted when ",networkstate);
     var send = true;
     Object.keys(stock).map((key) => {
       if (stock[key] === "") {
