@@ -78,7 +78,12 @@ export const addStock = (stockinput, e) => {
 };
 
 export const getSuppliers = () => {
+  console.log("getSuppliers");
+
   return (dispatch) => {
+    dispatch({
+      type: LOADING,
+    });
     Api.get(`/supplier.php`, {
       params: {
         action: "get",
@@ -99,16 +104,23 @@ export const getSuppliers = () => {
   };
 };
 
-export const saveSupplier = (supplier) => {
+export const saveSupplier = (supplier, e) => {
   return (dispatch) => {
+    dispatch({
+      type: LOADING,
+    });
+
     console.log({
-      supplier: supplier,
+      supplier_name: supplier.name,
+      supplier_phone: supplier.phone,
+      action: "add",
       owner: reactLocalStorage.getObject("userdata").serialno,
     });
 
     Api.get(`/supplier.php`, {
       params: {
-        supplier: supplier,
+        supplier_name: supplier.name,
+        supplier_phone: supplier.phone,
         action: "add",
         owner: reactLocalStorage.getObject("userdata").serialno,
       },
@@ -119,6 +131,7 @@ export const saveSupplier = (supplier) => {
           type: ADD_SUPPLIER,
           suppliers: res.data.suppliers,
         });
+        e.reset();
       })
       .catch((error) => {
         // your error handling goes here}
@@ -126,7 +139,7 @@ export const saveSupplier = (supplier) => {
       });
   };
 };
-export const saveUnit = (unit) => {
+export const saveUnit = (unit, e) => {
   return (dispatch) => {
     dispatch({
       type: LOADING,
@@ -151,6 +164,7 @@ export const saveUnit = (unit) => {
           type: ADD_UNIT,
           units: res.data.unit,
         });
+        e.reset();
       })
       .catch((error) => {
         // your error handling goes here}
@@ -159,8 +173,78 @@ export const saveUnit = (unit) => {
   };
 };
 
+export const deleteSupplier = (supplier) => {
+  return (dispatch) => {
+    dispatch({
+      type: LOADING,
+    });
+
+    console.log({
+      id: supplier.id,
+      action: "delete",
+      owner: reactLocalStorage.getObject("userdata").serialno,
+    });
+
+    Api.get(`/supplier.php`, {
+      params: {
+        id: supplier.id,
+        action: "delete",
+        owner: reactLocalStorage.getObject("userdata").serialno,
+      },
+    })
+      .then((res) => {
+        console.log(res.data);
+
+        dispatch({
+          type: GET_SUPPLIERS,
+          suppliers: res.data.suppliers,
+        });
+      })
+      .catch((error) => {
+        // your error handling goes here}
+        console.log("error", error);
+      });
+  };
+};
+
+export const deleteUnit = (unit) => {
+  return (dispatch) => {
+    dispatch({
+      type: LOADING,
+    });
+
+    console.log({
+      id: unit.id,
+      action: "delete",
+      owner: reactLocalStorage.getObject("userdata").serialno,
+    });
+
+    Api.get(`/units.php`, {
+      params: {
+        id: unit.id,
+        action: "delete",
+        owner: reactLocalStorage.getObject("userdata").serialno,
+      },
+    })
+      .then((res) => {
+        console.log(res.data);
+        dispatch({
+          type: ADD_UNIT,
+          units: res.data.unit,
+        });
+      })
+      .catch((error) => {
+        // your error handling goes here}
+        console.log("error", error);
+      });
+  };
+};
 export const getUnits = () => {
   return (dispatch) => {
+    console.log("getUnits ", {
+      action: "get",
+      owner: reactLocalStorage.getObject("userdata").serialno,
+    });
     Api.get(`/units.php`, {
       params: {
         action: "get",
@@ -168,7 +252,7 @@ export const getUnits = () => {
       },
     })
       .then((res) => {
-        console.log("database", res.data);
+        console.log("units database", res.data);
         dispatch({
           type: GET_UNITS,
           units: res.data.unit,
@@ -183,9 +267,9 @@ export const getUnits = () => {
 
 export const getStock = () => {
   return (dispatch) => {
-    console.log({
-      currentshopidkey: reactLocalStorage.getObject("userdata").default_shop,
-      action: "all",
+    console.log("calling loading");
+    dispatch({
+      type: LOADING,
     });
 
     Api.get(`/stocks.php`, {
@@ -280,7 +364,6 @@ export const getStockCountHistory = (shopid) => {
       },
     })
       .then((res) => {
-        console.log("getStockCountHistory " + res.data.items);
         dispatch({
           type: GET_STOCK_COUNT_GROUPED,
           stocks: res.data,
@@ -347,6 +430,34 @@ export const deleteStock = (id) => {
         dispatch({
           type: GET_STOCK,
           stocks: res.data,
+        });
+      })
+      .catch((error) => {
+        // your error handling goes here}
+        console.log("error", error);
+      });
+  };
+};
+
+export const exportItems = (data) => {
+  return (dispatch) => {
+    console.log("exporting", data);
+    dispatch({
+      type: "LOADING",
+    });
+
+    Api.get(`/stocks.php`, {
+      params: {
+        data,
+        action: "export",
+      },
+    })
+      .then((res) => {
+        const exporteditems = res.data;
+        console.log("exporteditems", exporteditems);
+        dispatch({
+          type: "EXPORT_ITEMS",
+          exporteditems: exporteditems,
         });
       })
       .catch((error) => {

@@ -3,11 +3,14 @@ import { withRouter } from "react-router-dom";
 
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
-import { DefinedRange } from "react-date-range";
 import { DateRange } from "react-date-range";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItem from "@material-ui/core/ListItem";
 import moment from "moment";
+import Item from "../../components/Item";
+import TodayIcon from "@material-ui/icons/Today";
+import DateRangeIcon from "@material-ui/icons/DateRange";
+import Months from "../Months";
+import { reactLocalStorage } from "reactjs-localstorage";
+import Button from "@material-ui/core/Button";
 const d = new Date();
 const options = [
   "January",
@@ -41,7 +44,7 @@ const ProfitExpensesManager = (props) => {
   const [state, setState] = useState([
     {
       startDate: new Date(),
-      endDate: null,
+      endDate: new Date(),
       key: "selection",
     },
   ]);
@@ -53,9 +56,20 @@ const ProfitExpensesManager = (props) => {
       state: {
         fromdate: item.selection.startDate,
         todate: item.selection.endDate,
+        type: "day",
       },
     });
     // props.history.push("/profitexpensesummary");
+  };
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -70,60 +84,38 @@ const ProfitExpensesManager = (props) => {
           ranges={state}
         />
       </div>
-      {/* <div className="row">
-        <DefinedRange
-          onChange={(item) => getProfitExpense(item)}
-          ranges={state}
-        />
-      </div> */}
 
-      <ListItem
-        button
-        onClick={() => {
-          props.history.push({
-            pathname: "/profitexpensesummary",
-            state: { fromdate: new Date(), todate: new Date() },
-          });
-        }}
-      >
-        <ListItemText
-          primary={<h5>Today</h5>}
-          secondary="View today's stock report"
-        />
-      </ListItem>
-      <ListItem
-        button
-        onClick={() => {
-          var fromtimeStamp = moment(
-            output.startOf("month").format("LL")
-          ).format("YYYY-MM-DD hh:mm:ss");
-          var totimestamp = moment(output.endOf("month").format("LL")).format(
-            "YYYY-MM-DD hh:mm:ss"
-          );
+      <Item
+        description="View today profit and expenses summary"
+        className="datepicker"
+        title="Today"
+        route="profitexpensesummary"
+        icon={<TodayIcon fontSize="large" />}
+        data="today"
+      />
 
-          props.history.push({
-            pathname: "/profitexpensesummary",
-            state: { fromdate: fromtimeStamp, todate: totimestamp },
-          });
-        }}
-      >
-        <ListItemText
-          primary={<h5>This Month</h5>}
-          secondary="View current month stock report"
-        />
-      </ListItem>
+      <Item
+        description="View monthly profit and expenses summary"
+        className="datepicker"
+        title="Monthly Profit and Expenses"
+        icon={<DateRangeIcon fontSize="large" />}
+        onClick={handleClickOpen}
+      />
+      <Months
+        pathname="profitexpensesummary"
+        fullScreen
+        open={open}
+        handleClose={handleClose}
+      />
 
-      {/* <ListItem
-        button
-        onClick={() => {
-          props.history.push({ pathname: "profitandexpenseanalysis" });
-        }}
-      >
-        <ListItemText
-          primary={<h5>Profit and Expenses</h5>}
-          secondary="Profit and expenses graphical representation"
-        />
-      </ListItem> */}
+      {/* <Item
+        description="View today profit and expenses summary"
+        className="datepicker"
+        title="Profit and Expenses Graph"
+        route="profitandexpenseanalysis"
+        icon={<TodayIcon fontSize="large" />}
+        data="today"
+      /> */}
     </>
   );
   // }

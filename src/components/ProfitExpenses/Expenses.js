@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -13,6 +12,16 @@ import "react-overlay-loader/styles.css";
 import { reactLocalStorage } from "reactjs-localstorage";
 import Api from "../../api/api";
 import moment from "moment";
+
+import { makeStyles } from "@material-ui/core/styles";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import Avatar from "@material-ui/core/Avatar";
+import ImageIcon from "@material-ui/icons/Image";
+import WorkIcon from "@material-ui/icons/Work";
+import BeachAccessIcon from "@material-ui/icons/BeachAccess";
 
 function Expenses(props) {
   const [expenses, setExpense] = useState([]);
@@ -113,18 +122,21 @@ function Expenses(props) {
         <ExpenseForm />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <ul className="collection">
+        <List className={classes.root}>
           {expenses.map((value, index) => (
-            <Link to="#" className="collection-item avatar" key={index}>
-              <div className="col s10">
-                <i className="material-icons circle">folder</i>
-                <span className="title">{value.expensedetails}</span>
-                <br />
-                <span>{value.amount} /=</span>
-              </div>
-            </Link>
+            <ListItem key={index}>
+              <ListItemAvatar>
+                <Avatar>
+                  <ImageIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={value.expensedetails}
+                secondary={value.amount}
+              />
+            </ListItem>
           ))}
-        </ul>
+        </List>
       </TabPanel>
     </div>
   );

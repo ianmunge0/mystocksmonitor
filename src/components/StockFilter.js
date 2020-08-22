@@ -1,133 +1,262 @@
 import React, { useEffect, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import { Link, withRouter } from "react-router-dom";
-import M from "materialize-css/dist/js/materialize.min.js";
 import { getReport } from "../Redux/Actions/Reports";
 import { connect } from "react-redux";
-import NavBar from "../components/Navigations/NavBar";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
 import moment from "moment";
+import Grid from "@material-ui/core/Grid";
+import { Typography } from "@material-ui/core";
+import TextField from "@material-ui/core/TextField";
 
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import Avatar from "@material-ui/core/Avatar";
+import ImageIcon from "@material-ui/icons/Image";
+
+import clsx from "clsx";
+import Drawer from "@material-ui/core/Drawer";
+import Divider from "@material-ui/core/Divider";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import InboxIcon from "@material-ui/icons/MoveToInbox";
+import MailIcon from "@material-ui/icons/Mail";
+import Button from "@material-ui/core/Button";
+import NoItems from "./NoItems";
+
+const d = new Date();
+const options = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: "100%",
+    backgroundColor: theme.palette.background.paper,
+  },
+  list: {
+    width: 250,
+  },
+  fullList: {
+    width: "auto",
+  },
+}));
 function StockFilter(props) {
+  const classes = useStyles();
+  const getMonth = (monthStr) => {
+    return new Date(monthStr + "-1-01").getMonth() + 1;
+  };
+
+  var month = options[d.getMonth()];
+  const input = getMonth(month) + "-" + d.getFullYear();
+  const output = moment(input, "MM-YY");
+
   // const [cash, setCash] = useState(0);
   var fromtimeStamp = props.location.state.fromdate;
   var totimestamp = props.location.state.todate;
-  console.log("StockFilter", (fromtimeStamp, totimestamp));
+  if (props.location.state === "today") {
+    fromtimeStamp = new Date();
+    totimestamp = new Date();
+  }
+
+  if (props.location.state === "month") {
+    fromtimeStamp = moment(output.startOf("month").format("LL")).format(
+      "YYYY-MM-DD hh:mm:ss"
+    );
+    totimestamp = moment(output.endOf("month").format("LL")).format(
+      "YYYY-MM-DD hh:mm:ss"
+    );
+  }
 
   useEffect(() => {
-    M.Modal.init(document.querySelectorAll(".modal"), {
-      onOpenEnd: function (el) {},
-    });
-    console.log(fromtimeStamp, totimestamp);
+    // console.log(fromtimeStamp, totimestamp);
     props.getReport(fromtimeStamp, totimestamp);
   }, []);
 
-  // var fromdateString = moment(Date.parse(props.startDate)).format("LLLL");
+  const [state, setState] = React.useState({
+    top: false,
+    left: false,
+    bottom: false,
+    right: false,
+  });
 
-  const deleteProduct = (item) => {
-    // props.deleteStock(item);
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+
+    setState({ ...state, [anchor]: open });
   };
 
+  const list = (anchor) => (
+    <div
+      className={clsx(classes.list, {
+        [classes.fullList]: anchor === "top" || anchor === "bottom",
+      })}
+      role="presentation"
+      onClick={toggleDrawer(anchor, false)}
+      onKeyDown={toggleDrawer(anchor, false)}
+    >
+      <List>
+        {["Products History"].map((text, index) => (
+          <ListItem button key={text}>
+            <ListItemIcon>
+              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+            </ListItemIcon>
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
+      </List>
+    </div>
+  );
+
+  var anchor = "bottom";
+
+  var tifOptions = null;
+  if (props.reports.stocks["items"]) {
+    tifOptions = Object.keys(props.reports.stocks["items"]).map((key) => (
+      <div key={key}>
+        <Typography variant="h6" style={{ margin: 10 }}>
+          {key}
+        </Typography>
+        {props.reports.stocks["items"][key].length > 0
+          ? props.reports.stocks["items"][key].map((value, index) => (
+              <List className={classes.root}>
+                <ListItem onClick={toggleDrawer("bottom", true)}>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <ImageIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={`${value.name}` + " ~(" + `${value.status}` + ")"}
+                    secondary={
+                      "qty: " +
+                      `${value.stock_qty}` +
+                      " x " +
+                      `${value.buyingprice}` +
+                      " = " +
+                      `${value.stock_qty}` * `${value.buyingprice}` +
+                      "/= "
+                    }
+                  />
+                </ListItem>
+                <Divider />
+              </List>
+            ))
+          : "no stocks yet"}
+      </div>
+    ));
+  } else {
+    return (
+      <>
+        <NoItems text="No Stocks Added Yet" />
+        <Loader fullPage loading={props.reports.loading} />
+      </>
+    );
+  }
+
+  // return <>{tifOptions}</>;
   return (
-    <>
+    <div>
       {/* <NavBar titleone="Stock in Report  " titletwo={fromdateString} /> */}
 
-      <div>
-        <Loader fullPage loading={props.reports.loading} />
-        {props.reports.stocks.items && props.reports.stocks.items.length ? (
-          <>
-            <div
-              className="nav-wrapper z-depth-3"
-              style={{ padding: 5, marginTop: 10 }}
-            >
-              <form>
-                <div className="input-field">
-                  <input
-                    placeholder="quick search"
-                    id="search"
-                    // onChange={onText}
-                    type="search"
-                    required
+      {props.reports.stocks["items"] ? (
+        <>
+          <div style={{ padding: 10 }}>
+            <TextField
+              variant="outlined"
+              fullWidth
+              type="search"
+              placeholder="quick search"
+            />
+          </div>
+          <Grid container style={{ marginTop: 20, marginBotton: 10 }}>
+            <Grid item xs>
+              <Typography align="center" variant="h6">
+                Entries
+              </Typography>
+              <Typography align="center" variant="h6">
+                {props.reports.stocks.count}
+              </Typography>
+            </Grid>
+            <Grid item xs>
+              <Typography align="center" variant="h6">
+                On Credit
+              </Typography>
+              <Typography align="center" variant="h6">
+                {props.reports.stocks.credit}
+              </Typography>
+            </Grid>
+            <Grid item xs>
+              <Typography align="center" variant="h6">
+                On cash
+              </Typography>
+              <Typography align="center" variant="h6">
+                {props.reports.stocks.cash}
+              </Typography>
+            </Grid>
+          </Grid>
+        </>
+      ) : (
+        <Typography variant="h5" style={{ margin: 30 }}>
+          No Stocks
+        </Typography>
+      )}
+      {/* <List className={classes.root}> */}
+      {tifOptions}
+      {/* {props.reports.stocks
+          ? props.reports.stocks["items"].map((value, index) => (
+              <div key={index}>
+                <ListItem onClick={toggleDrawer("bottom", true)}>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <ImageIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={`${value.name}` + " ~(" + `${value.status}` + ")"}
+                    secondary={
+                      "qty: " +
+                      `${value.stock_qty}` +
+                      " x " +
+                      `${value.buyingprice}` +
+                      " = " +
+                      `${value.stock_qty}` * `${value.buyingprice}` +
+                      "/= "
+                    }
                   />
-                  <label className="label-icon" htmlFor="search">
-                    <i className="material-icons">search</i>
-                  </label>
-                  <i className="material-icons">close</i>
-                </div>
-              </form>
-            </div>
-            <div className="container">
-              <div className="row">
-                <div className="col s3 center">
-                  <h6>Entries</h6>
-                  <h6>
-                    {props.reports.stocks.items
-                      ? props.reports.stocks.items.length
-                      : 0}
-                  </h6>
-                </div>
-                <div className="col s5 center">
-                  <h6>On Credit</h6>
-                  <h6>{props.reports.stocks.credit}</h6>
-                </div>
-                <div className="col s4 center">
-                  <h6>On cash</h6>
-                  <h6>{props.reports.stocks.cash}</h6>
-                </div>
+                </ListItem>
+                <Divider />
               </div>
-            </div>
-          </>
-        ) : (
-          <h5>no products</h5>
-        )}
-        <div className="section modal-trigger " data-target="editmodal">
-          <div className="container">
-            {props.reports.stocks.items
-              ? props.reports.stocks.items.map((value, index) => (
-                  <div className="row" key={index}>
-                    <div className="col s12">
-                      <h6 style={{ fontWeight: "bold" }}>
-                        {value.name} ~{" "}
-                        <span className="green-text">{value.status}</span>
-                      </h6>
-                      <div>
-                        qty {value.stock_qty} x {value.buyingprice} =
-                        {value.stock_qty * value.buyingprice}/=
-                      </div>
-                    </div>
-                    <div className="col s12">
-                      <div className="col s6 stocktxt">
-                        {/* <p>~ by fred</p> */}
-                        <p>supplier ~ {value.supplier_name} </p>
-                      </div>
-                      <div className="col s6 stocktxt">
-                        <p className="stocktxt right" style={{ fontSize: 10 }}>
-                          {value.date_time}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              : ""}
-          </div>
-        </div>
-        <div className="divider"></div>
-      </div>
-
-      <div className="col s12">
-        <div id="editmodal" className="modal bottom-sheet">
-          <div className="modal-content sidenav bottom-modal">
-            <ul>
-              <li>
-                <Link to="editstock">
-                  <i className="material-icons">edit</i>Product History
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </>
+            ))
+          : ""} */}
+      {/* </List> */}
+      <React.Fragment key={anchor}>
+        <Drawer
+          anchor={anchor}
+          open={state[anchor]}
+          onClose={toggleDrawer(anchor, false)}
+        >
+          {list(anchor)}
+        </Drawer>
+      </React.Fragment>
+    </div>
   );
 }
 const mapStateToProps = (state) => ({

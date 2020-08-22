@@ -10,7 +10,6 @@ const initialState = {
 const AuthenticationReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOADING:
-      console.log("AuthenticationReducer LOADING", state);
       return {
         ...state,
         loading: true,

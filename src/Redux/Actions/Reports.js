@@ -9,11 +9,6 @@ export const getReport = (fromtime, totime) => {
       type: LOADING,
       loading: true,
     });
-    console.log({
-      fromtimeStamp: moment(fromtime).format("YYYY-MM-DD hh:mm:ss"),
-      totimeStamp: moment(totime).format("YYYY-MM-DD hh:mm:ss"),
-      shop: reactLocalStorage.getObject("userdata").default_shop,
-    });
 
     Api.get(`/reports.php`, {
       params: {

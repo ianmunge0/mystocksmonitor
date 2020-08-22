@@ -1,73 +1,78 @@
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
+import Grid from "@material-ui/core/Grid";
 import { getStock, deleteStock } from "../../Redux/Actions/Stock";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import NavBar from "../../components/Navigations/NavBar";
 import clsx from "clsx";
 import List from "@material-ui/core/List";
-import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Drawer from "@material-ui/core/Drawer";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
-import DeleteSharpIcon from "@material-ui/icons/DeleteSharp";
-import ViewHeadlineIcon from "@material-ui/icons/ViewHeadline";
-// import { hashHistory } from "react-router";
 
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import Avatar from "@material-ui/core/Avatar";
+import Typography from "@material-ui/core/Typography";
+import ReportProblemIcon from "@material-ui/icons/ReportProblem";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
+import { Divider } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
+import ImageIcon from "@material-ui/icons/Image";
+import DoneAllIcon from "@material-ui/icons/DoneAll";
+import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 
-const columns = [
-  { id: "name", label: "Name \nBuying Price", minWidth: 170 },
-  { id: "sellingprice", label: "Qty \nSelling Price", minWidth: 100 },
-];
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Slide from "@material-ui/core/Slide";
+import Button from "@material-ui/core/Button";
 
-function createData(name, code) {
-  return { name, code };
-}
-
-const useStyles = makeStyles({
-  root: {
-    width: "100%",
-  },
-  container: {
-    maxHeight: 440,
-  },
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: "100%",
+    maxWidth: "36ch",
+    backgroundColor: theme.palette.background.paper,
+  },
+  inline: {
+    display: "inline",
+  },
+}));
+
 function AllStocks(props) {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (action) => {
+    setOpen(false);
+    if (action === "delete") {
+      props.deleteStock(item.stockid);
+    }
+  };
+
   const rows = props.stocks;
   useEffect(() => {
     props.getStock();
+    // setStocks(props.stock);
   }, []);
+  const [all, setAll] = useState(false);
+
+  const [stocks, setStocks] = useState([]);
 
   const classes = useStyles();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
   const [item, setItem] = useState(null);
 
-  const [state, setState] = React.useState({
+  const [state, setState] = useState({
     top: false,
     left: false,
     bottom: false,
@@ -83,11 +88,21 @@ function AllStocks(props) {
     }
 
     setState({ ...state, [anchor]: open });
-    console.log(type);
-    if (type === "Delete") {
-      props.deleteStock(item.stockid);
+    if (type === 2) {
+      handleClickOpen();
+      // props.deleteStock(item.stockid);
+      // return <Alert severity="error">{item.name} deleted successfully</Alert>;
     }
-    if (type === "Edit") {
+    // console.log(item);
+    if (type === 0) {
+      props.history.push({
+        pathname: `/productsummary/${item.shopserial_key}`,
+        state: {
+          data: item,
+        },
+      });
+    }
+    if (type === 1) {
       props.history.push({
         pathname: `/editstock/${item.stockid}`,
       });
@@ -118,7 +133,7 @@ function AllStocks(props) {
       <List>
         {["Product History", "Edit", "Delete"].map((text, index) => (
           <ListItem
-            onClick={toggleDrawerOne(anchor, false, text)}
+            onClick={toggleDrawerOne(anchor, false, index)}
             button
             key={text}
           >
@@ -129,54 +144,153 @@ function AllStocks(props) {
     </div>
   );
 
-  if (rows.length === 0) {
-    return <h5>No stock available</h5>;
-  }
-
+  const outofstock = props.stocks.filter((row) => parseInt(row.stock_qty) == 0);
+  const runningoutofstock = props.stocks.filter(
+    (row) => parseInt(row.stock_qty) <= parseInt(row.reorder_level)
+  );
   return (
-    <Paper className={classes.root}>
-      <TableContainer className={classes.container}>
-        <Loader fullPage loading={props.stockresponse.loading} />
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                >
-                  <b>{column.label}</b>
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row, index) => {
-                return (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    tabIndex={-1}
-                    key={index}
-                    onClick={toggleDrawer("bottom", true, row)}
-                  >
-                    <TableCell>
-                      {row.name} <br />
-                      {row.buyingprice} /=
-                    </TableCell>
-                    <TableCell>
-                      {row.stock_qty} {row.unit} <br />
-                      {row.sellingprice} /=
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-          </TableBody>
-        </Table>
-      </TableContainer>
+    <>
+      <Button
+        variation="outline"
+        onClick={() => {
+          props.history.push({
+            pathname: "export",
+          });
+        }}
+      >
+        Export
+      </Button>
+      <Loader fullPage loading={props.waiting.loading} />
+      {all ? (
+        <Alert
+          icon={false}
+          severity="success"
+          onClick={() => {
+            props.dispatch({
+              type: "GET_STOCK",
+              stocks: stocks,
+            });
+            setAll(false);
+          }}
+        >
+          Show All({stocks.length})
+        </Alert>
+      ) : (
+        ""
+      )}
+      {outofstock.length > 0 ? (
+        <Alert
+          variant="filled"
+          severity="error"
+          onClick={() => {
+            if (stocks.length === 0) {
+              setStocks(props.stocks);
+            }
+            props.dispatch({
+              type: "GET_STOCK",
+              stocks: outofstock,
+            });
+            setAll(true);
+          }}
+          action={<ArrowForwardIosIcon />}
+        >
+          {outofstock.length} products are out of stock
+        </Alert>
+      ) : (
+        ""
+      )}
+      {runningoutofstock.length > 0 ? (
+        <Alert
+          variant="filled"
+          severity="warning"
+          action={<ArrowForwardIosIcon />}
+          onClick={() => {
+            if (stocks.length === 0) {
+              setStocks(props.stocks);
+            }
+
+            props.dispatch({
+              type: "GET_STOCK",
+              stocks: runningoutofstock,
+            });
+            setAll(true);
+          }}
+          style={{ marginTop: 10 }}
+        >
+          {runningoutofstock.length} products going out of stock
+        </Alert>
+      ) : (
+        ""
+      )}
+      {props.stocks.map((row, index) => {
+        return (
+          <List
+            className={classes.root}
+            key={index}
+            onClick={toggleDrawer("bottom", true, row)}
+          >
+            <ListItem alignItems="flex-start">
+              <ListItemAvatar>
+                {parseInt(row.stock_qty) <= parseInt(row.reorder_level) ? (
+                  <Avatar style={{ backgroundColor: "#ff9800" }}>
+                    <ReportProblemIcon />
+                  </Avatar>
+                ) : (
+                  <Avatar style={{ backgroundColor: "green" }}>
+                    <DoneAllIcon />
+                  </Avatar>
+                )}
+              </ListItemAvatar>
+              <ListItemText
+                primary={row.name}
+                secondary={
+                  <>
+                    <Typography
+                      component="span"
+                      variant="body2"
+                      className={classes.inline}
+                      color="textPrimary"
+                    >
+                      {"Qty: " +
+                        `${row.stock_qty} ${
+                          row.unit_data ? row.unit_data.unit_name : ""
+                        }`}
+                      {row.supplier_data
+                        ? " | Supplier: " + `${row.supplier_data.supplier_name}`
+                        : ""}
+                      <br />
+                    </Typography>
+                    {"Buying Price: " + `${row.buyingprice}`} |{" "}
+                    {"Selling Price: " + `${row.buyingprice}`}
+                  </>
+                }
+              />
+            </ListItem>
+            <Divider />
+          </List>
+        );
+      })}
+      <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle id="alert-dialog-slide-title">
+          {"Are you sure you want to delete?"}
+        </DialogTitle>
+
+        <DialogActions>
+          <Button onClick={() => handleClose("close")} color="primary">
+            Not Yet
+          </Button>
+          <Button onClick={() => handleClose("delete")} color="primary">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Drawer
         anchor={"bottom"}
         open={state["bottom"]}
@@ -184,139 +298,20 @@ function AllStocks(props) {
       >
         {list("bottom")}
       </Drawer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
-      />
-    </Paper>
+    </>
   );
 }
 
-// function AllStocks(props) {
-//   useEffect(() => {
-//     props.getStock();
-
-//     // var elems = document.querySelectorAll('.fixed-action-btn');
-//     M.FloatingActionButton.init(
-//       document.querySelectorAll(".fixed-action-btn"),
-//       {}
-//     );
-
-//     M.Modal.init(document.querySelectorAll(".modal"), {
-//       onOpenEnd: function (el) {},
-//     });
-//   }, []);
-
-//   const [editid, setEditid] = useState("");
-
-//   console.log(props.stocks);
-
-//   const deleteProduct = (id) => {
-//     props.deleteStock(id);
-//   };
-
-//   return (
-//     <div>
-//       <NavBar titleone="Stock Setup" />
-//       <Loader fullPage loading={props.stockresponse.loading} />
-//       <table className="highlight">
-//         <thead>
-//           <tr>
-//             <th>
-//               Name <br /> Buying Price
-//             </th>
-//             <th className="right">
-//               <span className="right">Qty</span>
-//               <br />
-//               Selling Price
-//             </th>
-//           </tr>
-//         </thead>
-
-//         <tbody>
-//           <Link to="/stockcount" className="btn" style={{ marginTop: 10 }}>
-//             Products Count
-//           </Link>
-//           {props.stocks.length > 0 ? (
-//             props.stocks.map((item, key) => (
-//               <tr
-//                 key={key}
-//                 className="modal-trigger "
-//                 onClick={() => setEditid(item.stockserial_key)}
-//                 data-target="editmodal"
-//               >
-//                 <td>
-//                   {item.name} <br />
-//                   {item.buyingprice} /=
-//                 </td>
-//                 <td className="right">
-//                   <div className="left">
-//                     {item.stock_qty} {item.unit_name}
-//                     <br />
-//                     {item.sellingprice}/=
-//                   </div>
-//                   <a href="!#" className="secondary-content ">
-//                     <i className="material-icons valign">more_vert</i>
-//                   </a>
-//                 </td>
-//               </tr>
-//             ))
-//           ) : (
-//             <h5>No stock added yet</h5>
-//           )}
-//         </tbody>
-//       </table>
-//       <div className="fixed-action-btn">
-//         <Link to="newstock" className="btn-floating btn-large red">
-//           <i className="large material-icons">add</i>
-//         </Link>
-//       </div>
-
-//       <div id="editmodal" className="modal bottom-sheet">
-//         <div className="modal-content sidenav bottom-modal">
-//           <ul>
-//             <li>
-//               <a href="#!">
-//                 <i className="material-icons">format_list_bulleted</i>
-//                 Product History
-//               </a>
-//             </li>
-//             <li>
-//               <Link to={`/editstock/${editid}`}>
-//                 <i className="material-icons">edit</i>Edit
-//               </Link>
-//             </li>
-//             <li>
-//               <Link
-//                 to="#"
-//                 onClick={() => deleteProduct(editid)}
-//                 className="modal-trigger "
-//                 data-target="deletealert"
-//               >
-//                 <i className="material-icons">delete</i>Delete
-//               </Link>
-//             </li>
-//           </ul>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
 const mapStateToProps = (state) => ({
   stocks: state.stock.stocks,
-  stockresponse: state.stock,
+  waiting: state.stock,
 });
 
 const mapDispacthToProps = (dispatch) => {
   return {
     getStock: () => dispatch(getStock()),
     deleteStock: (id) => dispatch(deleteStock(id)),
+    dispatch,
   };
 };
 export default connect(

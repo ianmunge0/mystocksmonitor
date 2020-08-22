@@ -4,10 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import NewNav from "../Navigations/NewNav";
-import NavBar from "../Navigations/NavBar";
 import NewStock from "../Stocks/NewStock";
 import AllStocks from "../Stocks/AllStocks";
 import StockCount from "../Stock/StockCount";
@@ -85,15 +82,17 @@ export default function StockSetup() {
           <LinkTab label="Counts" href="/spam" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
-      <TabPanel value={value} index={0}>
-        <AllStocks />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <NewStock />
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <StockCount />
-      </TabPanel>
+      <div style={{ margin: 10 }}>
+        <TabPanel value={value} index={0}>
+          <AllStocks />
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <NewStock />
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          <StockCount />
+        </TabPanel>
+      </div>
     </div>
   );
 }

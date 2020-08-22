@@ -22,8 +22,17 @@ import Avatar from "@material-ui/core/Avatar";
 import Badge from "@material-ui/core/Badge";
 import { reactLocalStorage } from "reactjs-localstorage";
 import auth from "../auth";
-const drawerWidth = 240;
 
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Slide from "@material-ui/core/Slide";
+const drawerWidth = 240;
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 const StyledBadge = withStyles((theme) => ({
   badge: {
     backgroundColor: "#44b700",
@@ -110,6 +119,21 @@ function AppBarComponent(props) {
     setMobileOpen(!mobileOpen);
   };
 
+  const [open, setOpen] = React.useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (action) => {
+    setOpen(false);
+    if (action === "delete") {
+      auth.logout(() => {
+        props.history.push({ pathname: "/login/admin" });
+        handleDrawerToggle();
+      });
+    }
+  };
+
   const drawer = (
     <div>
       <div className={classes.toolbar} />
@@ -145,13 +169,10 @@ function AppBarComponent(props) {
             key={text}
             onClick={() => {
               if (text === "Logout") {
-                auth.logout(() => {
-                  props.history.push({ pathname: "/login/admin" });
-                  handleDrawerToggle();
-                });
+                handleClickOpen();
               } else {
                 props.history.push({ pathname: "/myprofile" });
-                handleDrawerToggle();
+                setMobileOpen(false); //handleDrawerToggle();
                 // window.location = "/myprofile";
               }
             }}
@@ -163,23 +184,57 @@ function AppBarComponent(props) {
           </ListItem>
         ))}
       </List>
+
+      <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle id="alert-dialog-slide-title">
+          {"Are you sure you want to logout?"}
+        </DialogTitle>
+
+        <DialogActions>
+          <Button onClick={() => handleClose("close")} color="primary">
+            No
+          </Button>
+          <Button onClick={() => handleClose("delete")} color="primary">
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
   const initToolbar = (title) => {
     console.log("initToolbar", title);
     switch (title) {
       case "sales":
-        return <Link to="/newsale">Add +</Link>;
+        return (
+          <Button
+            onClick={() => {
+              props.history.push({
+                pathname: "/newsale",
+              });
+            }}
+          >
+            <Typography style={{ color: "#fff" }}>Add +</Typography>
+          </Button>
+        );
         break;
       case "profitnexpenses":
         return (
-          <Link
-            style={{ fontSize: 12 }}
-            className="btn btn-primary col s12"
-            to="/expenses"
+          <Button
+            onClick={() => {
+              props.history.push({
+                pathname: "/expenses",
+              });
+            }}
           >
-            Add Expenes +
-          </Link>
+            <Typography style={{ color: "#fff" }}>Add Expenes +</Typography>
+          </Button>
         );
         break;
       default:
@@ -215,7 +270,9 @@ function AppBarComponent(props) {
               onClick={
                 () => {
                   props.backlink
-                    ? props.history.push({ pathname: `${props.backlink}` })
+                    ? props.history.push({
+                        pathname: "/" + `${props.backlink}`,
+                      })
                     : props.history.goBack();
                 }
                 // props.history.push({ pathname: (`${props.backlink}` ? `${props.backlink}` : ) })
@@ -232,10 +289,10 @@ function AppBarComponent(props) {
               </Typography>
             </Grid>
             {props.settings ? (
-              <Grid item xs={8}>
-                <Button className={classes.actionbtn} primary="sdsf">
+              <Grid item xs={8} className={classes.actionbtn}>
+                <div className={classes.actionbtn}>
                   {initToolbar(props.settings)}
-                </Button>
+                </div>
               </Grid>
             ) : (
               ""

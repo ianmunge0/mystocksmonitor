@@ -4,8 +4,26 @@ import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
-import NavBar from "../../components/Navigations/NavBar";
-
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
+import { makeStyles } from "@material-ui/core/styles";
+import { Divider } from "@material-ui/core";
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: "center",
+    color: theme.palette.text.secondary,
+  },
+  inputs: {
+    marginRight: 15,
+    paddingTop: 0,
+    paddingBottom: 13,
+  },
+}));
 function StockCount(props) {
   useEffect(() => {
     props.getStock(34);
@@ -29,53 +47,62 @@ function StockCount(props) {
     props.saveStockCount(count, item);
   };
 
+  const classes = useStyles();
   return (
-    <div>
+    <div className={classes.root}>
       <Loader fullPage loading={props.updateresponse.stock.loading} />
-      <ul className="collection">
-        <div className="collection-item">
-          <Link
-            to="/counthistory"
-            className="btn btn-primary"
-            style={{ marginTop: 15, marginBottom: 15 }}
-          >
-            <i className="material-icons left">remove_red_eye</i>View Count
-            History
-          </Link>
-        </div>
-        {props.stocks.length > 0
-          ? props.stocks.map((item, key) => (
-              <li className="collection-item" key={key}>
-                <form onSubmit={(e) => saveCount(e, item, count)}>
-                  <div className="row  valign-wrapper">
-                    <div className="col s4">
-                      <div className="col s12">
-                        <p style={{ fontSize: 16 }}>{item.name}</p>
-                        <p style={{ fontSize: 12 }}>
-                          System Count ({item.stock_qty} )
-                        </p>
-                      </div>
-                    </div>
-                    <div className="col s12">
-                      <input
-                        type="text"
-                        className="editinput center countinput"
-                        onChange={(e) => handleCount(item.stockserial_key, e)}
-                        defaultValue={item.stock_qty}
-                        id={item.stockserial_key}
-                      />
-                    </div>
-                    <div className="col s3">
-                      <button type="submit" className="btn btn-small">
-                        Ok
-                      </button>
-                    </div>
-                  </div>
-                </form>
-              </li>
-            ))
-          : ""}
-      </ul>
+
+      <div className="collection-item">
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            props.history.push({
+              pathname: "/counthistory",
+            });
+          }}
+        >
+          <i className="material-icons left">remove_red_eye</i> View Count
+          History
+        </Button>
+      </div>
+      {props.stocks.length > 0
+        ? props.stocks.map((item, key) => (
+            <form
+              onSubmit={(e) => saveCount(e, item, count)}
+              key={key}
+              style={{ marginTop: 20 }}
+            >
+              <Grid container>
+                <Grid item xs>
+                  <p style={{ fontSize: 16, marginTop: 0, marginBottom: 0 }}>
+                    {item.name}
+                  </p>
+                  <p style={{ fontSize: 12, marginTop: 0 }}>
+                    System Count ({item.stock_qty} )
+                  </p>
+                </Grid>
+                <Grid item xs>
+                  <TextField
+                    className={classes.inputs}
+                    id={item.stockserial_key}
+                    defaultValue={item.stock_qty}
+                    onChange={(e) => handleCount(item.stockserial_key, e)}
+                    variant="outlined"
+                    type="text"
+                  />
+                </Grid>
+                <Grid item xs>
+                  <Button type="submit" variant="contained" color="primary">
+                    Save
+                  </Button>
+                </Grid>
+              </Grid>
+              <Divider />
+            </form>
+          ))
+        : ""}
       {props.stocks.length == 0 ? <h5>No counts at the moment</h5> : " "}
     </div>
   );
@@ -92,4 +119,7 @@ const mapDispacthToProps = (dispatch) => {
     saveStockCount: (count, item) => dispatch(saveStockCount(count, item)),
   };
 };
-export default connect(mapStateToProps, mapDispacthToProps)(StockCount);
+export default connect(
+  mapStateToProps,
+  mapDispacthToProps
+)(withRouter(StockCount));

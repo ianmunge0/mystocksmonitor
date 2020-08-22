@@ -2,34 +2,14 @@ import React, { useState } from "react";
 
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
-import { DefinedRange } from "react-date-range";
+// import { DefinedRange } from "react-date-range";
 import { DateRange } from "react-date-range";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItem from "@material-ui/core/ListItem";
-import moment from "moment";
-const d = new Date();
-const options = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-export default function StockInManager(props) {
-  const getMonth = (monthStr) => {
-    return new Date(monthStr + "-1-01").getMonth() + 1;
-  };
+import ShowChartIcon from "@material-ui/icons/ShowChart";
+import TodayIcon from "@material-ui/icons/Today";
+import DateRangeIcon from "@material-ui/icons/DateRange";
+import Item from "./Item";
 
-  var month = options[d.getMonth()];
-  const input = getMonth(month) + "-" + d.getFullYear();
-  const output = moment(input, "MM-YY");
+export default function StockInManager(props) {
   const handleSelect = (ranges) => {
     console.log("handleSelect", ranges.selection);
     setState([ranges.selection]);
@@ -55,6 +35,7 @@ export default function StockInManager(props) {
       {/* <NavBar titleone="Stock in Manager" /> */}
       <DateRange
         editableDateInputs={false}
+        style={{ width: "100%" }}
         onChange={(item) => {
           handleSelect(item);
         }}
@@ -66,7 +47,34 @@ export default function StockInManager(props) {
         onChange={(item) => getstock(item)}
         ranges={state}
       /> */}
-      <ListItem
+      <Item
+        description="View Stocks Items"
+        className="datepicker"
+        title="Today"
+        route="stockfilter"
+        icon={<TodayIcon fontSize="large" />}
+        data="today"
+      />
+
+      <Item
+        description="View current month stock report"
+        className="datepicker"
+        title="This Month"
+        route="stockfilter"
+        icon={<DateRangeIcon fontSize="large" />}
+        data="month"
+      />
+
+      <Item
+        description="Compare product analysis report"
+        className="datepicker"
+        title="Product Analysis"
+        route="productsanalysis"
+        icon={<ShowChartIcon fontSize="large" />}
+        data="month"
+      />
+
+      {/* <ListItem
         button
         onClick={() => {
           props.history.push({
@@ -100,9 +108,9 @@ export default function StockInManager(props) {
           primary={<h5>This Month</h5>}
           secondary="View current month stock report"
         />
-      </ListItem>
+      </ListItem> */}
 
-      <ListItem
+      {/* <ListItem
         button
         onClick={() => {
           props.history.push({ pathname: "productsanalysis" });
@@ -112,7 +120,7 @@ export default function StockInManager(props) {
           primary={<h5>Product Analysis</h5>}
           secondary="Compare product analysis report"
         />
-      </ListItem>
+      </ListItem> */}
 
       {/* <Products /> */}
     </>

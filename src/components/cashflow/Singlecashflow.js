@@ -6,10 +6,23 @@ import { connect } from "react-redux";
 import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+import { makeStyles } from "@material-ui/core/styles";
 import moment from "moment";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
+import { Divider, Typography, Grid } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import AddIcon from "@material-ui/icons/Add";
+import RemoveIcon from "@material-ui/icons/Remove";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
 const options = [
   "January",
   "February",
@@ -102,6 +115,18 @@ function Singlecashflow(props) {
     setMonth(option);
     props.getTodayExpenses(expense);
   };
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      flexGrow: 1,
+      backgroundColor: theme.palette.background.paper,
+    },
+    inputs: {
+      width: "100%",
+      float: "left",
+    },
+  }));
+
+  const classes = useStyles();
 
   console.log("props", props.expenses.profitnexpense.todayexpenses);
 
@@ -111,171 +136,184 @@ function Singlecashflow(props) {
 
   return (
     <>
-      <div className="row  z-depth-3" style={{ paddingBottom: 20 }}>
-        <div className="col s12 center">
-          <h5>
-            Cash in hand <br />{" "}
-            {props.expenses.profitnexpense.todayexpenses.cash_in_hand}/=
-          </h5>
-        </div>
-        <div className="col s12">
-          <div className="col s6">
-            <button
-              className="waves-effect waves-light btn btn-primary left modal-trigger"
-              onClick={() => handleClickOpen("in")}
-            >
-              <i className="material-icons left ">add</i>cash In
-            </button>
-            {/* <a
-              className="waves-effect waves-light btn btn-primary left modal-trigger"
-              href="#modal1"
-            >
-              <i className="material-icons left ">add</i>cash In
-            </a> */}
-          </div>
-          <div className="col s6">
-            <button
-              className="btn btn-warning orange right"
-              onClick={() => handleClickOpen("out")}
-            >
-              <i className="material-icons left">remove</i>cash Out
-            </button>
-            <Dialog
-              type={type}
-              fullScreen
-              open={open}
-              handleClose={handleClose}
-            />
-          </div>
-        </div>
-      </div>
-      <div className="container">
-        <div className="row">
-          <div className="col s12">
-            <div>
-              <IconButton
-                aria-label="more"
-                aria-controls="long-menu"
-                aria-haspopup="true"
-                onClick={handleClick}
-              >
-                <a href="#" className="btn" style={{ marginTop: 10 }}>
-                  <i className="material-icons left">fast_rewind</i>
-                  {month ? month : options[d.getMonth()]} {""}
-                  {d.getFullYear()}
-                </a>
-              </IconButton>
-              <Menu
-                id="long-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={openn}
-                onClose={handleClosee}
-                PaperProps={{
-                  style: {
-                    maxHeight: ITEM_HEIGHT * 4.5,
-                    width: "20ch",
-                  },
-                }}
-              >
-                {options.map((option) => (
-                  <MenuItem
-                    key={option}
-                    selected={option === options[d.getMonth()]}
-                    onClick={() => handleClosee(option)}
-                  >
-                    {option}
-                  </MenuItem>
-                ))}
-              </Menu>
-            </div>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col s12">
-            <table>
-              <thead>
-                <tr>
-                  <th>Type </th>
-                  <th>In</th>
-                  <th>Out</th>
-                </tr>
-              </thead>
+      <IconButton
+        aria-label="more"
+        aria-controls="long-menu"
+        style={{ width: "100%" }}
+        aria-haspopup="true"
+        onClick={handleClick}
+      >
+        <ChevronLeftIcon />
+        {month ? month : options[d.getMonth()]} {""}
+        {d.getFullYear()}
+        <ChevronRightIcon />
+      </IconButton>
+      <Menu
+        id="long-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={openn}
+        onClose={handleClosee}
+        PaperProps={{
+          style: {
+            maxHeight: ITEM_HEIGHT * 4.5,
+            width: "20ch",
+          },
+        }}
+      >
+        {options.map((option) => (
+          <MenuItem
+            key={option}
+            selected={option === options[d.getMonth()]}
+            onClick={() => handleClosee(option)}
+          >
+            {option}
+          </MenuItem>
+        ))}
+      </Menu>
+      <Grid container>
+        <Grid xs={12}>
+          <Typography variant="h6" align="center">
+            Profit Today
+          </Typography>
+        </Grid>
+        <Grid xs={12}>
+          {" "}
+          <Typography variant="h6" align="center">
+            {props.expenses.profitnexpense.todayexpenses.cash_in_hand}
+          </Typography>
+        </Grid>
+      </Grid>
 
-              <tbody>
-                <tr>
-                  <td>Previous balance</td>
-                  <td>
-                    {
-                      props.expenses.profitnexpense.todayexpenses
-                        .balance_forward
-                    }
-                  </td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>Sales</td>
-                  <td>
-                    {
-                      props.expenses.profitnexpense.todayexpenses
-                        .current_month_sales
-                    }
-                  </td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <td>Purchases</td>
-                  <td>-</td>
-                  <td>
-                    {
-                      props.expenses.profitnexpense.todayexpenses
-                        .current_month_purchases
-                    }
-                  </td>
-                </tr>
-                <tr>
-                  <td>Expenses</td>
-                  <td>-</td>
-                  <td>
-                    {
-                      props.expenses.profitnexpense.todayexpenses
-                        .current_month_expenses
-                    }
-                  </td>
-                </tr>
-                {props.expenses.profitnexpense.todayexpenses.cashinlist.map(
-                  (value, index) => (
-                    <tr key={index}>
-                      <td>{value.description}</td>
-                      <td>{value.amount}</td>
-                      <td>-</td>
-                    </tr>
-                  )
-                )}
-                {props.expenses.profitnexpense.todayexpenses.expenseslist.map(
-                  (value, index) => (
-                    <tr key={index}>
-                      <td>{value.expensedetails}</td>
-                      <td>-</td>
-                      <td>{value.amount}</td>
-                    </tr>
-                  )
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div className="row">
-        <p className="left col s6" style={{ fontWeight: "bold" }}>
-          Total cash In{" "}
-          {props.expenses.profitnexpense.todayexpenses.total_cashin}
-        </p>
-        <p className="right col s6" style={{ fontWeight: "bold" }}>
-          Total cash Out{" "}
-          {props.expenses.profitnexpense.todayexpenses.total_cashout}
-        </p>
-      </div>
+      <Divider />
+
+      <Grid container>
+        <Grid item xs={6} align="center">
+          <Button
+            variant="outlined"
+            color="primary"
+            style={{ marginTop: 20, paddingTop: 5, paddingBottom: 5 }}
+            className={classes.button}
+            onClick={() => handleClickOpen("in")}
+            type="submit"
+            endIcon={<AddIcon>send</AddIcon>}
+          >
+            Cash In
+          </Button>
+        </Grid>
+        <Grid item xs={6} align="center">
+          <Button
+            variant="outlined"
+            color="secondary"
+            style={{ marginTop: 20, paddingTop: 5, paddingBottom: 5 }}
+            className={classes.button}
+            onClick={() => handleClickOpen("out")}
+            type="submit"
+            endIcon={<RemoveIcon>send</RemoveIcon>}
+          >
+            Cash Out
+          </Button>
+        </Grid>
+      </Grid>
+
+      <Dialog type={type} fullScreen open={open} handleClose={handleClose} />
+
+      <TableContainer>
+        <Table className={classes.table} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Type</TableCell>
+              <TableCell>In</TableCell>
+              <TableCell>Out</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableRow>
+              <TableCell component="th" scope="row">
+                Previous balance
+              </TableCell>
+              <TableCell>
+                {props.expenses.profitnexpense.todayexpenses.balance_forward}
+              </TableCell>
+              <TableCell>-</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell component="th" scope="row">
+                Sales
+              </TableCell>
+              <TableCell>
+                {
+                  props.expenses.profitnexpense.todayexpenses
+                    .current_month_sales
+                }
+              </TableCell>
+              <TableCell>-</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell component="th" scope="row">
+                Purchases
+              </TableCell>
+              <TableCell>-</TableCell>
+              <TableCell>
+                {
+                  props.expenses.profitnexpense.todayexpenses
+                    .current_month_purchases
+                }
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell component="th" scope="row">
+                Expenses
+              </TableCell>
+              <TableCell>-</TableCell>
+              <TableCell>
+                {
+                  props.expenses.profitnexpense.todayexpenses
+                    .current_month_expenses
+                }
+              </TableCell>
+            </TableRow>
+
+            {props.expenses.profitnexpense.todayexpenses.cashinlist.map(
+              (value, index) => (
+                <TableRow key={index}>
+                  <TableCell component="th" scope="row">
+                    {value.description}
+                  </TableCell>
+                  <TableCell>{value.amount}</TableCell>
+                  <TableCell>-</TableCell>
+                </TableRow>
+              )
+            )}
+            {props.expenses.profitnexpense.todayexpenses.expenseslist.map(
+              (value, index) => (
+                <TableRow key={index}>
+                  <TableCell component="th" scope="row">
+                    {value.expensedetails}
+                  </TableCell>
+                  <TableCell>-</TableCell>
+                  <TableCell>{value.amount}</TableCell>
+                </TableRow>
+              )
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      <Grid container style={{ marginTop: 10 }}>
+        <Grid item xs={6} align="center">
+          <Typography spacing={3} variant="button" display="block" gutterBottom>
+            Total Cash In:{" "}
+            {props.expenses.profitnexpense.todayexpenses.total_cashin}
+          </Typography>
+        </Grid>
+        <Grid item xs={6} align="center">
+          <Typography spacing={3} variant="button" display="block" gutterBottom>
+            Total Cash Out:{" "}
+            {props.expenses.profitnexpense.todayexpenses.total_cashout}
+          </Typography>
+        </Grid>
+      </Grid>
     </>
   );
 }
