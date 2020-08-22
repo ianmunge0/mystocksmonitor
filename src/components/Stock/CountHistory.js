@@ -4,8 +4,11 @@ import { getStockCountHistory } from "../../Redux/Actions/Stock";
 import { connect } from "react-redux";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
-import NavBar from "../../components/Navigations/NavBar";
 import { reactLocalStorage } from "reactjs-localstorage";
+import Chip from "@material-ui/core/Chip";
+import FaceIcon from "@material-ui/icons/Face";
+import DoneIcon from "@material-ui/icons/Done";
+import { Divider } from "@material-ui/core";
 
 function CountHistory(props) {
   useEffect(() => {
@@ -14,39 +17,32 @@ function CountHistory(props) {
     );
   }, []);
 
-  console.log("CountHistory ", props.stocks);
-
-  return (
-    <>
-      {/* <NavBar titleone="Stock Count" /> */}
-      <ul className="collection">
-        <Loader fullPage loading={props.loading} />
-        {props.stocks["items"]
-          ? props.stocks["items"].map((value, key) => (
-              <li className="collection-item countitem" key={key}>
-                <div className="row">
-                  <span className="title left ">{value.display_day}</span>
-                  <br />
-                  <div className="left">
-                    <h6>
-                      {value.count}/{props.stocks["count"]} items counted
-                    </h6>
-                  </div>
-                  <Link
-                    to={`/counts/${parseInt(
-                      (new Date(value.count_day).getTime() / 1000).toFixed(0)
-                    )}`}
-                    className="secondary-content right"
-                  >
-                    <i className="material-icons">remove_red_eye</i>
-                  </Link>
-                </div>
-              </li>
-            ))
-          : ""}
-      </ul>
-    </>
-  );
+  var tifOptions = null;
+  if (props.stocks.items) {
+    tifOptions = Object.keys(props.stocks.items).map((key) => (
+      <div key={key}>
+        {console.log(new Date(key).getTime())}
+        <div style={{ marginBottom: 20, marginLeft: 10, marginRight: 10 }}>
+          <h3 className="title left ">{key.split("_")[0]}</h3>
+          <Chip
+            icon={<FaceIcon />}
+            label={`${props.stocks.items[key].length}/${props.stocks.count} items counted`}
+            clickable
+            color="primary"
+            // onDelete={handleDelete}
+            deleteIcon={<DoneIcon />}
+            onClick={() => {
+              props.history.push({
+                pathname: `/counts/${key.split("_")[1]}`,
+              });
+            }}
+          />
+        </div>
+        <Divider />
+      </div>
+    ));
+  }
+  return <>{tifOptions}</>;
 }
 
 const mapStateToProps = (state) => ({

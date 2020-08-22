@@ -1,26 +1,19 @@
 import React, { useEffect, useState } from "react";
-import NavBar from "../../components/Navigations/NavBar";
-import M from "materialize-css/dist/js/materialize.min.js";
 import { getShop, updateShop, deleteShop } from "../../Redux/Actions/Shops";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
 import { Redirect } from "react-router-dom";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
 import Api from "../../api/api";
 import { reactLocalStorage } from "reactjs-localstorage";
+import { Divider } from "@material-ui/core";
+import Checkbox from "@material-ui/core/Checkbox";
 
 function ShopSettings(props) {
   useEffect(() => {
-    M.Tabs.init(document.querySelector(".tabs"), {
-      swipeable: true,
-    });
-
-    document.addEventListener("DOMContentLoaded", function () {
-      M.FormSelect.init(document.querySelectorAll("select"), {});
-    });
-    console.log(props.match.params.id);
-
     getShop(props.match.params.id);
   }, []);
 
@@ -124,7 +117,11 @@ function ShopSettings(props) {
         console.log("error", error);
       });
   };
+  const [checked, setChecked] = React.useState(true);
 
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
+  };
   // const [shop, setShop] = useState({
   //   shopname: "",
   //   password: "",
@@ -139,105 +136,105 @@ function ShopSettings(props) {
   console.log("settings", shop);
 
   return (
-    <div>
-      <div className="row">
-        <Loader fullPage loading={loading} />
-        <div className="col s12 m12">
-          <form className="col s12" onSubmit={updateShop}>
-            <div className="row">
-              <div className="col s12">
-                <p className="red-text">{error}</p>
-              </div>
-              <div className="input-field custominpt col s12">
-                <p>Shop name</p>
-                <input
-                  id="shopname"
-                  type="text"
-                  placeholder="shopname"
-                  onChange={handleShopData}
-                  defaultValue={shop.shopname}
-                  className="validate"
-                />
-              </div>
-              <div className="input-field custominpt col s12">
-                <p>Location</p>
-                <input
-                  id="region"
-                  type="text"
-                  placeholder="region"
-                  onChange={handleShopData}
-                  defaultValue={shop.region}
-                  className="validate"
-                />
-              </div>
+    <form className="col s12" onSubmit={updateShop} style={{ margin: 10 }}>
+      <Loader fullPage loading={loading} />
+      <p className="red-text">{error}</p>
+      <p style={{ padding: 0, margin: 0 }}>Shop name</p>
+      <TextField
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        value={shop.shopname}
+        onChange={handleShopData}
+        name="shopname"
+        type="text"
+        id="shopname"
+      />
+      <p style={{ padding: 0, margin: 0 }}>Branch</p>
+      <TextField
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        value={shop.region}
+        onChange={handleShopData}
+        name="region"
+        type="text"
+        id="region"
+      />
+      <p style={{ padding: 0, margin: 0 }}>Type</p>
+      <TextField
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        value={shop.shoptype}
+        onChange={handleShopData}
+        name="shoptype"
+        type="text"
+        id="shoptype"
+      />
+      <h5>Settings</h5>
+      <Divider />
+      <h6 style={{ margin: 0, padding: 0 }}>
+        Send Backup{" "}
+        <Checkbox
+          checked={checked}
+          onChange={handleChange}
+          inputProps={{ "aria-label": "primary checkbox" }}
+        />
+      </h6>
 
-              <div className="input-field custominpt col s12">
-                <p>Type</p>
-                <input
-                  id="shoptype"
-                  type="text"
-                  placeholder="shoptype"
-                  onChange={handleShopData}
-                  defaultValue={shop.shoptype}
-                  className="validate"
-                />
-              </div>
-              <div className="input-field custominpt col s12">
-                <h5>Settings</h5>
+      {/* <div className="input-field custominpt col s12"> */}
+      <div>Backup email</div>
+      {/* <input
+          id="shoptype"
+          type="text"
+          placeholder="shoptype"
+          onChange={handleShopData}
+          defaultValue={shop.emailaddress}
+          className="validate"
+        /> */}
 
-                <div className="switch">
-                  <label>
-                    <div className="row valign-wrapper">
-                      <div className="col s8">
-                        <h6>Send Backup</h6>
-                      </div>
-                      <div className="col s4">
-                        <input
-                          type="checkbox"
-                          defaultChecked={
-                            shop ? (shop.backup === "1" ? true : false) : false
-                          }
-                        />
-                        <span className="lever"></span>
-                      </div>
-                    </div>
-                  </label>
-                </div>
-              </div>
+      <TextField
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        value={shop.emailaddress}
+        onChange={handleShopData}
+        name="email"
+        type="text"
+        id="email"
+      />
+      {/* </div> */}
+      <Link
+        fullWidth
+        style={{
+          padding: 15,
+          color: "red",
+          textDecoration: "none",
+          textAlign: "center",
+          fontSize: 17,
+        }}
+        onClick={() => {
+          deleteShop(props.match.params.id);
+        }}
+      >
+        Delete Shop
+      </Link>
 
-              <div className="input-field custominpt col s12">
-                <div>Backup email</div>
-                <input
-                  id="shoptype"
-                  type="text"
-                  placeholder="shoptype"
-                  onChange={handleShopData}
-                  defaultValue={shop.emailaddress}
-                  className="validate"
-                />
-              </div>
-            </div>
-
-            <Link
-              to="#"
-              onClick={() => {
-                deleteShop(props.match.params.id);
-              }}
-              className="collection-item"
-            >
-              <h5 className="red-text">Delete Shop</h5>
-            </Link>
-            <div className="row">
-              <div className="input-field custominpt col s12 center">
-                <button className="btn btn-primary">
-                  <i className="material-icons left ">save</i>Update
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        color="primary"
+        style={{ padding: 15, marginTop: 20 }}
+      >
+        Update
+      </Button>
+    </form>
   );
 }
 

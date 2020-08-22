@@ -12,7 +12,13 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import ShopForm from "./ShopForm";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListItem from "@material-ui/core/ListItem";
+import List from "@material-ui/core/List";
+import FolderIcon from "@material-ui/icons/Folder";
 
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import { Divider, Typography } from "@material-ui/core";
 function Shops(props) {
   useEffect(() => {
     props.getShops();
@@ -67,6 +73,7 @@ function Shops(props) {
     root: {
       flexGrow: 1,
       backgroundColor: theme.palette.background.paper,
+      padding: 0,
     },
   }));
   const classes = useStyles();
@@ -92,7 +99,47 @@ function Shops(props) {
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0}>
-          <ul className="collection">
+          <List>
+            {props.shops.shops.length > 0 ? (
+              props.shops.shops.map((value, index) => (
+                <>
+                  <ListItem
+                    key={index}
+                    onClick={() =>
+                      props.history.push({
+                        pathname: `/shopsettings/${value.serialno}`,
+                        myCustomProps: value,
+                      })
+                    }
+                  >
+                    <ListItemIcon>
+                      <FolderIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={value.shopname}
+                      secondary={
+                        <span>
+                          Type: {value.shoptype}, Location: {value.region}
+                        </span>
+                      }
+                    />
+                  </ListItem>
+                  <Divider />
+                </>
+              ))
+            ) : (
+              <div style={{ position: "relative" }}>
+                <Typography
+                  variant={"h5"}
+                  align="center"
+                  style={{ position: "absolute", top: "50%", margin: 20 }}
+                >
+                  No Shops yet
+                </Typography>
+              </div>
+            )}
+          </List>
+          {/* <ul className="collection">
             {props.shops.shops.length > 0
               ? props.shops.shops.map((value, index) => (
                   <Link
@@ -117,7 +164,7 @@ function Shops(props) {
                   </Link>
                 ))
               : ""}
-          </ul>
+          </ul> */}
         </TabPanel>
         <TabPanel value={value} index={1}>
           <ShopForm />

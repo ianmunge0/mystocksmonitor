@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
-import { DefinedRange } from "react-date-range";
 import { DateRange } from "react-date-range";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItem from "@material-ui/core/ListItem";
-
-import moment from "moment";
+import Item from "./Item";
+import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
+import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
+import TodayIcon from "@material-ui/icons/Today";
+import DateRangeIcon from "@material-ui/icons/DateRange";
+import Months from "../components/Months";
 const d = new Date();
 const options = [
   "January",
@@ -30,15 +31,8 @@ export default function SalesManager(props) {
   };
 
   var month = options[d.getMonth()];
-  const input = getMonth(month) + "-" + d.getFullYear();
-  const output = moment(input, "MM-YY");
-
-  const handleSelect = (ranges) => {
-    setState([ranges.selection]);
-  };
 
   const selectedSalesDate = (item) => {
-    console.log("selectedSalesDate", item.selection.startDate);
     props.history.push({
       pathname: "/salesreceipts",
       state: {
@@ -48,62 +42,69 @@ export default function SalesManager(props) {
     });
   };
 
-  const [state, setState] = useState([
-    {
-      startDate: new Date(),
-      endDate: null,
-      key: "selection",
-    },
-  ]);
+  const [open, setOpen] = React.useState(false);
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
     <>
-      {/* <NavBar titleone="Sales Manager" action="salesmanager" /> */}
       <DateRange
         editableDateInputs={false}
         onChange={(item) => {
           selectedSalesDate(item);
         }}
         moveRangeOnFirstSelection={false}
-        ranges={state}
       />
-      {/* <DefinedRange
-        onChange={(item) => selectedSalesDate(item)}
-        ranges={state}
+      <Item
+        description="View today's sales"
+        className="datepicker"
+        title="Today"
+        route="salesreceipts"
+        icon={<TodayIcon fontSize="large" />}
+        data="today"
+      />
+      <Item
+        description="View current month sales"
+        className="datepicker"
+        title="This Month"
+        route="salesreceipts"
+        icon={<DateRangeIcon fontSize="large" />}
+        data="month"
+      />
+      <Item
+        description="Sales by months"
+        className="datepicker"
+        title="Monthly Sales"
+        icon={<CalendarTodayIcon fontSize="large" />}
+        onClick={handleClickOpen}
+      />
+      <Months
+        pathname="salesreceipts"
+        fullScreen
+        open={open}
+        handleClose={handleClose}
+      />
+      {/* <Item
+        description="Sales by months"
+        className="datepicker"
+        title="Monthly Sales"
+        route="salesreceipts"
+        icon={<CalendarTodayIcon fontSize="large" />}
+        data="monthly"
       /> */}
-
-      <ListItem
-        button
-        onClick={() => {
-          props.history.push({
-            pathname: "/salesreceipts",
-            state: { fromdate: new Date(), todate: new Date() },
-          });
-        }}
-      >
-        <ListItemText primary={<h5>Today</h5>} secondary="View today's sales" />
-      </ListItem>
-      <ListItem
-        button
-        onClick={() => {
-          var fromtimeStamp = moment(
-            output.startOf("month").format("LL")
-          ).format("YYYY-MM-DD hh:mm:ss");
-          var totimestamp = moment(output.endOf("month").format("LL")).format(
-            "YYYY-MM-DD hh:mm:ss"
-          );
-
-          props.history.push({
-            pathname: "/salesreceipts",
-            state: { fromdate: fromtimeStamp, todate: totimestamp },
-          });
-        }}
-      >
-        <ListItemText
-          primary={<h5>This Month</h5>}
-          secondary="View current month sales"
-        />
-      </ListItem>
+      <Item
+        description="Manage Customers"
+        className="datepicker"
+        title="Customers"
+        route="customers"
+        icon={<PeopleAltIcon fontSize="large" />}
+        data="customers"
+      />
     </>
   );
   // }

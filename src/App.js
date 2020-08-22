@@ -4,12 +4,9 @@ import "./App.css";
 import { connect } from "react-redux";
 import { logout } from "./Redux/Actions";
 
-import { Switch, Route, IndexRedirect } from "react-router-dom";
-import StockSetupold from "./components/StockSetup";
+import { Switch, Route } from "react-router-dom";
 import EditStock from "./components/Stock/EditStock";
-import NavBar from "./components/Navigations/NavBar";
 import Dashboard from "./components/Dashboard";
-import SideNavbar from "../src/components/Navigations/SideNavbar";
 import StockInManager from "./components/StockInManager";
 import SalesManager from "./components/SalesManager";
 import ProfitExpensesManager from "./components/ProfitExpenses/ProfitExpensesManager";
@@ -21,18 +18,14 @@ import CountHistory from "./components/Stock/CountHistory";
 import Counts from "./components/Stock/Counts";
 import DefaultPage from "./components/Initial/index";
 import Login from "./components/Initial/Login";
-import { useSelector } from "react-redux";
 import Units from "./components/Units";
 import CashSalesHistory from "./components/CashSales/CashSalesHistory";
 import StockFilter from "./components/StockFilter";
 import Register from "./components/Initial/Register";
-import NewStock from "./components/Stock/NewStock";
 import StockCount from "./components/Stock/StockCount";
-import Auth from "./components/AuthCheck";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import Shops from "./components/Shops/Shops";
 import ShopSettings from "./components/Shops/ShopSettings";
-import NewShops from "./components/Shops/NewShop";
 import NewCashSale from "./components/CashSales/NewCashSale";
 import SalesProductList from "./components/CashSales/SalesProductList";
 import SalesReceipts from "./components/Sales/SalesReceipts";
@@ -44,14 +37,174 @@ import InititalPage from "./components/Initial/Initialpage";
 import Reset from "./components/Initial/Reset";
 import ProductsAnalysis from "./components/Analysis/ProductsAnalysis";
 import ProfitandExpenseAnalysis from "./components/Analysis/ProfitandExpenseAnalysis";
-import Appcopy from "./Appcopy";
-
+import Customers from "./components/Sales/Customers";
+import CustomerProfile from "./components/Sales/CustomerProfile";
+import PartialPayment from "./components/Sales/PartialPayment";
+import ProductHistory from "./components/Stocks/Product/ProductHistory";
+import SingleProductSales from "./components/Stocks/Product/SingleProductSales";
+import Export from "./components/Shops/Export";
 function App(props) {
-  const loggedin = useSelector((state) => state.login);
-
-  // console.log(props);
   return (
-    <Appcopy/>
+    <React.Fragment>
+      <>
+        <Switch>
+          <Route exact path="/" component={DefaultPage} />
+          <Route path="/initialshopspage" component={InititalPage} />
+          <Route path="/login/:type" component={Login} />
+          <Route path="/reset" component={Reset} />
+          <Route path="/register" component={Register} />
+
+          <ProtectedRoute
+            title="Stock Setup"
+            path="/stocksetup"
+            backlink="dashboard"
+            component={StockSetup}
+          />
+          <ProtectedRoute
+            title="Product History"
+            path="/productsummary/:id"
+            backlink="stocksetup"
+            component={ProductHistory}
+          />
+          <ProtectedRoute
+            title="Dashboard"
+            path="/dashboard"
+            component={Dashboard}
+          />
+          <ProtectedRoute title="All Shops" path="/shops" component={Shops} />
+          <ProtectedRoute path="/shopsettings/:id" component={ShopSettings} />
+          <ProtectedRoute
+            title="Stock Report"
+            path="/stockinmanager"
+            component={StockInManager}
+          />
+          <ProtectedRoute
+            path="/salesmanager"
+            backlink="dashboard"
+            title="Sales"
+            settings="sales"
+            component={SalesManager}
+          />
+          <ProtectedRoute
+            title="Customers Management"
+            path="/customers"
+            component={Customers}
+          />
+          <ProtectedRoute
+            title="Customer Profile"
+            path="/customerprofile/:id"
+            component={CustomerProfile}
+          />
+          <ProtectedRoute
+            backlink="salesmanager"
+            title="Enter New Sales"
+            path="/newsale"
+            component={NewCashSale}
+          />
+          <Route path="/salesproductlist" component={SalesProductList} />
+          <ProtectedRoute
+            title="Product Sales"
+            path="/productssales"
+            component={SingleProductSales}
+          />
+          <ProtectedRoute
+            title="Sales Receipts"
+            path="/salesreceipts"
+            component={SalesReceipts}
+          />
+          <ProtectedRoute
+            title="Partial Payment"
+            path="/partialpayment"
+            component={PartialPayment}
+          />
+          <ProtectedRoute
+            title="Receipt"
+            path="/singlereceipt"
+            component={SingleSales}
+          />
+          <ProtectedRoute
+            path="/profitexpense"
+            title="Profit "
+            settings="profitnexpenses"
+            component={ProfitExpensesManager}
+          />
+          <ProtectedRoute
+            title="Attendants"
+            path="/attendants"
+            component={Attendants}
+          />
+          <ProtectedRoute
+            title="Attendant Profile"
+            path="/attendantsprofile/:id"
+            component={AttendantsProfile}
+          />
+          <ProtectedRoute
+            path="/export"
+            title="Transfer Stock"
+            component={Export}
+          />
+          <ProtectedRoute
+            path="/myprofile"
+            title="My Profile"
+            component={Profile}
+          />
+          <ProtectedRoute path="/units" component={Units} />
+          <ProtectedRoute
+            title="Add Expenses"
+            path="/expenses"
+            component={Expenses}
+          />
+          <ProtectedRoute
+            title="Day's Count"
+            path="/counts/:timestamp"
+            component={Counts}
+          />
+          <ProtectedRoute path="/stockcount" component={StockCount} />
+
+          <ProtectedRoute
+            path="/profitexpensesummary"
+            title="Profit and Expenses summary"
+            component={ProfitExpenseSummary}
+          />
+          <ProtectedRoute
+            path="/profitandexpenseanalysis"
+            component={ProfitandExpenseAnalysis}
+          />
+          <ProtectedRoute
+            title="Cash Sales Summary"
+            path="/cashsaleshistory"
+            component={CashSalesHistory}
+          />
+
+          <ProtectedRoute
+            title="Edit Product"
+            // backlink="stocksetup"
+            path="/editstock/:id"
+            component={EditStock}
+          />
+          <ProtectedRoute
+            title="Cash Flow"
+            path="/cashflow"
+            component={Singlecashflow}
+          />
+          <ProtectedRoute
+            title="Counts History"
+            path="/counthistory"
+            component={CountHistory}
+          />
+          <ProtectedRoute
+            title="Stocks"
+            path="/stockfilter"
+            component={StockFilter}
+          />
+          <ProtectedRoute
+            title="Product Analysis"
+            path="/productsanalysis"
+            component={ProductsAnalysis}
+          />
+        </Switch>
+      </>
+    </React.Fragment>
   );
 }
 

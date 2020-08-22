@@ -87,10 +87,11 @@ function ProfitandExpenseAnalysis(props) {
   // if (props.saleslist.length === 0) {
   //   return <h4>Waiting...</h4>;
   // }
+  console.log(props.graphresponse);
   return (
     <div className="container" style={{ minWidth: "380px", height: "80%" }}>
       {/* <Loader fullPage loading={props.saleslist.loading} /> */}
-      <IconButton
+      {/* <IconButton
         aria-label="more"
         aria-controls="long-menu"
         aria-haspopup="true"
@@ -124,12 +125,12 @@ function ProfitandExpenseAnalysis(props) {
             {option}
           </MenuItem>
         ))}
-      </Menu>
-      {/* <ResponsiveContainer>
+      </Menu> */}
+      <ResponsiveContainer>
         <LineChart
           width={730}
           height={250}
-          data={data}
+          // data={data}
           margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
@@ -140,7 +141,7 @@ function ProfitandExpenseAnalysis(props) {
           <Line type="monotone" dataKey="pv" stroke="#8884d8" />
           <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
         </LineChart>
-      </ResponsiveContainer> */}
+      </ResponsiveContainer>
     </div>
   );
   // }

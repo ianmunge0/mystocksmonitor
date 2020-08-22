@@ -21,6 +21,10 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Icon from "@material-ui/core/Icon";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -68,6 +72,10 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
+  },
+  inputs: {
+    width: "100%",
+    float: "left",
   },
 }));
 
@@ -206,51 +214,49 @@ function Attendants(props) {
         )}
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <form className="col s12" onSubmit={addAttendant} autoComplete="off">
-          <div className="row">
-            <div className="input-field col s12">
-              <i className="material-icons prefix">account_circle</i>
-              <input
-                onChange={handleAttendantData}
+        <form
+          className="col s12"
+          onSubmit={addAttendant}
+          autoComplete="off"
+          style={{ margin: 10 }}
+        >
+          <Grid container spacing={3}>
+            <Grid item xs>
+              <TextField
+                className={classes.inputs}
                 id="attendant_name"
-                type="text"
-                className="validate"
-              />
-              <label htmlFor="attendant_name">username</label>
-            </div>
-          </div>
-          <div className="row" style={{ margin: "0 auto" }}>
-            <label className=" col s10">Select A Role</label>
-            <div className="input-field col s10">
-              <div className="row">
-                {roles.map((value, key) => (
-                  <label className="col s6" key={key}>
-                    <input
-                      // onClick={(e) => handleAttendantRoles(e, value.name)}
-                      id={value.id}
-                      onChange={(e) => setCheckedRole(value.id, e)}
-                      name={value.name}
-                      type="checkbox"
-                      className="validate"
-                    />
-                    <span>{value.name.split("_").join(" ")}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          </div>
-          <div className="row">
-            <div className="input-field col s12">
-              <i className="material-icons prefix">lock</i>
-              <input
+                label="Username"
                 onChange={handleAttendantData}
-                id="attendant_password"
-                type="text"
-                className="validate"
+                variant="outlined"
               />
-              <label htmlFor="attendant_password">password</label>
-            </div>
+            </Grid>
+            <Grid item xs>
+              <TextField
+                className={classes.inputs}
+                id="attendant_password"
+                label="Password"
+                onChange={handleAttendantData}
+                variant="outlined"
+              />
+            </Grid>
+          </Grid>
+          <div style={{ marginTop: 10, marginBottom: 10 }}>
+            <div style={{ marginTop: 10, marginBottom: 10 }}>Select A Role</div>
+            {roles.map((value, key) => (
+              <label className="col s6" key={key}>
+                <input
+                  // onClick={(e) => handleAttendantRoles(e, value.name)}
+                  id={value.id}
+                  onChange={(e) => setCheckedRole(value.id, e)}
+                  name={value.name}
+                  type="checkbox"
+                  className="validate"
+                />
+                <span>{value.name.split("_").join(" ")}</span>
+              </label>
+            ))}
           </div>
+
           <div className="row">
             <div className="col s12">
               <span className="red-text">{error}</span>
@@ -258,11 +264,17 @@ function Attendants(props) {
             <p className="red-text" style={{ marginLeft: 20 }}>
               {props.attendants.addingerror}
             </p>
-            <div className="input-field col s12 center">
-              <button className="btn btn-primary">
-                <i className="material-icons left ">save</i>Save
-              </button>
-            </div>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              style={{ marginTop: 20, padding: 15 }}
+              className={classes.button}
+              type="submit"
+              endIcon={<Icon>send</Icon>}
+            >
+              Save
+            </Button>
           </div>
         </form>
       </TabPanel>

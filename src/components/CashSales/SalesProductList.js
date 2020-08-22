@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import NavBar from "../../components/Navigations/NavBar";
 import { addSales } from "../../Redux/Actions/Sales";
 import { getStock } from "../../Redux/Actions/Stock";
 import { connect } from "react-redux";

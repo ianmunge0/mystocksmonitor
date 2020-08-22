@@ -22,8 +22,8 @@ import { useHistory } from "react-router-dom";
 import M from "materialize-css/dist/js/materialize.min.js";
 import { register } from "../../Redux/Actions";
 import auth from "../auth";
-import AppBarComponent from "../../components/Navigations/AppBarComponent";
 import NormalAppBar from "../Navigations/NormalAppBar";
+import Messages from "../Common/Messages";
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+    padding: 15,
   },
 }));
 function countryToFlag(isoCode) {
@@ -128,135 +129,110 @@ function Register(props) {
       <Loader fullPage loading={props.loading} />
       <CssBaseline />
       <div className={classes.paper}>
-        <span className="red-text">{error}</span>
+        <Messages type="error" text={error} />
         <form
           noValidate
           autoComplete="off"
           className={classes.form}
           onSubmit={handleSubmit}
         >
-          <div className="row">
-            <span className="red-text">
-              {props.message ? props.regdata.message : ""}
-            </span>
-            <div className="input-field col s12">
-              <i className="material-icons prefix">account_circle</i>
-              <input
-                placeholder="Email "
-                id="email"
-                value={email}
-                name="email"
-                onChange={handleChange}
-                type="text"
-                className="validate"
-              />
-            </div>
-          </div>
-          {/* <Dialog
-            countries={countries}
-            fullScreen
-            open={open}
-            setdcountry={setdcountry}
-            handleClose={handleClose}
-          /> */}
+          <span className="red-text">
+            {props.message ? props.regdata.message : ""}
+          </span>
 
-          <div className="row">
-            <div className="input-field col s12">
-              <i className="material-icons prefix">phone</i>
-              <input
-                type="text"
-                defaultValue={phone}
-                onChange={handleChange}
-                className="validate"
-                id="phone"
-                name="phone"
-              />
-              <label htmlFor="phone">Phone Number</label>
-            </div>
-          </div>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            onChange={handleChange}
+            className={classes.customfieldinput}
+            value={email}
+            fullWidth
+            id="email"
+            name="email"
+            label="email"
+            autoFocus
+          />
 
-          <div className="row">
-            <div className="input-field col s12">
-              <i className="material-icons prefix">flag</i>
-              <Autocomplete
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            onChange={handleChange}
+            className={classes.customfieldinput}
+            value={phone}
+            fullWidth
+            id="phone"
+            name="phone"
+            label="phone"
+            autoFocus
+          />
+          <Autocomplete
+            id="country"
+            style={{ width: "100%", marginTop: 15 }}
+            options={countries}
+            onChange={(event, newValue) => {
+              setInputs((inputs) => ({
+                ...inputs,
+                ["country"]: newValue.label,
+              }));
+              setInputs((inputs) => ({
+                ...inputs,
+                ["country_code"]: newValue.code,
+              }));
+              console.log(newValue);
+            }}
+            classes={{
+              option: classes.option,
+            }}
+            autoHighlight
+            getOptionLabel={(option) => option.label}
+            renderOption={(option) => (
+              <React.Fragment>
+                <span>{countryToFlag(option.code)}</span>
+                {option.label} ({option.code}) +{option.phone}
+              </React.Fragment>
+            )}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                placeholder="Choose a country"
+                variant="outlined"
                 id="country"
-                style={{ width: 300 }}
-                options={countries}
-                onChange={(event, newValue) => {
-                  setInputs((inputs) => ({
-                    ...inputs,
-                    ["country"]: newValue.label,
-                  }));
-                  setInputs((inputs) => ({
-                    ...inputs,
-                    ["country_code"]: newValue.code,
-                  }));
-                  console.log(newValue);
+                inputProps={{
+                  ...params.inputProps,
+                  autoComplete: "new-password", // disable autocomplete and autofill
                 }}
-                classes={{
-                  option: classes.option,
-                }}
-                autoHighlight
-                getOptionLabel={(option) => option.label}
-                renderOption={(option) => (
-                  <React.Fragment>
-                    <span>{countryToFlag(option.code)}</span>
-                    {option.label} ({option.code}) +{option.phone}
-                  </React.Fragment>
-                )}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    placeholder="Choose a country"
-                    variant="outlined"
-                    id="country"
-                    inputProps={{
-                      ...params.inputProps,
-                      autoComplete: "new-password", // disable autocomplete and autofill
-                    }}
-                  />
-                )}
               />
-
-              {/* <i className="material-icons prefix">flag</i>
-              <input
-                id="country"
-                value={country}
-                onChange={handleChange}
-                className="validate"
-                placeholder="Select your country"
-                // value="select country"
-                onClick={() => handleClickOpen()}
-                name="country"
-              /> */}
-            </div>
-          </div>
-          <div className="row">
-            <div className="input-field col s12">
-              <i className="material-icons prefix">lock</i>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={handleChange}
-                className="validate"
-                name="password"
-              />
-              <label htmlFor="password">Password</label>
-            </div>
-          </div>
-          <div className="row">
-            <div className="input-field col s12 center">
-              <button className="btn btn-primary" type="submit">
-                Register
-              </button>
-            </div>
-          </div>
+            )}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            onChange={handleChange}
+            className={classes.customfieldinput}
+            value={password}
+            fullWidth
+            id="password"
+            name="password"
+            label="password"
+            autoFocus
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            Sign In
+          </Button>
         </form>
 
         <Grid container>
           <Grid item xs>
-            <Link href="#" variant="body2">
+            <Link href="/reset" variant="body2">
               Forgot password?
             </Link>
           </Grid>

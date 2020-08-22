@@ -20,6 +20,7 @@
     "idb": "^5.0.4",
     "local-storage": "^2.0.0",
     "material-table": "^1.67.1",
+    "material-ui-search-bar": "^1.0.0",
     "materialize-css": "^1.0.0",
     "moment": "^2.27.0",
     "react": "^16.13.1",

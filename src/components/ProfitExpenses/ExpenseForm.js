@@ -89,14 +89,14 @@ function ExpenseForm(props) {
   //   render() {
   const classes = useStyles();
   return (
-    <div>
+    <div style={{ margin: 10 }}>
       <form
         noValidate
         autoComplete="off"
         onSubmit={addNewExpense}
         style={{ marginTop: 20 }}
       >
-        <Grid container spacing={3}>
+        <Grid spacing={3}>
           <Grid item xs={12}>
             <TextField
               className={classes.inputs}
@@ -104,6 +104,7 @@ function ExpenseForm(props) {
               label="Description"
               variant="outlined"
               onChange={handleData}
+              style={{ marginBottom: 20 }}
             />
           </Grid>
           <Grid item xs={12}>
@@ -114,6 +115,7 @@ function ExpenseForm(props) {
               variant="outlined"
               placeholder="Amount e.g 10"
               onChange={handleData}
+              style={{ marginBottom: 20 }}
             />
           </Grid>
           <Grid item xs={12}>
@@ -121,6 +123,7 @@ function ExpenseForm(props) {
               variant="contained"
               color="primary"
               size="large"
+              fullWidth
               type="submit"
               className={classes.button}
               startIcon={<SaveIcon />}

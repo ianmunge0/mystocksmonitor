@@ -12,51 +12,14 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { connect } from "react-redux";
-import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import moment from "moment";
 import { getSalesReceipts } from "../../Redux/Actions/SalesReceipts";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
-
-const data = [
-  {
-    name: "Page A",
-    uv: 4000,
-  },
-  {
-    name: "Page B",
-    uv: 3000,
-    pv: 1398,
-  },
-  {
-    name: "Page C",
-    uv: 2000,
-    pv: 9800,
-  },
-  {
-    name: "Page D",
-    uv: 2780,
-    pv: 3908,
-  },
-  {
-    name: "Page E",
-    uv: 1890,
-    pv: 4800,
-  },
-  {
-    name: "Page F",
-    uv: 2390,
-    pv: 3800,
-  },
-  {
-    name: "Page G",
-    uv: 3490,
-    pv: 4300,
-  },
-];
-console.log(data);
+import Button from "@material-ui/core/Button";
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 const options = [
   "January",
   "February",
@@ -119,25 +82,22 @@ function ProductsAnalysis(props) {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openn = Boolean(anchorEl);
-  console.log("items", props);
   if (props.saleslist.length === 0) {
     return <h4>Waiting...</h4>;
   }
   return (
-    <div className="container" style={{ minWidth: "380px", height: "80%" }}>
+    <div className="container" style={{ height: "85%" }}>
       <Loader fullPage loading={props.saleslist.loading} />
-      <IconButton
+      <Button
         aria-label="more"
         aria-controls="long-menu"
         aria-haspopup="true"
         onClick={handleClick}
       >
-        <a href="#" className="btn" style={{ marginTop: 10 }}>
-          <i className="material-icons left">fast_rewind</i>
-          {month ? month : options[d.getMonth()]} {""}
-          {d.getFullYear()}
-        </a>
-      </IconButton>
+        <ArrowBackIosIcon />
+        {month ? month : options[d.getMonth()]} {""}
+        {d.getFullYear()}
+      </Button>
       <Menu
         id="long-menu"
         anchorEl={anchorEl}
@@ -162,21 +122,6 @@ function ProductsAnalysis(props) {
         ))}
       </Menu>
       <ResponsiveContainer>
-        {/* <div> */}
-        {/* <LineChart
-            width={730}
-            height={250}
-            data={data}
-            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="pv" stroke="#8884d8" />
-            <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-          </LineChart> */}
         <BarChart
           width={600}
           height={300}
@@ -189,14 +134,11 @@ function ProductsAnalysis(props) {
           <CartesianGrid strokeDasharray="3 3" />
           <Tooltip />
           <Legend />
-          {/* <Bar dataKey="pv" fill="#8884d8" /> */}
           <Bar dataKey="Sales" fill="#82ca9d" />
         </BarChart>
-        {/* </div> */}
       </ResponsiveContainer>
     </div>
   );
-  // }
 }
 
 const mapStateToProps = (state) => ({
