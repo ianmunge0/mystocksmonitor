@@ -12,10 +12,8 @@ import TextField from "@material-ui/core/TextField";
 import CancelIcon from "@material-ui/icons/Cancel";
 
 import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
 import Customers from "./Customers";
+import Messages from "../Common/Messages";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,7 +35,6 @@ function NewCashSale(props) {
   const [type, setType] = useState("cash");
 
   const changePrice = (item, e) => {
-    console.log(item, e.target.value);
     setError("");
     if (parseInt(e.target.value) < item.sellingprice) {
       item.salessellingprice = item.sellingprice;
@@ -54,13 +51,11 @@ function NewCashSale(props) {
   };
 
   const changeQty = (item, e) => {
-    console.log(item, e.target.value);
     item.quantity = e.target.value;
     props.dispatch({ type: "CHANGE_QTY", sales: item });
   };
 
   const changeType = (item, e) => {
-    console.log(e.target.id);
     item.type = e.target.id;
     props.dispatch({ type: "CHANGE_TYPE", sales: item });
     setType(e.target.id);
@@ -70,6 +65,11 @@ function NewCashSale(props) {
   };
 
   const saveSales = () => {
+    setError("");
+    if (type === "credit" && customer.name === "") {
+      setError("Credit sale must have a customer");
+      return;
+    }
     // props.sales.sales.customer = customer;
     console.log(customer);
     props.saveSales(props.sales.sales, customer);
@@ -89,6 +89,7 @@ function NewCashSale(props) {
 
   const handleClickOpenCustomer = () => {
     console.log("vv");
+    setType("cutomersale");
     setOpenCustomer(true);
   };
 
@@ -103,13 +104,12 @@ function NewCashSale(props) {
     setCustomer(name);
   };
 
-  console.log("all items", props.sales);
   const classes = useStyles();
 
   return (
     <div className="cashsalewarp">
       <SalesDialog fullScreen open={open} handleClose={handleClose} />
-      <span className="red-text"> {error}</span>
+      <Messages type="error" text={error} />
       <div className={classes.root}>
         <Grid container spacing={3}>
           <Grid item xs={6}>

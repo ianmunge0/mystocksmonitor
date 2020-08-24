@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import Item from "./Item";
+import Item from "../Item";
 import { Link } from "react-router-dom";
 import { reactLocalStorage } from "reactjs-localstorage";
 import Button from "@material-ui/core/Button";
-import ShopsDialog from "./Shops/SelectDefaultShop";
+// import ShopsDialog from "./Shops/SelectDefaultShop";
 import Snackbar from "@material-ui/core/Snackbar";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
@@ -23,7 +23,10 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-function Dashboard(props) {
+function Index(props) {
+  useEffect(() => {
+    const roles = getUserRole();
+  }, []);
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
@@ -33,6 +36,10 @@ function Dashboard(props) {
 
   const handleClose = () => {
     setOpen(false);
+  };
+  const getUserRole = () => {
+    const roles = reactLocalStorage.getObject("userdata");
+    console.log("roles", roles);
   };
   return (
     <Grid container>
@@ -49,12 +56,11 @@ function Dashboard(props) {
           onClick={handleClickOpen}
         >
           Current Shop:{" "}
-          {reactLocalStorage.getObject("currentshop")
-            ? reactLocalStorage.getObject("currentshop").shopname
+          {reactLocalStorage.getObject("userdata").currentshop
+            ? reactLocalStorage.getObject("userdata").currentshop.shopname
             : "N/A"}
         </Button>
       </Grid>
-      <ShopsDialog fullScreen open={open} handleClose={handleClose} />
       <Grid item xs={12}>
         <Item
           description="add, View all shops"
@@ -142,4 +148,4 @@ function Dashboard(props) {
   );
 }
 
-export default Dashboard;
+export default Index;

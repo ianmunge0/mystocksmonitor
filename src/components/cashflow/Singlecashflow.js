@@ -172,12 +172,12 @@ function Singlecashflow(props) {
         ))}
       </Menu>
       <Grid container>
-        <Grid xs={12}>
+        <Grid item xs={12}>
           <Typography variant="h6" align="center">
             Profit Today
           </Typography>
         </Grid>
-        <Grid xs={12}>
+        <Grid item xs={12}>
           {" "}
           <Typography variant="h6" align="center">
             {props.expenses.profitnexpense.todayexpenses.cash_in_hand}

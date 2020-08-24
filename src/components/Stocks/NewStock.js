@@ -116,7 +116,7 @@ function NewStock(props) {
   return (
     <>
       <form noValidate autoComplete="off" onSubmit={addNewStock}>
-        <Grid container spacing={3}>
+        <Grid>
           <Loader fullPage loading={props.stockresponse.loading} />
           <Grid item xs={12}>
             {props.stockresponse.stockresponse ? (

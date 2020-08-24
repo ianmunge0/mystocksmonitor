@@ -39,13 +39,10 @@ function NewExpenseDialog(props) {
   const [type, setType] = useState("");
   const classes = useStyles();
 
-  const changeDefaultShop = (shopid) => {
-    props.setDeafultShop(shopid, props);
-  };
-
   const [expense, setExpense] = useState({
     description: "",
     amount: "",
+    date: "",
   });
   const handleData = (e) => {
     setExpense({
@@ -70,8 +67,8 @@ function NewExpenseDialog(props) {
       expense.from = "dialog";
       expense.adminid = reactLocalStorage.getObject("userdata").serialno;
       expense.shopid = reactLocalStorage.getObject("userdata").default_shop;
-      var dd = new Date().getTime();
-      expense.date_time = moment(dd).format("YYYY-MM-DD hh:mm:ss");
+      // var dd = new Date().getTime();
+      expense.date_time = expense.date;
       props.addExpense(expense, props);
     }
   };
@@ -125,6 +122,18 @@ function NewExpenseDialog(props) {
                 id="amount"
                 style={{ marginTop: 20 }}
                 label="Amount"
+                onChange={handleData}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <label>Date</label>
+              <TextField
+                fullWidth
+                placeholder="Due Date"
+                id="date"
+                type="date"
+                name="date"
                 onChange={handleData}
                 variant="outlined"
               />

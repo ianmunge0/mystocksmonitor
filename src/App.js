@@ -43,6 +43,7 @@ import PartialPayment from "./components/Sales/PartialPayment";
 import ProductHistory from "./components/Stocks/Product/ProductHistory";
 import SingleProductSales from "./components/Stocks/Product/SingleProductSales";
 import Export from "./components/Shops/Export";
+import Index from "./components/Users/Index";
 function App(props) {
   return (
     <React.Fragment>
@@ -58,6 +59,7 @@ function App(props) {
             title="Stock Setup"
             path="/stocksetup"
             backlink="dashboard"
+            roles={["ADMIN_ROLE"]}
             component={StockSetup}
           />
           <ProtectedRoute
@@ -69,12 +71,14 @@ function App(props) {
           <ProtectedRoute
             title="Dashboard"
             path="/dashboard"
+            roles={["ADMIN_ROLEc"]}
             component={Dashboard}
           />
           <ProtectedRoute title="All Shops" path="/shops" component={Shops} />
           <ProtectedRoute path="/shopsettings/:id" component={ShopSettings} />
           <ProtectedRoute
             title="Stock Report"
+            roles={["ADMIN_ROLE"]}
             path="/stockinmanager"
             component={StockInManager}
           />
@@ -137,6 +141,11 @@ function App(props) {
             title="Attendant Profile"
             path="/attendantsprofile/:id"
             component={AttendantsProfile}
+          />
+          <ProtectedRoute
+            path="/user"
+            title="User DashBoard"
+            component={Index}
           />
           <ProtectedRoute
             path="/export"

@@ -91,8 +91,8 @@ function StockFilter(props) {
     bottom: false,
     right: false,
   });
-
-  const toggleDrawer = (anchor, open) => (event) => {
+  const [item, setItem] = useState(null);
+  const toggleDrawerOne = (anchor, open, type) => (event) => {
     if (
       event.type === "keydown" &&
       (event.key === "Tab" || event.key === "Shift")
@@ -100,6 +100,27 @@ function StockFilter(props) {
       return;
     }
 
+    setState({ ...state, [anchor]: open });
+
+    if (type === 0) {
+      props.history.push({
+        pathname: `/productsummary/${item.shopserial_key}`,
+        state: {
+          data: item,
+        },
+      });
+    }
+  };
+
+  const toggleDrawer = (anchor, open, item) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+
+    setItem(item);
     setState({ ...state, [anchor]: open });
   };
 
@@ -109,12 +130,16 @@ function StockFilter(props) {
         [classes.fullList]: anchor === "top" || anchor === "bottom",
       })}
       role="presentation"
-      onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
         {["Products History"].map((text, index) => (
-          <ListItem button key={text}>
+          <ListItem
+            button
+            onClick={toggleDrawerOne(anchor, false, index)}
+            button
+            key={text}
+          >
             <ListItemIcon>
               {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
             </ListItemIcon>
@@ -131,13 +156,21 @@ function StockFilter(props) {
   if (props.reports.stocks["items"]) {
     tifOptions = Object.keys(props.reports.stocks["items"]).map((key) => (
       <div key={key}>
-        <Typography variant="h6" style={{ margin: 10 }}>
+        <Typography
+          variant="h6"
+          style={{
+            marginLeft: 10,
+            marginRight: 10,
+            marginBottom: 0,
+            marginTop: 0,
+          }}
+        >
           {key}
         </Typography>
         {props.reports.stocks["items"][key].length > 0
           ? props.reports.stocks["items"][key].map((value, index) => (
-              <List className={classes.root}>
-                <ListItem onClick={toggleDrawer("bottom", true)}>
+              <List className={classes.root} key={index}>
+                <ListItem onClick={toggleDrawer("bottom", true, value)}>
                   <ListItemAvatar>
                     <Avatar>
                       <ImageIcon />

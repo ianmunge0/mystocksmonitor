@@ -4,6 +4,7 @@ import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { DateRange } from "react-date-range";
 import Item from "./Item";
+import { connect } from "react-redux";
 import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import TodayIcon from "@material-ui/icons/Today";
@@ -25,13 +26,7 @@ const options = [
   "December",
 ];
 
-export default function SalesManager(props) {
-  const getMonth = (monthStr) => {
-    return new Date(monthStr + "-1-01").getMonth() + 1;
-  };
-
-  var month = options[d.getMonth()];
-
+function SalesManager(props) {
   const selectedSalesDate = (item) => {
     props.history.push({
       pathname: "/salesreceipts",
@@ -107,5 +102,15 @@ export default function SalesManager(props) {
       />
     </>
   );
-  // }
 }
+
+const mapStateToProps = (state) => ({
+  titles: state.titles,
+});
+
+const mapDispacthToProps = (dispatch) => {
+  return {
+    dispatch,
+  };
+};
+export default connect(mapStateToProps, mapDispacthToProps)(SalesManager);
