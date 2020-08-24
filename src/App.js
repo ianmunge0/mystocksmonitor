@@ -71,7 +71,7 @@ function App(props) {
           <ProtectedRoute
             title="Dashboard"
             path="/dashboard"
-            roles={["ADMIN_ROLEc"]}
+            roles={[]}
             component={Dashboard}
           />
           <ProtectedRoute title="All Shops" path="/shops" component={Shops} />

@@ -8,6 +8,7 @@ import { withRouter } from "react-router-dom";
 import Api from "../api/api";
 import AppBarComponent from "../components/Navigations/AppBarComponent";
 import auth from "./auth";
+import { grantPermission } from "./Common/GrantPermission";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -59,11 +60,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 // import Main from "../components/Main";
 
-export const ProtectedRoute = ({ component: Component, ...rest }) => {
+export const ProtectedRoute = ({ component: Component, roles, ...rest }) => {
   // const classes = useStyles();
   const classes = useStyles();
-
-  // console.log("rest", props);
 
   return (
     <Route
@@ -87,23 +86,41 @@ export const ProtectedRoute = ({ component: Component, ...rest }) => {
             );
           } else {
             return (
-              <div className={classes.root}>
-                <CssBaseline />
-                <AppBarComponent
-                  data={props}
-                  title={rest.title}
-                  backlink={rest.backlink}
-                  settings={rest.settings}
-                />
+              <>
+                {grantPermission(roles) && (
+                  <div className={classes.root}>
+                    <CssBaseline />
+                    <AppBarComponent
+                      data={props}
+                      title={rest.title}
+                      backlink={rest.backlink}
+                      settings={rest.settings}
+                    />
 
-                <main className={classes.content}>
-                  <div className={classes.toolbar} />
-                  <Component title={rest.title} {...props} />
-                </main>
-              </div>
-              // <Main>
-              //   <Component title={rest.title} {...props} />
-              // </Main>
+                    <main className={classes.content}>
+                      <div className={classes.toolbar} />
+                      <Component title={rest.title} {...props} />
+                    </main>
+                  </div>
+                )}
+
+                {/* {!grantPermission(roles) && (
+                  <Route
+                    render={() => (
+                      <>
+                        <Redirect
+                          to={{
+                            pathname: "/",
+                            state: {
+                              from: props.location,
+                            },
+                          }}
+                        />
+                      </>
+                    )}
+                  />
+                )} */}
+              </>
             );
           }
         } else {
