@@ -69,7 +69,7 @@ function ProductsAnalysis(props) {
     var totimestamp = moment(output.endOf("month").format("LL")).format(
       "YYYY-MM-DD hh:mm:ss"
     );
-    var type = "itemslist";
+    var type = "salesgraph";
     props.getSalesReceipts(fromtimeStamp, totimestamp, type);
   };
   const getMonth = (monthStr) => {

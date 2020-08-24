@@ -25,14 +25,6 @@ export const saveSales = (sales, customer) => {
       type: LOADING,
       loading: true,
     });
-    console.log({
-      sales,
-      customer_id: customer ? customer.serialno : 0,
-      initialamount: customer ? customer.amount : 0,
-      oncredit_due_date: customer ? customer.duedate : "",
-      action: "save",
-      date_time: moment(dd).format("YYYY-MM-DD hh:mm:ss"),
-    });
     Api.get(`/sales.php`, {
       params: {
         sales,

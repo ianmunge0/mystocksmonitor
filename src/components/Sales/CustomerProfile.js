@@ -89,7 +89,7 @@ function CustomerProfile(props) {
   useEffect(() => {
     props.getcustomer(props.match.params.id);
   }, []);
-  console.log("cc", props.customer);
+  console.log("cc profile", props.customer);
   if (props.customer.loading) {
     return <Loader fullPage loading={props.customer.loading} />;
   }
@@ -254,7 +254,11 @@ function CustomerProfile(props) {
                             Totals: {value.qtysold * value.onsalesellprice} /={" "}
                           </span>
                           <span style={{ color: "green", fontSize: 13 }}>
-                            Paid: {value.totalpaid} /={" "}
+                            Paid:{" "}
+                            {value.totalpaid
+                              ? value.totalpaid
+                              : value.qtysold * value.onsalesellprice}{" "}
+                            /={" "}
                           </span>
                           <br />
                           <span style={{ fontSize: 13 }}>
@@ -312,15 +316,25 @@ function CustomerProfile(props) {
                         <span style={{ color: "green", fontSize: 13 }}>
                           Totals: {value.qtysold * value.onsalesellprice} /={" "}
                         </span>
-                        <span style={{ color: "green", fontSize: 13 }}>
-                          Paid: {value.totalpaid} /={" "}
-                        </span>{" "}
-                        <span style={{ color: "red", fontSize: 13 }}>
-                          UnPaid:{" "}
-                          {value.qtysold * value.onsalesellprice -
-                            value.totalpaid}{" "}
-                        </span>
-                        /=
+                        {value.credit_status === "0" ? (
+                          <>
+                            <span style={{ color: "green", fontSize: 13 }}>
+                              Paid:{" "}
+                              {value.totalpaid
+                                ? value.totalpaid
+                                : value.qtysold * value.onsalesellprice}{" "}
+                              /={" "}
+                            </span>
+                            <span style={{ color: "red", fontSize: 13 }}>
+                              UnPaid:{" "}
+                              {value.qtysold * value.onsalesellprice -
+                                value.totalpaid}{" "}
+                              /=
+                            </span>
+                          </>
+                        ) : (
+                          ""
+                        )}
                         <br />
                         <span style={{ fontSize: 13 }}>
                           Date: {value.date_time}

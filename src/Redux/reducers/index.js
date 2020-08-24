@@ -10,6 +10,7 @@ import Customers from "./Customers";
 
 import { combineReducers } from "redux";
 import ProductSummary from "./Product";
+import Titles from "./Titles";
 
 const allReducers = combineReducers({
   login: AuthenticationReducer,
@@ -22,6 +23,7 @@ const allReducers = combineReducers({
   profitnexpense: ProfitnExpenses,
   customers: Customers,
   productsummary: ProductSummary,
+  title: Titles,
 });
 
 export default allReducers;

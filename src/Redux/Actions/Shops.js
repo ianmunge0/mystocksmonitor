@@ -196,8 +196,8 @@ export const setDeafultShop = (shopid, props) => {
       .then((res) => {
         const response = res.data;
         console.log("setDeafultShop actions ", response);
+        reactLocalStorage.setObject("currentshop", response.currentshop);
         var data = reactLocalStorage.getObject("userdata");
-        data.currentshop = response.currentshop;
         data.default_shop = response.currentshop.serialno;
         reactLocalStorage.setObject("userdata", data);
         dispatch({

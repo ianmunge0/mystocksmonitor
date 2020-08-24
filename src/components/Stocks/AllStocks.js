@@ -127,7 +127,6 @@ function AllStocks(props) {
         [classes.fullList]: anchor === "top" || anchor === "bottom",
       })}
       role="presentation"
-      //   onClick={toggleDrawerOne(anchor, false,type)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
@@ -143,7 +142,6 @@ function AllStocks(props) {
       </List>
     </div>
   );
-
   const outofstock = props.stocks.filter((row) => parseInt(row.stock_qty) == 0);
   const runningoutofstock = props.stocks.filter(
     (row) => parseInt(row.stock_qty) <= parseInt(row.reorder_level)
@@ -310,7 +308,6 @@ const mapStateToProps = (state) => ({
 const mapDispacthToProps = (dispatch) => {
   return {
     getStock: () => dispatch(getStock()),
-    deleteStock: (id) => dispatch(deleteStock(id)),
     dispatch,
   };
 };

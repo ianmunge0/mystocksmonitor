@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import Grid from "@material-ui/core/Grid";
+import { connect } from "react-redux";
 import { Button } from "@material-ui/core";
 import { Link, withRouter } from "react-router-dom";
 import Drawer from "@material-ui/core/Drawer";
@@ -112,6 +113,7 @@ const useStyles = makeStyles((theme) => ({
 function AppBarComponent(props) {
   const classes = useStyles();
   //   render() {
+  useEffect(() => {}, []);
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -285,7 +287,7 @@ function AppBarComponent(props) {
           <Grid container spacing={3}>
             <Grid item xs={props.settings ? 4 : 12}>
               <Typography variant="h6" style={{ marginTop: 10 }} noWrap>
-                {props.title}
+                {props.statetitle.title ? props.statetitle.title : props.title}
               </Typography>
             </Grid>
             {props.settings ? (
@@ -337,5 +339,16 @@ function AppBarComponent(props) {
   );
   //   }
 }
-
-export default withRouter(AppBarComponent);
+const mapStateToProps = (state) => ({
+  statetitle: state.title,
+});
+const mapDispacthToProps = (dispatch) => {
+  return {
+    dispatch,
+  };
+};
+export default connect(
+  mapStateToProps,
+  mapDispacthToProps
+)(withRouter(AppBarComponent));
+// export default withRouter(AppBarComponent);

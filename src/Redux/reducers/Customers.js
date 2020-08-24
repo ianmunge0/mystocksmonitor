@@ -2,6 +2,7 @@ const initialState = {
   customers: [],
   loading: true,
   addingerror: "",
+  searchedcustomers: [],
   payments: [],
 };
 
@@ -21,6 +22,21 @@ const Customers = (state = initialState, action) => {
       return {
         ...state,
         payments: action.payments,
+        loading: false,
+      };
+    case "SEARCH_CUSTOMER":
+      console.log("vb", action.payload);
+      // return state;
+      return {
+        ...state,
+        customers: {
+          customers: action.payload.customers.customers.filter((p) =>
+            p.name.includes(action.payload.text)
+          ),
+        },
+        // customers: state.customers.customers.filter(
+        //   (value) => value.name === action.payload
+        // ),
         loading: false,
       };
     case "ADDED_CUSTOMERS":
@@ -44,6 +60,7 @@ const Customers = (state = initialState, action) => {
         loading: false,
       };
     case "GET_CUSTOMERS":
+      console.log("GET_CUSTOMERS ", action.customers);
       return {
         ...state,
         customers: action.customers,

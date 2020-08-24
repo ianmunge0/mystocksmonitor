@@ -55,6 +55,8 @@ export const login = (email, password, type) => {
       type: LOADING,
     });
 
+    console.log({ attendant_id: email, password, type });
+
     if (type === "attendant") {
       Api.get(`/login.php`, {
         params: { attendant_id: email, password, type },
@@ -96,8 +98,11 @@ export const login = (email, password, type) => {
           if (userdata.status) {
             console.log("saving to localstorage login", res.data);
             reactLocalStorage.setObject("userdata", userdata.profile);
+            reactLocalStorage.setObject("currentshop", userdata.currentshop);
             reactLocalStorage.setObject("shops", userdata.shops);
             reactLocalStorage.setObject("countries", userdata.countries);
+            reactLocalStorage.setObject("roles", userdata.roles);
+
             reactLocalStorage.set("loggedin", true);
             reactLocalStorage.set("user_type", type);
           }

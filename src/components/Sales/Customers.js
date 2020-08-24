@@ -108,7 +108,6 @@ function Customers(props) {
   const handleChangeCustomerInputs = (e) => {
     const { name, value } = e.target;
     setInputs((inputs) => ({ ...inputs, [name]: value }));
-    console.log(inputs);
   };
 
   const saveCustomer = (event) => {
@@ -151,7 +150,19 @@ function Customers(props) {
     }
   };
 
-  console.log(props.customers.customers["customers"]);
+  const handleSearch = (e) => {
+    console.log("search", e.target.value);
+    props.dispatch({
+      type: "SEARCH_CUSTOMER",
+      payload: {
+        text: e.target.value,
+        customers: props.customers.customers,
+      },
+    });
+    // props.searchCustomer(e.target.value);
+  };
+
+  console.log("cu", props.customers.customers);
 
   return (
     <div className={classes.root}>
@@ -183,12 +194,15 @@ function Customers(props) {
 
         <Divider />
         <div style={{ padding: 10 }} className={classes.searchinputwrap}>
-          <TextField
-            variant="outlined"
-            fullWidth
-            type="search"
-            placeholder="quick search"
-          />
+          <form>
+            <TextField
+              variant="outlined"
+              fullWidth
+              type="search"
+              onChange={(e) => handleSearch(e)}
+              placeholder="quick search"
+            />
+          </form>
         </div>
         <Tabs
           variant="fullWidth"

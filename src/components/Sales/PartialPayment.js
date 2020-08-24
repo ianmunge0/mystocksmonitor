@@ -34,6 +34,7 @@ import {
   getReceiptsPayment,
   savePayment,
 } from "../../Redux/Actions/Customers";
+import { deleteReceipt } from "../../Redux/Actions/SalesReceipts";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -126,16 +127,41 @@ function PartialPayment(props) {
               alignItems="center"
               style={{
                 margin: 0,
-                paddingRight: 10,
-                paddingLeft: 10,
-                paddingBottom: 10,
               }}
             >
               <Grid item xs={12}>
-                <Typography variant={"h6"}>
-                  Receipt No. {props.location.state.data.receiptno}
-                </Typography>
-                <Typography variant={"h5"}>
+                <List
+                  style={{
+                    margin: 0,
+                    padding: 0,
+                  }}
+                >
+                  <ListItem>
+                    <ListItemText
+                      secondary={
+                        <Typography variant="h6">
+                          Receipt No. {props.location.state.data.receiptno}
+                        </Typography>
+                      }
+                    />
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        onClick={() => {
+                          props.deleteReceipt(
+                            props.location.state.data.receiptno,
+                            props
+                          );
+                        }}
+                        edge="end"
+                        aria-label="delete"
+                      >
+                        <DeleteIcon style={{ color: "red" }} />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </List>
+
+                <Typography>
                   Product Name: {props.location.state.data.stock_name}
                 </Typography>
                 <Grid container>
@@ -230,7 +256,7 @@ function PartialPayment(props) {
             <List dense={dense}>
               {props.payments.receiptpayments
                 ? props.payments.receiptpayments.map((value, index) => (
-                    <div>
+                    <div key={index}>
                       <ListItem>
                         <ListItemText
                           primary={value.date_time}
@@ -265,6 +291,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispacthToProps = (dispatch) => {
   return {
+    deleteReceipt: (receiptno, props) =>
+      dispatch(deleteReceipt(receiptno, props)),
     deletePayment: (item) => dispatch(deletePayment(item)),
     getReceiptsPayment: (customer_id, receiptno) =>
       dispatch(getReceiptsPayment(customer_id, receiptno)),

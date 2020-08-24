@@ -19,6 +19,7 @@ import Icon from "@material-ui/core/Icon";
 import PropTypes from "prop-types";
 
 function Attendantprofile(props) {
+  // const [loading, setLoading] = useState(false);
   useEffect(() => {
     props.dispatch({ type: "LOADING" });
     Api.get(`/attendants.php`, {
@@ -31,6 +32,7 @@ function Attendantprofile(props) {
         const profile = res.data;
         setAttendant(profile);
         setRole(profile.roles);
+        console.log("profile", profile);
         props.dispatch({
           type: "GET_PROFILE",
           profile,
@@ -85,8 +87,8 @@ function Attendantprofile(props) {
     setError("");
     // console.log(attendant);
     attendantnew.id = attendant.attendantid;
-    if (attendantnew.password !== "") {
-      attendantnew.password = attendant.password;
+    if (attendantnew.password === "") {
+      attendantnew.password = "";
     }
     console.log("saving", attendantnew.sales_notifications);
     if (attendantnew.sales_notifications !== "") {
@@ -143,7 +145,10 @@ function Attendantprofile(props) {
     console.log("handleAttendantData", attendantnew);
   };
 
-  console.log(attendant);
+  console.log(props);
+  if (props.profile.loading) {
+    return <Loader fullPage loading={props.profile.loading} />;
+  }
 
   return (
     <div className="container">
@@ -153,12 +158,12 @@ function Attendantprofile(props) {
           onSubmit={updateProfile}
           style={{ margin: 10 }}
         >
-          <Loader fullPage loading={props.profile.loading} />
           <div className="col s12">
             <p className="red-text">{error}</p>
           </div>
           <Grid container spacing={3}>
-            <Grid item xs>
+            <Grid item xs={12}>
+              {console.log("nn", attendant.username)}
               <TextField
                 className={classes.inputs}
                 id="username"
@@ -168,7 +173,7 @@ function Attendantprofile(props) {
                 variant="outlined"
               />
             </Grid>
-            <Grid item xs>
+            <Grid item xs={12}>
               <TextField
                 className={classes.inputs}
                 id="password"

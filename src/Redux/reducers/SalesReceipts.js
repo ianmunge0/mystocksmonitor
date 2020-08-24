@@ -1,4 +1,8 @@
-import { GET_RECEIPTS, LOADING } from "../Actions/actions";
+import {
+  GET_RECEIPTS,
+  LOADING,
+  GET_RECEIPT_PAYMENTS,
+} from "../Actions/actions";
 const initialState = {
   total: 0,
   credit: [],
@@ -15,6 +19,12 @@ const Receipts = (state = initialState, action) => {
         loading: true,
       };
     case GET_RECEIPTS:
+      return {
+        ...state.receipts,
+        receipts: action.receipts,
+        loading: false,
+      };
+    case GET_RECEIPT_PAYMENTS:
       return {
         ...state.receipts,
         receipts: action.receipts,
