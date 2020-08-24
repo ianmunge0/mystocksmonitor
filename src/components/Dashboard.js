@@ -7,7 +7,7 @@ import ShopsDialog from "./Shops/SelectDefaultShop";
 import Snackbar from "@material-ui/core/Snackbar";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import { Divider } from "@material-ui/core";
+import { UnlockAccess } from "./Common/UnlockAccess";
 const useStyles = makeStyles((theme) => ({
   "@global": {
     body: {
@@ -55,32 +55,39 @@ function Dashboard(props) {
         </Button>
       </Grid>
       <ShopsDialog fullScreen open={open} handleClose={handleClose} />
-      <Grid item xs={12}>
-        <Item
-          description="add, View all shops"
-          className="datepicker"
-          title="Shops management"
-          route="shops"
-          icon="arrow_downward"
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <Item
-          description="add, count and view all stocks"
-          title="Stocks"
-          route="stocksetup"
-          icon="settings"
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <Item
-          description="Stock reports view/print"
-          className="datepicker"
-          title="Stock-in Report"
-          route="stockinmanager"
-          icon="arrow_downward"
-        />
-      </Grid>
+      <UnlockAccess request={["ADD_SHOP"]}>
+        <Grid item xs={12}>
+          <Item
+            description="add, View all shops"
+            className="datepicker"
+            title="Shops management"
+            route="shops"
+            icon="arrow_downward"
+          />
+        </Grid>
+      </UnlockAccess>
+
+      <UnlockAccess request={["ADD_SHOP"]}>
+        <Grid item xs={12}>
+          <Item
+            description="add, count and view all stocks"
+            title="Stocks"
+            route="stocksetup"
+            icon="settings"
+          />
+        </Grid>
+      </UnlockAccess>
+      <UnlockAccess request={["ADD_SHOP"]}>
+        <Grid item xs={12}>
+          <Item
+            description="Stock reports view/print"
+            className="datepicker"
+            title="Stock-in Report"
+            route="stockinmanager"
+            icon="arrow_downward"
+          />
+        </Grid>
+      </UnlockAccess>
       <Grid item xs={12}>
         <Item
           description="Sales reports view/print"

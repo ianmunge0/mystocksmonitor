@@ -71,6 +71,7 @@ export const login = (email, password, type) => {
             reactLocalStorage.setObject("userdata", userdata);
             reactLocalStorage.set("loggedin", true);
             reactLocalStorage.set("user_type", type);
+            reactLocalStorage.setObject("roles", userdata.role);
           }
           dispatch({
             type: LOG_IN,
