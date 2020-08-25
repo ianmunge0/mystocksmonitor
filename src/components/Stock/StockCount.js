@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getStock, saveStockCount } from "../../Redux/Actions/Stock";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
 import Button from "@material-ui/core/Button";

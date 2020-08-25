@@ -90,7 +90,7 @@ function AllStocks(props) {
     setState({ ...state, [anchor]: open });
     if (type === 2) {
       handleClickOpen();
-      // props.deleteStock(item.stockid);
+       props.deleteStock(item.stockid);
       // return <Alert severity="error">{item.name} deleted successfully</Alert>;
     }
     // console.log(item);
@@ -142,10 +142,10 @@ function AllStocks(props) {
       </List>
     </div>
   );
-  const outofstock = props.stocks.filter((row) => parseInt(row.stock_qty) == 0);
-  const runningoutofstock = props.stocks.filter(
+  const outofstock = props.stocks.length > 0 ? props.stocks.filter((row) => parseInt(row.stock_qty) == 0) : "";
+  const runningoutofstock = props.stocks.length > 0 ? props.stocks.filter(
     (row) => parseInt(row.stock_qty) <= parseInt(row.reorder_level)
-  );
+  ) : [];
   return (
     <>
       <Button
@@ -220,7 +220,7 @@ function AllStocks(props) {
       ) : (
         ""
       )}
-      {props.stocks.map((row, index) => {
+      {props.stocks.length > 0 ? props.stocks.map((row, index) => {
         return (
           <List
             className={classes.root}
@@ -267,7 +267,7 @@ function AllStocks(props) {
             <Divider />
           </List>
         );
-      })}
+      }) : ""}
       <Dialog
         open={open}
         TransitionComponent={Transition}
@@ -308,6 +308,7 @@ const mapStateToProps = (state) => ({
 const mapDispacthToProps = (dispatch) => {
   return {
     getStock: () => dispatch(getStock()),
+    deleteStock: (id) => dispatch(deleteStock()),
     dispatch,
   };
 };
