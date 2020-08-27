@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
@@ -10,6 +11,13 @@ import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import TodayIcon from "@material-ui/icons/Today";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import Months from "../components/Months";
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
+import { green } from "@material-ui/core/colors";
+import { grantPermission } from "./Common/GrantPermission";
+
+import Zoom from "@material-ui/core/Zoom";
+
 const d = new Date();
 const options = [
   "January",
@@ -25,8 +33,31 @@ const options = [
   "November",
   "December",
 ];
-
+const useStyles = makeStyles((theme) => ({
+  root: {
+    backgroundColor: theme.palette.background.paper,
+    position: "relative",
+  },
+  fab: {
+    position: "absolute",
+    top: theme.spacing(2),
+    right: theme.spacing(2),
+  },
+  fabGreen: {
+    color: theme.palette.common.white,
+    backgroundColor: green[500],
+    "&:hover": {
+      backgroundColor: green[600],
+    },
+  },
+}));
 function SalesManager(props) {
+  const classes = useStyles();
+  const theme = useTheme();
+  const transitionDuration = {
+    enter: theme.transitions.duration.enteringScreen,
+    exit: theme.transitions.duration.leavingScreen,
+  };
   const selectedSalesDate = (item) => {
     props.history.push({
       pathname: "/salesreceipts",
@@ -36,7 +67,13 @@ function SalesManager(props) {
       },
     });
   };
-
+  const [state, setState] = useState([
+    {
+      startDate: new Date(),
+      endDate: new Date(),
+      key: "selection",
+    },
+  ]);
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -46,15 +83,34 @@ function SalesManager(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
   return (
-    <>
+    <div className={classes.root}>
       <DateRange
         editableDateInputs={false}
         onChange={(item) => {
           selectedSalesDate(item);
         }}
         moveRangeOnFirstSelection={false}
+        ranges={state}
       />
+      {grantPermission(["ADD_SALES"]) && (
+        <Zoom
+          onClick={() => {
+            props.history.push({
+              pathname: "/newsale",
+            });
+          }}
+          key="primary"
+          in={true}
+          timeout={transitionDuration}
+          unmountOnExit
+        >
+          <Fab aria-label="Add" className={classes.fab} color="primary">
+            <AddIcon />
+          </Fab>
+        </Zoom>
+      )}
       <Item
         description="View today's sales"
         className="datepicker"
@@ -100,7 +156,7 @@ function SalesManager(props) {
         icon={<PeopleAltIcon fontSize="large" />}
         data="customers"
       />
-    </>
+    </div>
   );
 }
 

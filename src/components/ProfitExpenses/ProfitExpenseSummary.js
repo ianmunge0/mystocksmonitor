@@ -10,20 +10,20 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import { Divider, Typography } from "@material-ui/core";
-
+import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+import Grid from "@material-ui/core/Grid";
 function ProfitExpenseSummary(props) {
   var fromtimestamp = props.location.state.fromdate;
   var totimestamp = props.location.state.todate;
   var type = props.location.state.type;
 
   console.log("ProfitExpenseSummary", props);
+  if (props.location.state === "today") {
+    fromtimestamp = moment(new Date()).format("YYYY-MM-DD hh:mm:ss");
+    totimestamp = moment(new Date()).format("YYYY-MM-DD hh:mm:ss");
+  }
 
   useEffect(() => {
-    if (props.location.state === "today") {
-      fromtimestamp = moment(new Date()).format("YYYY-MM-DD hh:mm:ss");
-      totimestamp = moment(new Date()).format("YYYY-MM-DD hh:mm:ss");
-    }
-
     filterEnSummary(fromtimestamp, totimestamp);
   }, []);
 
@@ -76,6 +76,9 @@ function ProfitExpenseSummary(props) {
           <Divider />
 
           <List>
+            {/* <Grid container>
+              <Grid item xs={10}>
+                {" "} */}
             <ListItem
               onClick={() =>
                 props.history.push({
@@ -93,13 +96,15 @@ function ProfitExpenseSummary(props) {
                 secondary="View profit and expenses summary"
               />
               <ListItemText
-                primary={
-                  <h5 align="right">
-                    {props.profitnexpense.profitnexpense.cashsales}
-                  </h5>
-                }
+                align="right"
+                primary={props.profitnexpense.profitnexpense.cashsales}
+              />
+              <ListItemText
+                align="right"
+                primary={<ArrowForwardIosIcon fontSize="small" />}
               />
             </ListItem>
+
             <Divider />
             <ListItem>
               <ListItemText
@@ -107,37 +112,58 @@ function ProfitExpenseSummary(props) {
                 secondary="Sales profit"
               />
               <ListItemText
-                primary={
-                  <h5 align="right">
-                    {props.profitnexpense.profitnexpense.salesprofit}
-                  </h5>
-                }
+                align="right"
+                primary={props.profitnexpense.profitnexpense.salesprofit}
               />
             </ListItem>
             <Divider />
-            <ListItem>
+            <ListItem
+              onClick={() =>
+                props.history.push({
+                  pathname: "/badstocks",
+                  state: {
+                    fromtimestamp,
+                    totimestamp,
+                  },
+                })
+              }
+            >
               <ListItemText
                 primary={<Typography variant="h5">Bad Stocks</Typography>}
                 secondary="View profit and expenses summary"
               />
               <ListItemText
+                align="right"
                 primary={
-                  <h5 align="right">
-                    {props.profitnexpense.profitnexpense.badstockvalue}
-                  </h5>
+                  <>
+                    {props.profitnexpense.profitnexpense.badstockvalue}{" "}
+                    <ArrowForwardIosIcon fontSize="small" />
+                  </>
                 }
               />
             </ListItem>
             <Divider />
-            <ListItem>
+            <ListItem
+              onClick={() =>
+                props.history.push({
+                  pathname: "/expenseslists",
+                  state: {
+                    fromtimestamp,
+                    totimestamp,
+                  },
+                })
+              }
+            >
               <ListItemText
                 primary={<Typography variant="h5">Expenses</Typography>}
               />
               <ListItemText
+                align="right"
                 primary={
-                  <h5 align="right">
-                    {props.profitnexpense.profitnexpense.expense}
-                  </h5>
+                  <>
+                    {props.profitnexpense.profitnexpense.expense}{" "}
+                    <ArrowForwardIosIcon fontSize="small" />
+                  </>
                 }
               />
             </ListItem>

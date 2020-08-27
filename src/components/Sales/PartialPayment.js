@@ -35,6 +35,7 @@ import {
   savePayment,
 } from "../../Redux/Actions/Customers";
 import { deleteReceipt } from "../../Redux/Actions/SalesReceipts";
+import { UnlockAccess } from "../Common/UnlockAccess";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,12 +59,10 @@ function PartialPayment(props) {
   useEffect(() => {
     props.dispatch({ type: "STOPLOADING", loading: false });
     // setPayments(props.location.state.data.receipts);
-    if (props.location.state.data.receiptno) {
-      props.getReceiptsPayment(
-        props.location.state.data.customer_id,
-        props.location.state.data.receiptno
-      );
-    }
+    props.getReceiptsPayment(
+      props.location.state.data.customer_id,
+      props.location.state.data.receiptno
+    );
   }, [props.location.state.data]);
   const [dense, setDense] = React.useState(false);
   const [secondary, setSecondary] = React.useState(false);
@@ -146,20 +145,22 @@ function PartialPayment(props) {
                         </Typography>
                       }
                     />
-                    <ListItemSecondaryAction>
-                      <IconButton
-                        onClick={() => {
-                          props.deleteReceipt(
-                            props.location.state.data.receiptno,
-                            props
-                          );
-                        }}
-                        edge="end"
-                        aria-label="delete"
-                      >
-                        <DeleteIcon style={{ color: "red" }} />
-                      </IconButton>
-                    </ListItemSecondaryAction>
+                    <UnlockAccess request={["DELETE_SALES"]}>
+                      <ListItemSecondaryAction>
+                        <IconButton
+                          onClick={() => {
+                            props.deleteReceipt(
+                              props.location.state.data.receiptno,
+                              props
+                            );
+                          }}
+                          edge="end"
+                          aria-label="delete"
+                        >
+                          <DeleteIcon style={{ color: "red" }} />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                    </UnlockAccess>
                   </ListItem>
                 </List>
 
@@ -174,30 +175,24 @@ function PartialPayment(props) {
                         props.location.state.data.onsalesellprice}{" "}
                     </Typography>
                   </Grid>
-                  {props.location.state.data.cashorcredit === "credit" ? (
-                    <>
-                      <Grid item xs={4}>
-                        <Typography>
-                          <span style={{ color: "green" }}>
-                            Paid: {props.location.state.data.totalpaid}
-                          </span>
-                        </Typography>
-                      </Grid>
+                  <Grid item xs={4}>
+                    <Typography>
+                      <span style={{ color: "green" }}>
+                        Paid: {props.location.state.data.totalpaid}
+                      </span>
+                    </Typography>
+                  </Grid>
 
-                      <Grid item xs={4}>
-                        <Typography>
-                          <span style={{ color: "red" }}>
-                            UnPaid:{" "}
-                            {props.location.state.data.qtysold *
-                              props.location.state.data.onsalesellprice -
-                              props.location.state.data.totalpaid}
-                          </span>
-                        </Typography>
-                      </Grid>
-                    </>
-                  ) : (
-                    ""
-                  )}
+                  <Grid item xs={4}>
+                    <Typography>
+                      <span style={{ color: "red" }}>
+                        UnPaid:{" "}
+                        {props.location.state.data.qtysold *
+                          props.location.state.data.onsalesellprice -
+                          props.location.state.data.totalpaid}
+                      </span>
+                    </Typography>
+                  </Grid>
                 </Grid>
               </Grid>
               {/* <Grid item xs={2} align="center">
@@ -258,38 +253,39 @@ function PartialPayment(props) {
         ) : (
           ""
         )}
-        {props.payments.length > 0 ? (
-          <Grid item xs={12}>
-            <div className={classes.demo}>
-              <List dense={dense}>
-                {props.payments.receiptpayments.map((value, index) => (
-                  <div key={index}>
-                    <ListItem>
-                      <ListItemText
-                        primary={value.date_time}
-                        secondary={`${value.amount}` + "/="}
-                      />
-                      <ListItemSecondaryAction>
-                        <IconButton
-                          onClick={() => {
-                            deletePayment(value);
-                          }}
-                          edge="end"
-                          aria-label="delete"
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </ListItemSecondaryAction>
-                    </ListItem>
-                    <Divider />
-                  </div>
-                ))}
-              </List>
-            </div>
-          </Grid>
-        ) : (
-          ""
-        )}
+
+        <Grid item xs={12}>
+          <div className={classes.demo}>
+            <List dense={dense}>
+              {props.payments.receiptpayments
+                ? props.payments.receiptpayments.map((value, index) => (
+                    <div key={index}>
+                      <ListItem>
+                        <ListItemText
+                          primary={value.date_time}
+                          secondary={`${value.amount}` + "/="}
+                        />
+                        <UnlockAccess request={["DELETE_SALES"]}>
+                          <ListItemSecondaryAction>
+                            <IconButton
+                              onClick={() => {
+                                deletePayment(value);
+                              }}
+                              edge="end"
+                              aria-label="delete"
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </ListItemSecondaryAction>{" "}
+                        </UnlockAccess>
+                      </ListItem>
+                      <Divider />
+                    </div>
+                  ))
+                : ""}
+            </List>
+          </div>
+        </Grid>
       </div>
     </div>
   );

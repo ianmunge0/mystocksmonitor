@@ -12,7 +12,7 @@ const AuthenticationReducer = (state = initialState, action) => {
     case LOADING:
       return {
         ...state,
-        loading: true,
+        loading: action.loading,
       };
     case "RESET_PASSWORD":
       return {

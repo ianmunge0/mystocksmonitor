@@ -21,6 +21,12 @@ const Sales = (state = initialState, action) => {
         receipts: action.receipts,
         loading: false,
       };
+    case "GET_RECEIPTS":
+      return {
+        ...state,
+        receipts: action.receipts,
+        loading: false,
+      };
     case "CLEAR_SALES_RECEIPT":
       return {
         ...state,

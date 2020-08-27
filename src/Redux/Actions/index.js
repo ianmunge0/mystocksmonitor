@@ -53,6 +53,7 @@ export const login = (email, password, type) => {
   return (dispatch) => {
     dispatch({
       type: LOADING,
+      loading: true,
     });
 
     console.log({ attendant_id: email, password, type });
@@ -64,8 +65,12 @@ export const login = (email, password, type) => {
         .then((res) => {
           console.log(res.data);
 
-          const userdata = res.data;
+          dispatch({
+            type: LOADING,
+            loading: false,
+          });
 
+          const userdata = res.data;
           if (userdata.status) {
             console.log("saving to localstorage login", res.data);
             reactLocalStorage.setObject("userdata", userdata);
@@ -92,6 +97,11 @@ export const login = (email, password, type) => {
       })
         .then((res) => {
           console.log(res.data);
+
+          dispatch({
+            type: LOADING,
+            loading: false,
+          });
 
           const userdata = res.data;
           console.log("userdata", userdata);

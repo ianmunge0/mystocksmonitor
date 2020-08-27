@@ -9,6 +9,13 @@ import Api from "../api/api";
 import AppBarComponent from "../components/Navigations/AppBarComponent";
 import auth from "./auth";
 import { grantPermission } from "./Common/GrantPermission";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Slide from "@material-ui/core/Slide";
+import { Button } from "@material-ui/core";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -60,9 +67,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 // import Main from "../components/Main";
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 export const ProtectedRoute = ({ component: Component, roles, ...rest }) => {
   // const classes = useStyles();
   const classes = useStyles();
+
+  const [open, setOpen] = React.useState(true);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = (action, props) => {
+    setOpen(false);
+
+    props.history.goBack();
+  };
 
   return (
     <Route
@@ -103,23 +123,9 @@ export const ProtectedRoute = ({ component: Component, roles, ...rest }) => {
                     </main>
                   </div>
                 )}
+                {console.log("log", props.location)}
 
-                {/* {!grantPermission(roles) && (
-                  <Route
-                    render={() => (
-                      <>
-                        <Redirect
-                          to={{
-                            pathname: "/",
-                            state: {
-                              from: props.location,
-                            },
-                          }}
-                        />
-                      </>
-                    )}
-                  />
-                )} */}
+                {!grantPermission(roles) && props.history.goBack()}
               </>
             );
           }

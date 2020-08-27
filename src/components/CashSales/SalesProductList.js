@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { addSales } from "../../Redux/Actions/Sales";
+import { addSales } from "../../Redux/Actions/NewSales";
 import { getStock } from "../../Redux/Actions/Stock";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";

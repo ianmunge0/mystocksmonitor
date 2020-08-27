@@ -40,12 +40,7 @@ export const getPEA = (fromtimeStamp, totimestamp) => {
       type: LOADING,
       loading: true,
     });
-    console.log("getEnPSummary", {
-      params: moment(fromtimeStamp).format("YYYY-MM-DD hh:mm:ss"),
-      totimeStamp: moment(totimestamp).format("YYYY-MM-DD hh:mm:ss"),
-      shopid: reactLocalStorage.getObject("userdata").default_shop,
-      action: "graphprofitexpense",
-    });
+
     Api.get(`/profitandexpense.php`, {
       params: {
         fromdate: moment(fromtimeStamp).format("YYYY-MM-DD hh:mm:ss"),
@@ -121,7 +116,6 @@ export const addExpense = (expense, props) => {
       "YYYY-MM-DD hh:mm:ss"
     );
 
-    console.log("addExpense ", expense);
     Api.get(`/profitandexpense.php`, {
       params: expense,
     })

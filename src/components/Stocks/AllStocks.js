@@ -29,6 +29,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import Button from "@material-ui/core/Button";
+import NoItems from "../NoItems";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -90,7 +91,7 @@ function AllStocks(props) {
     setState({ ...state, [anchor]: open });
     if (type === 2) {
       handleClickOpen();
-       props.deleteStock(item.stockid);
+      props.deleteStock(item.stockid);
       // return <Alert severity="error">{item.name} deleted successfully</Alert>;
     }
     // console.log(item);
@@ -142,10 +143,16 @@ function AllStocks(props) {
       </List>
     </div>
   );
-  const outofstock = props.stocks.length > 0 ? props.stocks.filter((row) => parseInt(row.stock_qty) == 0) : "";
-  const runningoutofstock = props.stocks.length > 0 ? props.stocks.filter(
-    (row) => parseInt(row.stock_qty) <= parseInt(row.reorder_level)
-  ) : [];
+  const outofstock =
+    props.stocks.length > 0
+      ? props.stocks.filter((row) => parseInt(row.stock_qty) == 0)
+      : "";
+  const runningoutofstock =
+    props.stocks.length > 0
+      ? props.stocks.filter(
+          (row) => parseInt(row.stock_qty) <= parseInt(row.reorder_level)
+        )
+      : [];
   return (
     <>
       <Button
@@ -220,54 +227,57 @@ function AllStocks(props) {
       ) : (
         ""
       )}
-      {props.stocks.length > 0 ? props.stocks.map((row, index) => {
-        return (
-          <List
-            className={classes.root}
-            key={index}
-            onClick={toggleDrawer("bottom", true, row)}
-          >
-            <ListItem alignItems="flex-start">
-              <ListItemAvatar>
-                {parseInt(row.stock_qty) <= parseInt(row.reorder_level) ? (
-                  <Avatar style={{ backgroundColor: "#ff9800" }}>
-                    <ReportProblemIcon />
-                  </Avatar>
-                ) : (
-                  <Avatar style={{ backgroundColor: "green" }}>
-                    <DoneAllIcon />
-                  </Avatar>
-                )}
-              </ListItemAvatar>
-              <ListItemText
-                primary={row.name}
-                secondary={
-                  <>
-                    <Typography
-                      component="span"
-                      variant="body2"
-                      className={classes.inline}
-                      color="textPrimary"
-                    >
-                      {"Qty: " +
-                        `${row.stock_qty} ${
-                          row.unit_data ? row.unit_data.unit_name : ""
-                        }`}
-                      {row.supplier_data
-                        ? " | Supplier: " + `${row.supplier_data.supplier_name}`
-                        : ""}
-                      <br />
-                    </Typography>
-                    {"Buying Price: " + `${row.buyingprice}`} |{" "}
-                    {"Selling Price: " + `${row.buyingprice}`}
-                  </>
-                }
-              />
-            </ListItem>
-            <Divider />
-          </List>
-        );
-      }) : ""}
+      {props.stocks.length > 0
+        ? props.stocks.map((row, index) => {
+            return (
+              <List
+                className={classes.root}
+                key={index}
+                onClick={toggleDrawer("bottom", true, row)}
+              >
+                <ListItem alignItems="flex-start">
+                  <ListItemAvatar>
+                    {parseInt(row.stock_qty) <= parseInt(row.reorder_level) ? (
+                      <Avatar style={{ backgroundColor: "#ff9800" }}>
+                        <ReportProblemIcon />
+                      </Avatar>
+                    ) : (
+                      <Avatar style={{ backgroundColor: "green" }}>
+                        <DoneAllIcon />
+                      </Avatar>
+                    )}
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={row.name}
+                    secondary={
+                      <>
+                        <Typography
+                          component="span"
+                          variant="body2"
+                          className={classes.inline}
+                          color="textPrimary"
+                        >
+                          {"Qty: " +
+                            `${row.stock_qty} ${
+                              row.unit_data ? row.unit_data.unit_name : ""
+                            }`}
+                          {row.supplier_data
+                            ? " | Supplier: " +
+                              `${row.supplier_data.supplier_name}`
+                            : ""}
+                          <br />
+                        </Typography>
+                        {"Buying Price: " + `${row.buyingprice}`} |{" "}
+                        {"Selling Price: " + `${row.buyingprice}`}
+                      </>
+                    }
+                  />
+                </ListItem>
+                <Divider />
+              </List>
+            );
+          })
+        : ""}
       <Dialog
         open={open}
         TransitionComponent={Transition}

@@ -68,6 +68,24 @@ const Stock = (state = initialState, action) => {
         item: action.item,
         loading: false,
       };
+
+    case "GET_BAD_STOCKS":
+      return {
+        ...state,
+        stocks: action.stocks,
+        loading: false,
+      };
+    // case "UPDATE_STOCK":
+    //   return {
+    //     ...state,
+    //     stocks: {
+    //       stock_qty : state.stocks.filter((item)=> {
+    //         if(item.stockserial_key === )
+    //       })
+    //     },
+    //     loading: false,
+    //   };
+
     case GET_STOCK:
       return {
         ...state,

@@ -60,9 +60,6 @@ function ShopsDialog(props) {
           <Typography variant="h6" className={classes.title}>
             Select a shop
           </Typography>
-          <Button autoFocus color="inherit" onClick={props.handleClose}>
-            Add Shop +
-          </Button>
         </Toolbar>
       </AppBar>
       <List>

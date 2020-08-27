@@ -212,36 +212,36 @@ function AppBarComponent(props) {
   );
   const initToolbar = (title) => {
     console.log("initToolbar", title);
-    switch (title) {
-      case "sales":
-        return (
-          <Button
-            onClick={() => {
-              props.history.push({
-                pathname: "/newsale",
-              });
-            }}
-          >
-            <Typography style={{ color: "#fff" }}>Add +</Typography>
-          </Button>
-        );
-        break;
-      case "profitnexpenses":
-        return (
-          <Button
-            onClick={() => {
-              props.history.push({
-                pathname: "/expenses",
-              });
-            }}
-          >
-            <Typography style={{ color: "#fff" }}>Add Expenes +</Typography>
-          </Button>
-        );
-        break;
-      default:
-        break;
-    }
+    // switch (title) {
+    // case "sales":
+    //   return (
+    //     <Button
+    //       onClick={() => {
+    //         props.history.push({
+    //           pathname: "/newsale",
+    //         });
+    //       }}
+    //     >
+    //       <Typography style={{ color: "#fff" }}>Add +</Typography>
+    //     </Button>
+    //   );
+    //   break;
+    // case "profitnexpenses":
+    //   return (
+    //     <Button
+    //       onClick={() => {
+    //         props.history.push({
+    //           pathname: "/expenses",
+    //         });
+    //       }}
+    //     >
+    //       <Typography style={{ color: "#fff" }}>Add Expenes +</Typography>
+    //     </Button>
+    //   );
+    //   break;
+    // default:
+    //   break;
+    // }
   };
 
   const { window } = props;

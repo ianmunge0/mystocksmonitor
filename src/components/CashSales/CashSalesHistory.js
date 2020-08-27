@@ -95,7 +95,10 @@ function CashSalesHistory(props) {
                         </TableCell>
                         <TableCell align="right">
                           {value.username}
-                          <br />3 days ago
+                          <br />
+                          <span style={{ fontSize: 12 }}>
+                            {value.date_time}
+                          </span>
                         </TableCell>
                       </TableRow>
                     ))

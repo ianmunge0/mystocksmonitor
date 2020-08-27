@@ -82,13 +82,8 @@ function Login(props) {
     });
   }
 
-  // setError(props.message);
-
-  console.log("lohin", loggedin.login.loading);
-
   return (
     <Container component="main" maxWidth="xs">
-      {/* <NormalAppBar /> */}
       <NormalAppBar backlink="/" title="Login" />
       <CssBaseline />
       <div className={classes.paper}>
@@ -106,7 +101,12 @@ function Login(props) {
           autoComplete="off"
         >
           <Messages type="error" text={error} />
-          <Messages type="success" text={props.message} />
+          <Messages
+            type="error"
+            text={
+              props.userdata.message ? props.userdata.message : props.message
+            }
+          />
 
           <Loader fullPage loading={loggedin.login.loading} />
           <TextField

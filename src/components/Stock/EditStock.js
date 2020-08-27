@@ -179,7 +179,7 @@ function EditStock(props) {
           placeholder="Qty"
         />
         <Grid container>
-          <Grid item xs>
+          <Grid item xs={12}>
             <div className={classes.label}>Buying Price </div>
             <TextField
               id="buyingprice"
@@ -191,7 +191,7 @@ function EditStock(props) {
               placeholder="Qty"
             />
           </Grid>
-          <Grid item xs>
+          <Grid item xs={12}>
             <div className={classes.label}>Selling Price </div>
             <TextField
               id="sellingprice"

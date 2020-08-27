@@ -33,7 +33,10 @@ function StockCount(props) {
   const [count, setCount] = useState([]);
 
   const handleCount = (v, e) => {
-    console.log(e.target.id);
+    console.log(e.target.value);
+    if (parseInt(e.target.value) < 0) {
+      e.target.value = 0;
+    }
 
     setCount({
       ...count,
@@ -90,7 +93,9 @@ function StockCount(props) {
                     defaultValue={item.stock_qty}
                     onChange={(e) => handleCount(item.stockserial_key, e)}
                     variant="outlined"
-                    type="text"
+                    type="number"
+                    pattern="[0-9]*"
+                    inputmode="numeric"
                   />
                 </Grid>
                 <Grid item xs>

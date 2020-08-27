@@ -44,6 +44,8 @@ import ProductHistory from "./components/Stocks/Product/ProductHistory";
 import SingleProductSales from "./components/Stocks/Product/SingleProductSales";
 import Export from "./components/Shops/Export";
 import Index from "./components/Users/Index";
+import BadStock from "./components/CashSales/BadStock";
+import ExpesensesList from "./components/CashSales/ExpesensesList";
 function App(props) {
   return (
     <React.Fragment>
@@ -54,162 +56,225 @@ function App(props) {
           <Route path="/login/:type" component={Login} />
           <Route path="/reset" component={Reset} />
           <Route path="/register" component={Register} />
-
+          //START SHOPS ROUTES
           <ProtectedRoute
-            title="Stock Setup"
-            path="/stocksetup"
-            backlink="dashboard"
-            roles={["ADMIN_ROLE"]}
-            component={StockSetup}
+            roles={["SHOPS_MANAGER"]}
+            title="All Shops"
+            path="/shops"
+            component={Shops}
           />
           <ProtectedRoute
-            title="Product History"
-            path="/productsummary/:id"
-            backlink="stocksetup"
-            component={ProductHistory}
+            roles={["SHOPS_MANAGER"]}
+            path="/shopsettings/:id"
+            component={ShopSettings}
           />
-          <ProtectedRoute
-            title="Dashboard"
-            path="/dashboard"
-            roles={[]}
-            component={Dashboard}
-          />
-          <ProtectedRoute title="All Shops" path="/shops" component={Shops} />
-          <ProtectedRoute path="/shopsettings/:id" component={ShopSettings} />
-          <ProtectedRoute
-            title="Stock Report"
-            roles={["ADMIN_ROLE"]}
-            path="/stockinmanager"
-            component={StockInManager}
-          />
+          //END SHOPS ROUTE //START SALES REPORT ROUTES
           <ProtectedRoute
             path="/salesmanager"
             backlink="dashboard"
+            roles={["SALES_MANAGER"]}
             title="Sales"
             settings="sales"
             component={SalesManager}
           />
           <ProtectedRoute
+            title="Sales Receipts"
+            path="/salesreceipts"
+            roles={["SALES_MANAGER"]}
+            component={SalesReceipts}
+          />
+          <ProtectedRoute
+            title="Product Sales"
+            path="/productssales"
+            roles={["SALES_MANAGER"]}
+            component={SingleProductSales}
+          />
+          <ProtectedRoute
+            title="Product Analysis"
+            path="/productsanalysis"
+            roles={["SALES_MANAGER"]}
+            component={ProductsAnalysis}
+          />
+          <ProtectedRoute
+            title="Receipt"
+            path="/singlereceipt"
+            roles={["SALES_MANAGER"]}
+            component={SingleSales}
+          />
+          <ProtectedRoute
             title="Customers Management"
+            roles={["SALES_MANAGER"]}
             path="/customers"
             component={Customers}
           />
           <ProtectedRoute
             title="Customer Profile"
+            roles={["SALES_MANAGER"]}
             path="/customerprofile/:id"
             component={CustomerProfile}
           />
           <ProtectedRoute
-            backlink="salesmanager"
+            backlink="dashboard"
+            roles={["SALES_MANAGER"]}
             title="Enter New Sales"
             path="/newsale"
             component={NewCashSale}
           />
-          <Route path="/salesproductlist" component={SalesProductList} />
+          <Route
+            roles={["SALES_MANAGER"]}
+            path="/salesproductlist"
+            component={SalesProductList}
+          />
+          //END SALES REPORT ROUTES //START STOCK ROUTES
           <ProtectedRoute
-            title="Product Sales"
-            path="/productssales"
-            component={SingleProductSales}
+            title="Stocks"
+            path="/stockfilter"
+            roles={["STOCK_REPORT_MANAGER"]}
+            component={StockFilter}
           />
           <ProtectedRoute
-            title="Sales Receipts"
-            path="/salesreceipts"
-            component={SalesReceipts}
+            title="Bad Stocks"
+            path="/badstocks"
+            roles={["STOCK_REPORT_MANAGER"]}
+            component={BadStock}
+          />
+          <ProtectedRoute
+            title="Product History"
+            path="/productsummary/:id"
+            roles={["STOCK_REPORT_MANAGER"]}
+            backlink="stocksetup"
+            component={ProductHistory}
+          />
+          <ProtectedRoute
+            title="Stock Report"
+            roles={["STOCK_REPORT_MANAGER"]}
+            path="/stockinmanager"
+            component={StockInManager}
+          />
+          <ProtectedRoute
+            title="Stock Setup"
+            path="/stocksetup"
+            backlink="dashboard"
+            roles={["STOCK_MANAGER"]}
+            component={StockSetup}
+          />
+          //END STOCK ROUTES
+          <ProtectedRoute
+            title="Dashboard"
+            roles={[]}
+            path="/dashboard"
+            component={Dashboard}
           />
           <ProtectedRoute
             title="Partial Payment"
             path="/partialpayment"
+            roles={["SALES_MANAGER"]}
             component={PartialPayment}
           />
           <ProtectedRoute
-            title="Receipt"
-            path="/singlereceipt"
-            component={SingleSales}
+            path="/expenseslists"
+            title="Expenses "
+            roles={["PROFIT_EXPENSES_MANAGER"]}
+            component={ExpesensesList}
           />
           <ProtectedRoute
             path="/profitexpense"
             title="Profit "
+            roles={["PROFIT_EXPENSES_MANAGER"]}
             settings="profitnexpenses"
             component={ProfitExpensesManager}
           />
           <ProtectedRoute
             title="Attendants"
             path="/attendants"
+            roles={["ADMIN_ROLE"]}
             component={Attendants}
           />
           <ProtectedRoute
             title="Attendant Profile"
+            roles={["ADMIN_ROLE"]}
             path="/attendantsprofile/:id"
             component={AttendantsProfile}
           />
-          <ProtectedRoute
+          {/* <ProtectedRoute
             path="/user"
             title="User DashBoard"
             component={Index}
-          />
+          /> */}
           <ProtectedRoute
             path="/export"
             title="Transfer Stock"
+            roles={["STOCK_MANAGER"]}
             component={Export}
           />
           <ProtectedRoute
             path="/myprofile"
             title="My Profile"
+            roles={["ATTENDANT"]}
             component={Profile}
           />
-          <ProtectedRoute path="/units" component={Units} />
+          <ProtectedRoute
+            roles={["ADD_STOCK"]}
+            path="/units"
+            component={Units}
+          />
           <ProtectedRoute
             title="Add Expenses"
             path="/expenses"
+            roles={["EXPENSES_MANAGER"]}
             component={Expenses}
           />
           <ProtectedRoute
             title="Day's Count"
+            roles={["STOCK_COUNT"]}
             path="/counts/:timestamp"
             component={Counts}
           />
-          <ProtectedRoute path="/stockcount" component={StockCount} />
-
+          <ProtectedRoute
+            roles={["STOCK_COUNT"]}
+            path="/stockcount"
+            component={StockCount}
+          />
           <ProtectedRoute
             path="/profitexpensesummary"
             title="Profit and Expenses summary"
+            roles={["PROFIT_EXPENSES_MANAGER"]}
             component={ProfitExpenseSummary}
           />
           <ProtectedRoute
             path="/profitandexpenseanalysis"
+            roles={["PROFIT_EXPENSES_MANAGER"]}
             component={ProfitandExpenseAnalysis}
           />
           <ProtectedRoute
             title="Cash Sales Summary"
             path="/cashsaleshistory"
+            roles={["SALES_MANAGER"]}
             component={CashSalesHistory}
           />
-
           <ProtectedRoute
             title="Edit Product"
-            // backlink="stocksetup"
             path="/editstock/:id"
+            roles={["EDIT_PRODUCT,STOCK_MANAGER"]}
             component={EditStock}
           />
           <ProtectedRoute
             title="Cash Flow"
             path="/cashflow"
+            roles={["CASH_FLOW"]}
             component={Singlecashflow}
           />
           <ProtectedRoute
             title="Counts History"
             path="/counthistory"
+            roles={["STOCK_COUNT"]}
             component={CountHistory}
           />
           <ProtectedRoute
-            title="Stocks"
-            path="/stockfilter"
-            component={StockFilter}
-          />
-          <ProtectedRoute
-            title="Product Analysis"
-            path="/productsanalysis"
-            component={ProductsAnalysis}
+            title="Customers Manager"
+            path="/customermanager"
+            roles={["ADD_SALES"]}
+            component={Customers}
           />
         </Switch>
       </>

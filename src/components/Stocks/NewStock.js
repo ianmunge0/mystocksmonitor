@@ -115,9 +115,9 @@ function NewStock(props) {
   const preventDefault = (event) => event.preventDefault();
   return (
     <>
+      <Loader fullPage loading={props.stockresponse.loading} />
       <form noValidate autoComplete="off" onSubmit={addNewStock}>
-        <Grid>
-          <Loader fullPage loading={props.stockresponse.loading} />
+        <Grid container>
           <Grid item xs={12}>
             {props.stockresponse.stockresponse ? (
               props.stockresponse.stockresponse.response ? (
@@ -132,7 +132,7 @@ function NewStock(props) {
             )}
             {error ? <Alert severity="error">{error}</Alert> : ""}
           </Grid>
-          <Grid item xs>
+          <Grid item xs={12}>
             <TextField
               className={classes.inputs}
               id="name"
@@ -141,6 +141,8 @@ function NewStock(props) {
               variant="outlined"
               onChange={handleStockData}
             />
+          </Grid>
+          <Grid item xs={12}>
             <TextField
               className={classes.inputs}
               style={{ marginTop: 10 }}
@@ -152,10 +154,11 @@ function NewStock(props) {
             />
           </Grid>
         </Grid>
-        <Grid container spacing={3}>
-          <Grid item xs>
+        <Grid container>
+          <Grid item xs={12}>
             <TextField
               className={classes.inputs}
+              style={{ marginTop: 10 }}
               id="buyingprice"
               label="Buying Price"
               onChange={handleStockData}
@@ -163,9 +166,10 @@ function NewStock(props) {
               variant="outlined"
             />
           </Grid>
-          <Grid item xs>
+          <Grid item xs={12}>
             <TextField
               className={classes.inputs}
+              style={{ marginTop: 10 }}
               id="sellingprice"
               label="Selling Price"
               onChange={handleStockData}
@@ -177,6 +181,7 @@ function NewStock(props) {
             <TextField
               className={classes.inputs}
               id="reorder_level"
+              style={{ marginTop: 10 }}
               label="Re-order level"
               onChange={handleStockData}
               defaultValue={props.stock ? props.stock.reorder_level : ""}

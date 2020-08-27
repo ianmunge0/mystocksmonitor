@@ -16,6 +16,7 @@ import NoItems from "../NoItems";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { UnlockAccess } from "../Common/UnlockAccess";
 const d = new Date();
 const options = [
   "January",
@@ -102,18 +103,20 @@ function SalesReceipts(props) {
                               Receipt No: #{itemdata}
                             </Typography>
                           </Grid>
-                          <Grid item xs={6}>
-                            <IconButton
-                              style={{ padding: 0, float: "right" }}
-                              onClick={() => {
-                                props.deleteReceipt(itemdata, props);
-                              }}
-                              edge="end"
-                              aria-label="delete"
-                            >
-                              <DeleteIcon style={{ color: "red" }} />
-                            </IconButton>
-                          </Grid>
+                          <UnlockAccess request={["DELETE_SALES"]}>
+                            <Grid item xs={6}>
+                              <IconButton
+                                style={{ padding: 0, float: "right" }}
+                                onClick={() => {
+                                  props.deleteReceipt(itemdata, props);
+                                }}
+                                edge="end"
+                                aria-label="delete"
+                              >
+                                <DeleteIcon style={{ color: "red" }} />
+                              </IconButton>
+                            </Grid>
+                          </UnlockAccess>
                         </Grid>
                       }
                       onClick={() => {

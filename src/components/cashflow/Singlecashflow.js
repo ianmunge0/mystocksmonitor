@@ -60,12 +60,6 @@ function Singlecashflow(props) {
 
   const [month, setMonth] = useState("");
   const [type, setType] = useState("");
-  const [inputs, setInputs] = useState({
-    email: "",
-    country: "",
-    password: "",
-    phone: "",
-  });
 
   const [open, setOpen] = React.useState(false);
 
@@ -127,8 +121,6 @@ function Singlecashflow(props) {
   }));
 
   const classes = useStyles();
-
-  console.log("props", props.expenses.profitnexpense.todayexpenses);
 
   if (props.expenses.profitnexpense.loading) {
     return <Loader fullPage loading={props.expenses.profitnexpense.loading} />;

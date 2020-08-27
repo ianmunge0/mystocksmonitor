@@ -187,22 +187,8 @@ function Attendants(props) {
                   />
                 </ListItemAvatar>
                 <ListItemText
-                  primary={value.username}
-                  secondary={
-                    <React.Fragment>
-                      <Typography
-                        component="span"
-                        variant="body2"
-                        className={classes.inline}
-                        color="textPrimary"
-                      >
-                        Roles:{" "}
-                        {value.roles.map((v, i) => (
-                          <span key={i}>{v.name.split("_").join(" ")}</span>
-                        ))}
-                      </Typography>
-                      {/* {value.roles} */}
-                    </React.Fragment>
+                  primary={
+                    <Typography variant="h5">{value.username}</Typography>
                   }
                 />
               </ListItem>
@@ -220,8 +206,8 @@ function Attendants(props) {
           autoComplete="off"
           style={{ margin: 10 }}
         >
-          <Grid container spacing={3}>
-            <Grid item xs>
+          <Grid container>
+            <Grid item xs={12}>
               <TextField
                 className={classes.inputs}
                 id="attendant_name"
@@ -230,7 +216,7 @@ function Attendants(props) {
                 variant="outlined"
               />
             </Grid>
-            <Grid item xs>
+            <Grid item xs={12} style={{ marginTop: 20 }}>
               <TextField
                 className={classes.inputs}
                 id="attendant_password"
