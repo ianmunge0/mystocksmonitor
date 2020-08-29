@@ -9,6 +9,7 @@ array(
     EXPENSES_MANAGER => "can view expense"
     DELETE_SALES => "user can delete sales"
     ADD_SALES => "user can add sales"
+    ATTENDANT_ROLE => 'for all attendants'
 
 
     STOCK_IN => "user can add new stock qty",

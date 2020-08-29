@@ -9,19 +9,6 @@ import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import Grid from "@material-ui/core/Grid";
 import { Button } from "@material-ui/core";
 import { Link, withRouter } from "react-router-dom";
-import Drawer from "@material-ui/core/Drawer";
-import Hidden from "@material-ui/core/Hidden";
-import Divider from "@material-ui/core/Divider";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import MailIcon from "@material-ui/icons/Mail";
-import Avatar from "@material-ui/core/Avatar";
-import Badge from "@material-ui/core/Badge";
-import { reactLocalStorage } from "reactjs-localstorage";
-import auth from "../auth";
 
 const useStyles = makeStyles((theme) => ({
   paper: {

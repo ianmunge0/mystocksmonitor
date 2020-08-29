@@ -7,10 +7,12 @@ import addSales from "./sales";
 import SalesReceipts from "./SalesReceipts";
 import ProfitnExpenses from "./ProfitnExpenses";
 import Customers from "./Customers";
+import StockIn from "./StockIn";
 
 import { combineReducers } from "redux";
 import ProductSummary from "./Product";
 import Titles from "./Titles";
+import Suppliers from "./Suppliers";
 
 const allReducers = combineReducers({
   login: AuthenticationReducer,
@@ -24,6 +26,8 @@ const allReducers = combineReducers({
   customers: Customers,
   productsummary: ProductSummary,
   title: Titles,
+  stocksin: StockIn,
+  suppliers: Suppliers,
 });
 
 export default allReducers;

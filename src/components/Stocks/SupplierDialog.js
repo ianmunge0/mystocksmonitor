@@ -25,7 +25,7 @@ import {
   saveSupplier,
   getSuppliers,
   deleteSupplier,
-} from "../../Redux/Actions/Stock";
+} from "../../Redux/Actions/Suppliers";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -44,22 +44,7 @@ function SupplierDialog(props) {
   const [selectedsupplier, setSelectedSuppliers] = useState({});
   const [chipData, setChipData] = useState([]);
 
-  const [openalert, setOpenAlert] = React.useState(false);
-
-  const handleAlertClickOpen = () => {
-    setOpenAlert(true);
-  };
-
-  const handleAlertClose = () => {
-    setOpenAlert(false);
-  };
-
   useEffect(() => {
-    // console.log({
-    //   action: "all",
-    //   shopid: reactLocalStorage.getObject("userdata").default_shop,
-    // });
-    // setLoading(true);
     props.getSuppliers();
   }, []);
   const classes = useStyles();
@@ -195,8 +180,8 @@ function SupplierDialog(props) {
 }
 
 const mapStateToProps = (state) => ({
-  waiting: state.stock,
-  suppliers: state.stock.suppliers,
+  waiting: state.suppliers,
+  suppliers: state.suppliers.suppliers,
 });
 
 const mapDispacthToProps = (dispatch) => {

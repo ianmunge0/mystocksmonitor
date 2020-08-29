@@ -313,7 +313,12 @@ function NewCashSale(props) {
 
   return (
     <>
-      <SalesDialog fullScreen open={open} handleClose={handleClose} />
+      <SalesDialog
+        type="sales"
+        fullScreen
+        open={open}
+        handleClose={handleClose}
+      />
       <Messages type="error" text={error} />
       <AppBar position="static">
         <Tabs

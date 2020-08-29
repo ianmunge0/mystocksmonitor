@@ -71,28 +71,38 @@ function Dashboard(props) {
       <UnlockAccess request={["ADD_SALES"]}>
         <Grid item xs={12}>
           <Item
-            description="add and view customer sales"
-            title="Customers Manager"
-            route="customermanager"
-            icon="settings"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Item
             description="add sales"
             title="Add Sales"
             route="newsale"
             icon="arrow_downward"
           />
         </Grid>
+        <Grid item xs={12}>
+          <Item
+            description="add and view customer sales"
+            title="Customers Manager"
+            route="customermanager"
+            icon="settings"
+          />
+        </Grid>
       </UnlockAccess>
-
       <UnlockAccess request={["STOCK_MANAGER"]}>
         <Grid item xs={12}>
           <Item
             description="add, count and view all stocks"
-            title="Stocks"
+            title="Stock Setup"
             route="stocksetup"
+            icon="settings"
+          />
+        </Grid>
+      </UnlockAccess>
+
+      <UnlockAccess request={["ATTENDANT_ROLE"]}>
+        <Grid item xs={12}>
+          <Item
+            description="add, count and view all stocks"
+            title="Stock In"
+            route="stockin"
             icon="settings"
           />
         </Grid>
@@ -102,7 +112,7 @@ function Dashboard(props) {
           <Item
             description="Stock reports view/print"
             className="datepicker"
-            title="Stock-in Report"
+            title="Stock In"
             route="stockinmanager"
             icon="arrow_downward"
           />

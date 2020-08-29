@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link, withRouter } from "react-router-dom";
 import { getReport } from "../Redux/Actions/Reports";
+import { deleteStockIn } from "../Redux/Actions/StockIn";
 import { connect } from "react-redux";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
@@ -10,21 +11,8 @@ import Grid from "@material-ui/core/Grid";
 import { Typography } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import Avatar from "@material-ui/core/Avatar";
-import ImageIcon from "@material-ui/icons/Image";
-
-import clsx from "clsx";
-import Drawer from "@material-ui/core/Drawer";
-import Divider from "@material-ui/core/Divider";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
-import Button from "@material-ui/core/Button";
 import NoItems from "./NoItems";
+import StockReportItem from "./Common/StockReportItem";
 
 const d = new Date();
 const options = [
@@ -41,32 +29,18 @@ const options = [
   "November",
   "December",
 ];
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-    backgroundColor: theme.palette.background.paper,
-  },
-  list: {
-    width: 250,
-  },
-  fullList: {
-    width: "auto",
-  },
-}));
 function StockFilter(props) {
-  const classes = useStyles();
   const getMonth = (monthStr) => {
     return new Date(monthStr + "-1-01").getMonth() + 1;
   };
-
   var month = options[d.getMonth()];
   const input = getMonth(month) + "-" + d.getFullYear();
   const output = moment(input, "MM-YY");
 
   // const [cash, setCash] = useState(0);
-  var fromtimeStamp = props.location.state.fromdate;
-  var totimestamp = props.location.state.todate;
-  if (props.location.state === "today") {
+  var fromtimeStamp = props.location.state && props.location.state.fromdate;
+  var totimestamp = props.location.state && props.location.state.todate;
+  if (props.location.state === "today" || props.today) {
     fromtimeStamp = new Date();
     totimestamp = new Date();
   }
@@ -81,78 +55,15 @@ function StockFilter(props) {
   }
 
   useEffect(() => {
-    // console.log(fromtimeStamp, totimestamp);
     props.getReport(fromtimeStamp, totimestamp);
   }, []);
 
-  const [state, setState] = React.useState({
-    top: false,
-    left: false,
-    bottom: false,
-    right: false,
-  });
-  const [item, setItem] = useState(null);
-  const toggleDrawerOne = (anchor, open, type) => (event) => {
-    if (
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
-    }
-
-    setState({ ...state, [anchor]: open });
-
-    if (type === 0) {
-      props.history.push({
-        pathname: `/productsummary/${item.shopserial_key}`,
-        state: {
-          data: item,
-        },
-      });
-    }
+  const deleteStock = (stock) => {
+    props.deleteStockIn(stock);
   };
-
-  const toggleDrawer = (anchor, open, item) => (event) => {
-    if (
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
-    }
-
-    setItem(item);
-    setState({ ...state, [anchor]: open });
-  };
-
-  const list = (anchor) => (
-    <div
-      className={clsx(classes.list, {
-        [classes.fullList]: anchor === "top" || anchor === "bottom",
-      })}
-      role="presentation"
-      onKeyDown={toggleDrawer(anchor, false)}
-    >
-      <List>
-        {["Products History"].map((text, index) => (
-          <ListItem
-            button
-            onClick={toggleDrawerOne(anchor, false, index)}
-            button
-            key={text}
-          >
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-    </div>
-  );
-
-  var anchor = "bottom";
 
   var tifOptions = null;
+  console.log("filter ", props.reports);
   if (props.reports.stocks["items"]) {
     tifOptions = Object.keys(props.reports.stocks["items"]).map((key) => (
       <div key={key}>
@@ -167,32 +78,17 @@ function StockFilter(props) {
         >
           {key}
         </Typography>
-        {props.reports.stocks["items"][key].length > 0
-          ? props.reports.stocks["items"][key].map((value, index) => (
-              <List className={classes.root} key={index}>
-                <ListItem onClick={toggleDrawer("bottom", true, value)}>
-                  <ListItemAvatar>
-                    <Avatar>
-                      <ImageIcon />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={`${value.name}` + " ~(" + `${value.status}` + ")"}
-                    secondary={
-                      "qty: " +
-                      `${value.stock_qty}` +
-                      " x " +
-                      `${value.buyingprice}` +
-                      " = " +
-                      `${value.stock_qty}` * `${value.buyingprice}` +
-                      "/= "
-                    }
-                  />
-                </ListItem>
-                <Divider />
-              </List>
-            ))
-          : "no stocks yet"}
+        {props.reports.stocks["items"][key].length > 0 ? (
+          props.reports.stocks["items"][key].map((value, index) => (
+            <StockReportItem
+              deleteStock={deleteStock}
+              value={value}
+              key={index}
+            />
+          ))
+        ) : (
+          <NoItems text="no stocks yet" />
+        )}
       </div>
     ));
   } else {
@@ -204,11 +100,8 @@ function StockFilter(props) {
     );
   }
 
-  // return <>{tifOptions}</>;
   return (
     <div>
-      {/* <NavBar titleone="Stock in Report  " titletwo={fromdateString} /> */}
-
       {props.reports.stocks["items"] ? (
         <>
           <div style={{ padding: 10 }}>
@@ -251,44 +144,7 @@ function StockFilter(props) {
           No Stocks
         </Typography>
       )}
-      {/* <List className={classes.root}> */}
       {tifOptions}
-      {/* {props.reports.stocks
-          ? props.reports.stocks["items"].map((value, index) => (
-              <div key={index}>
-                <ListItem onClick={toggleDrawer("bottom", true)}>
-                  <ListItemAvatar>
-                    <Avatar>
-                      <ImageIcon />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={`${value.name}` + " ~(" + `${value.status}` + ")"}
-                    secondary={
-                      "qty: " +
-                      `${value.stock_qty}` +
-                      " x " +
-                      `${value.buyingprice}` +
-                      " = " +
-                      `${value.stock_qty}` * `${value.buyingprice}` +
-                      "/= "
-                    }
-                  />
-                </ListItem>
-                <Divider />
-              </div>
-            ))
-          : ""} */}
-      {/* </List> */}
-      <React.Fragment key={anchor}>
-        <Drawer
-          anchor={anchor}
-          open={state[anchor]}
-          onClose={toggleDrawer(anchor, false)}
-        >
-          {list(anchor)}
-        </Drawer>
-      </React.Fragment>
     </div>
   );
 }
@@ -299,9 +155,7 @@ const mapDispacthToProps = (dispatch) => {
   return {
     getReport: (timeStamp, totimestamp) =>
       dispatch(getReport(timeStamp, totimestamp)),
+    deleteStockIn: (item) => dispatch(deleteStockIn(item)),
   };
 };
-export default connect(
-  mapStateToProps,
-  mapDispacthToProps
-)(withRouter(StockFilter));
+export default connect(mapStateToProps, mapDispacthToProps)(StockFilter);

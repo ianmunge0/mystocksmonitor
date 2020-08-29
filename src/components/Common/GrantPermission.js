@@ -6,7 +6,11 @@ export const grantPermission = (requestedRoles) => {
   var totalmatches = 0;
 
   if (requestedRoles === undefined) return true;
-  if (requestedRoles.length === 0 || user_type === "admin") return true;
+  if (
+    requestedRoles.length === 0 ||
+    (user_type === "admin" && requestedRoles.indexOf("ATTENDANT_ROLE") == -1)
+  )
+    return true;
   if (permittedRoles.length > 0) {
     permittedRoles.map((value, index) => {
       requestedRoles.map((valuekey, key) => {

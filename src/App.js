@@ -27,7 +27,6 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import Shops from "./components/Shops/Shops";
 import ShopSettings from "./components/Shops/ShopSettings";
 import NewCashSale from "./components/CashSales/NewCashSale";
-import SalesProductList from "./components/CashSales/SalesProductList";
 import SalesReceipts from "./components/Sales/SalesReceipts";
 import SingleSales from "./components/Sales/SingleSales";
 import StockSetup from "./components/Stocks/StockSetup";
@@ -46,6 +45,7 @@ import Export from "./components/Shops/Export";
 import Index from "./components/Users/Index";
 import BadStock from "./components/CashSales/BadStock";
 import ExpesensesList from "./components/CashSales/ExpesensesList";
+import StockIn from "./components/Stocks/StockIn";
 function App(props) {
   return (
     <React.Fragment>
@@ -115,15 +115,10 @@ function App(props) {
           />
           <ProtectedRoute
             backlink="dashboard"
-            roles={["SALES_MANAGER"]}
+            roles={["SALES_MANAGER", "ADD_SALES"]}
             title="Enter New Sales"
             path="/newsale"
             component={NewCashSale}
-          />
-          <Route
-            roles={["SALES_MANAGER"]}
-            path="/salesproductlist"
-            component={SalesProductList}
           />
           //END SALES REPORT ROUTES //START STOCK ROUTES
           <ProtectedRoute
@@ -149,13 +144,14 @@ function App(props) {
             title="Stock Report"
             roles={["STOCK_REPORT_MANAGER"]}
             path="/stockinmanager"
+            settings="stockin" //this is if you want to have a button at the app bar
             component={StockInManager}
           />
           <ProtectedRoute
             title="Stock Setup"
             path="/stocksetup"
             backlink="dashboard"
-            roles={["STOCK_MANAGER"]}
+            roles={["STOCK_MANAGER", "STOCK_IN"]}
             component={StockSetup}
           />
           //END STOCK ROUTES
@@ -275,6 +271,12 @@ function App(props) {
             path="/customermanager"
             roles={["ADD_SALES"]}
             component={Customers}
+          />
+          <ProtectedRoute
+            title="STOCK IN"
+            path="/stockin"
+            roles={["STOCK_IN"]}
+            component={StockIn}
           />
         </Switch>
       </>

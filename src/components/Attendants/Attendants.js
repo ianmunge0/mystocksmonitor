@@ -170,16 +170,15 @@ function Attendants(props) {
       <TabPanel value={value} index={0}>
         {props.attendants.attendants.length > 0 ? (
           props.attendants.attendants.map((value, index) => (
-            <List
-              className={classes.root}
-              key={index}
-              onClick={() => {
-                props.history.push({
-                  pathname: `/attendantsprofile/${value.serialno}`,
-                });
-              }}
-            >
-              <ListItem alignItems="flex-start">
+            <List className={classes.root} key={index}>
+              <ListItem
+                onClick={() => {
+                  props.history.push({
+                    pathname: `/attendantsprofile/${value.serialno}`,
+                  });
+                }}
+                alignItems="flex-start"
+              >
                 <ListItemAvatar>
                   <Avatar
                     alt={value.username}
@@ -190,6 +189,7 @@ function Attendants(props) {
                   primary={
                     <Typography variant="h5">{value.username}</Typography>
                   }
+                  secondary={<Typography>ID: {value.attendant_id}</Typography>}
                 />
               </ListItem>
               <Divider variant="inset" component="li" />

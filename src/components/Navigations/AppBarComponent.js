@@ -26,10 +26,11 @@ import auth from "../auth";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
+import { UnlockAccess } from "../Common/UnlockAccess";
+
+import { grantPermission } from "../Common/GrantPermission";
 const drawerWidth = 240;
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -212,36 +213,49 @@ function AppBarComponent(props) {
   );
   const initToolbar = (title) => {
     console.log("initToolbar", title);
-    // switch (title) {
-    // case "sales":
-    //   return (
-    //     <Button
-    //       onClick={() => {
-    //         props.history.push({
-    //           pathname: "/newsale",
-    //         });
-    //       }}
-    //     >
-    //       <Typography style={{ color: "#fff" }}>Add +</Typography>
-    //     </Button>
-    //   );
-    //   break;
-    // case "profitnexpenses":
-    //   return (
-    //     <Button
-    //       onClick={() => {
-    //         props.history.push({
-    //           pathname: "/expenses",
-    //         });
-    //       }}
-    //     >
-    //       <Typography style={{ color: "#fff" }}>Add Expenes +</Typography>
-    //     </Button>
-    //   );
-    //   break;
-    // default:
-    //   break;
-    // }
+    switch (title) {
+      case "stockin":
+        return (
+          <Button
+            onClick={() => {
+              props.history.push({
+                pathname: "/stockin",
+              });
+            }}
+          >
+            <Typography style={{ color: "#fff" }}>Add Stock +</Typography>
+          </Button>
+        );
+        break;
+      // case "sales":
+      //   return (
+      //     <Button
+      //       onClick={() => {
+      //         props.history.push({
+      //           pathname: "/newsale",
+      //         });
+      //       }}
+      //     >
+      //       <Typography style={{ color: "#fff" }}>Add +</Typography>
+      //     </Button>
+      //   );
+      //   break;
+      // case "profitnexpenses":
+      //   return (
+      //     <Button
+      //       onClick={() => {
+      //         props.history.push({
+      //           pathname: "/expenses",
+      //         });
+      //       }}
+      //     >
+      //       <Typography style={{ color: "#fff" }}>Add Expenes +</Typography>
+      //     </Button>
+      //   );
+      //   break;
+      default:
+        break;
+    }
   };
 
   const { window } = props;
@@ -252,33 +266,37 @@ function AppBarComponent(props) {
 
   return (
     <div>
-      <AppBar position="fixed" className={classes.appBar}>
+      <AppBar
+        position="fixed"
+        className={
+          !grantPermission(["ATTENDANT_ROLE"]) ? classes.appBar : "none"
+        }
+      >
         <Toolbar>
           {props.title === "Dashboard" ? (
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              onClick={handleDrawerToggle}
-              className={classes.menuButton}
-            >
-              <MenuIcon />
-            </IconButton>
+            <UnlockAccess request={["ADMIN_ROLE"]}>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={handleDrawerToggle}
+                className={classes.menuButton}
+              >
+                <MenuIcon />
+              </IconButton>
+            </UnlockAccess>
           ) : (
             <IconButton
               color="inherit"
               aria-label="open drawer"
               edge="start"
-              onClick={
-                () => {
-                  props.backlink
-                    ? props.history.push({
-                        pathname: "/" + `${props.backlink}`,
-                      })
-                    : props.history.goBack();
-                }
-                // props.history.push({ pathname: (`${props.backlink}` ? `${props.backlink}` : ) })
-              }
+              onClick={() => {
+                props.backlink
+                  ? props.history.push({
+                      pathname: "/" + `${props.backlink}`,
+                    })
+                  : props.history.goBack();
+              }}
               className={classes.menuButtonNormal}
             >
               <ArrowBackIosIcon />
@@ -303,38 +321,39 @@ function AppBarComponent(props) {
           {/* </Typography> */}
         </Toolbar>
       </AppBar>
-
-      <nav className={classes.drawer} aria-label="mailbox folders">
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Hidden smUp implementation="css">
-          <Drawer
-            container={container}
-            variant="temporary"
-            anchor={theme.direction === "rtl" ? "right" : "left"}
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        <Hidden xsDown implementation="css">
-          <Drawer
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            variant="permanent"
-            open
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-      </nav>
+      <UnlockAccess request={["ADMIN_ROLE"]}>
+        <nav className={classes.drawer} aria-label="mailbox folders">
+          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+          <Hidden smUp implementation="css">
+            <Drawer
+              container={container}
+              variant="temporary"
+              anchor={theme.direction === "rtl" ? "right" : "left"}
+              open={mobileOpen}
+              onClose={handleDrawerToggle}
+              classes={{
+                paper: classes.drawerPaper,
+              }}
+              ModalProps={{
+                keepMounted: true, // Better open performance on mobile.
+              }}
+            >
+              {drawer}
+            </Drawer>
+          </Hidden>
+          <Hidden xsDown implementation="css">
+            <Drawer
+              classes={{
+                paper: classes.drawerPaper,
+              }}
+              variant="permanent"
+              open
+            >
+              {drawer}
+            </Drawer>
+          </Hidden>
+        </nav>
+      </UnlockAccess>
     </div>
   );
   //   }
