@@ -20,6 +20,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import Slide from "@material-ui/core/Slide";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import { withRouter } from "react-router-dom";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     width: "auto",
   },
 }));
-export default function StockReportItem(props, key) {
+function StockReportItem(props, key) {
   const classes = useStyles();
   const [state, setState] = React.useState({
     top: false,
@@ -222,3 +223,4 @@ export default function StockReportItem(props, key) {
     </>
   );
 }
+export default withRouter(StockReportItem);

@@ -1,6 +1,23 @@
 import Api from "../../api/api";
 import { reactLocalStorage } from "reactjs-localstorage";
+export const deletecustomer = (id, props) => {
+  return (dispatch) => {
+    dispatch({
+      type: "LOADING",
+    });
 
+    Api.get(`/customers.php`, {
+      params: { id, action: "delete" },
+    })
+      .then((res) => {
+        console.log(res.data);
+        props.history.goBack();
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  };
+};
 export const addCustomer = (customer, event) => {
   return (dispatch) => {
     dispatch({

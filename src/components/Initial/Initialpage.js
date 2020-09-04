@@ -37,7 +37,6 @@ export default function HorizontalLabelPositionBelowStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
   useEffect(() => {
-    console.log("vv ", reactLocalStorage.getObject("currentshop") === "");
     if (reactLocalStorage.getObject("userdata").default_shop !== "") {
       window.location = "/dashboard";
     }

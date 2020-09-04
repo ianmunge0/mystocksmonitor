@@ -9,6 +9,7 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import { Divider } from "@material-ui/core";
+import NoItems from "../NoItems";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -108,7 +109,11 @@ function StockCount(props) {
             </form>
           ))
         : ""}
-      {props.stocks.length == 0 ? <h5>No counts at the moment</h5> : " "}
+      {props.stocks.length == 0 ? (
+        <NoItems text="No counts at the moment" />
+      ) : (
+        " "
+      )}
     </div>
   );
 }

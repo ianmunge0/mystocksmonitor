@@ -34,6 +34,7 @@ function NewShop(props) {
     console.log(shop);
   };
 
+  console.log("loading", props);
   return (
     <div>
       <div className="container">

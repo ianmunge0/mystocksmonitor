@@ -8,6 +8,7 @@ import Alert from "@material-ui/lab/Alert";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import NoItems from "../NoItems";
 import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
 
 import StockItem from "./StockItem";
 function AllStocks(props) {
@@ -15,6 +16,7 @@ function AllStocks(props) {
   useEffect(() => {
     props.getStock();
   }, []);
+
   const [all, setAll] = useState(false);
 
   const [stocks, setStocks] = useState([]);
@@ -103,11 +105,13 @@ function AllStocks(props) {
       ) : (
         ""
       )}
-      {props.stocks.length > 0
-        ? props.stocks.map((row, index) => {
-            return <StockItem row={row} key={index} />;
-          })
-        : ""}
+      {props.stocks.length > 0 ? (
+        props.stocks.map((row, index) => {
+          return <StockItem row={row} key={index} />;
+        })
+      ) : (
+        <NoItems text="No stocks yet" />
+      )}
     </>
   );
 }

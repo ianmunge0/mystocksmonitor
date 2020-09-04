@@ -101,7 +101,7 @@ export const saveStockIn = (stocks, supplier) => {
   };
 };
 
-export const deleteStockIn = (stock) => {
+export const deleteStockIn = (stock, props) => {
   return (dispatch) => {
     console.log("deleteStockIn", stock);
     dispatch({
@@ -117,11 +117,12 @@ export const deleteStockIn = (stock) => {
     })
       .then((res) => {
         const response = res.data;
+        // props.history.goBack();
         console.log("After deleting ", response);
-        dispatch({
-          type: "GET_REPORTS",
-          deletedstock: stock,
-        });
+        // dispatch({
+        //   type: "GET_REPORTS",
+        //   deletedstock: stock,
+        // });
         dispatch({
           type: "GET_STOCKS_IN",
           deletedstock: stock,

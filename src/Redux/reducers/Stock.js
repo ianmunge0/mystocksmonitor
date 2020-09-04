@@ -20,6 +20,7 @@ const initialState = {
   stockcounthistory: [],
   filteredstocks: [],
   loading: true,
+  stockscopy: [],
 };
 
 const Stock = (state = initialState, action) => {
@@ -85,11 +86,29 @@ const Stock = (state = initialState, action) => {
     //     },
     //     loading: false,
     //   };
+    case "GET_STOCK_FILTER":
+      let newState = {};
+      console.log(state);
+      let value = action.payload.text;
+      let filteredValues = state.stockscopy.filter((stock) => {
+        return stock.name.includes(value);
+      });
+      if (value) {
+        newState = filteredValues;
+      } else {
+        newState = state.stockscopy;
+      }
 
+      return {
+        ...state,
+        stocks: newState,
+        loading: false,
+      };
     case GET_STOCK:
       return {
         ...state,
         stocks: action.stocks,
+        stockscopy: action.stocks,
         loading: false,
       };
     case ADD_STOCK:

@@ -18,21 +18,6 @@ import { grantPermission } from "./Common/GrantPermission";
 
 import Zoom from "@material-ui/core/Zoom";
 
-const d = new Date();
-const options = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.paper,

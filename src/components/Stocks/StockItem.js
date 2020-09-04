@@ -214,4 +214,7 @@ const mapDispacthToProps = (dispatch) => {
     dispatch,
   };
 };
-export default connect(mapStateToProps, mapDispacthToProps)(StockItem);
+export default connect(
+  mapStateToProps,
+  mapDispacthToProps
+)(withRouter(StockItem));

@@ -175,7 +175,7 @@ function StockIn(props) {
     setSupplier(supplier);
   };
   const deleteStock = (stock) => {
-    props.deleteStockIn(stock);
+    props.deleteStockIn(stock, props);
   };
 
   //END COMPONENTS CODES
@@ -339,7 +339,7 @@ const mapStateToProps = (state) => ({
 const mapDispacthToProps = (dispatch) => ({
   saveStockIn: (stocks, supplier) => dispatch(saveStockIn(stocks, supplier)),
   getStocksIn: () => dispatch(getStocksIn()),
-  deleteStockIn: (item) => dispatch(deleteStockIn(item)),
+  deleteStockIn: (item, props) => dispatch(deleteStockIn(item, props)),
   dispatch, // ← Add this
 });
 

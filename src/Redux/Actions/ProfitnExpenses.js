@@ -116,6 +116,7 @@ export const addExpense = (expense, props) => {
       "YYYY-MM-DD hh:mm:ss"
     );
 
+    console.log("expenses", expense);
     Api.get(`/profitandexpense.php`, {
       params: expense,
     })

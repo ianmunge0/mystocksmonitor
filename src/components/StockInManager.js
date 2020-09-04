@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
@@ -8,8 +9,36 @@ import ShowChartIcon from "@material-ui/icons/ShowChart";
 import TodayIcon from "@material-ui/icons/Today";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import Item from "./Item";
-
+import { grantPermission } from "./Common/GrantPermission";
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
+import { green } from "@material-ui/core/colors";
+import Zoom from "@material-ui/core/Zoom";
+const useStyles = makeStyles((theme) => ({
+  root: {
+    backgroundColor: theme.palette.background.paper,
+    position: "relative",
+  },
+  fab: {
+    position: "absolute",
+    top: theme.spacing(2),
+    right: theme.spacing(2),
+  },
+  fabGreen: {
+    color: theme.palette.common.white,
+    backgroundColor: green[500],
+    "&:hover": {
+      backgroundColor: green[600],
+    },
+  },
+}));
 export default function StockInManager(props) {
+  const classes = useStyles();
+  const theme = useTheme();
+  const transitionDuration = {
+    enter: theme.transitions.duration.enteringScreen,
+    exit: theme.transitions.duration.leavingScreen,
+  };
   const handleSelect = (ranges) => {
     console.log("handleSelect", ranges.selection);
     setState([ranges.selection]);
@@ -42,6 +71,24 @@ export default function StockInManager(props) {
         moveRangeOnFirstSelection={false}
         ranges={state}
       />
+      {grantPermission(["STOCK_MANAGER"]) && (
+        <Zoom
+          onClick={() => {
+            props.history.push({
+              pathname: "/stockin",
+            });
+          }}
+          key="primary"
+          in={true}
+          timeout={transitionDuration}
+          style={{ marginTop: 50 }}
+          unmountOnExit
+        >
+          <Fab aria-label="Add" className={classes.fab} color="primary">
+            <AddIcon />
+          </Fab>
+        </Zoom>
+      )}
       {/* <DefinedRange
         dateDisplayFormat="MMM d, yyyy"
         onChange={(item) => getstock(item)}

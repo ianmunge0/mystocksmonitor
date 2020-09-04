@@ -6,8 +6,10 @@ import {
 } from "../Actions/actions";
 const initialState = {
   attendants: [],
-  loading: true,
+  loading: false,
   addingerror: "",
+  status: true,
+  msg: "",
 };
 
 const Attendants = (state = initialState, action) => {
@@ -34,6 +36,8 @@ const Attendants = (state = initialState, action) => {
       return {
         ...state,
         profile: action.profile,
+        status: action.profile.status && action.profile.status,
+        msg: action.profile.msg && action.profile.msg,
         loading: false,
       };
     case GET_ATTENDANTS:

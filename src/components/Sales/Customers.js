@@ -156,7 +156,7 @@ function Customers(props) {
       type: "SEARCH_CUSTOMER",
       payload: {
         text: e.target.value,
-        customers: props.customers.customers,
+        displaycustomers: props.customers.customers,
       },
     });
     // props.searchCustomer(e.target.value);
@@ -175,7 +175,6 @@ function Customers(props) {
         >
           <LinkTab label="All" href="/trash" {...a11yProps(1)} />
           <LinkTab label="New" href="/drafts" {...a11yProps(0)} />
-          <LinkTab label="Sms" href="/drafts" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
 
@@ -365,7 +364,6 @@ function Customers(props) {
           </div>
         </form>
       </TabPanel>
-      <TabPanel value={value} index={2}></TabPanel>
     </div>
   );
 }

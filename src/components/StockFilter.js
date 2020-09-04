@@ -8,7 +8,7 @@ import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
 import moment from "moment";
 import Grid from "@material-ui/core/Grid";
-import { Typography } from "@material-ui/core";
+import { Typography, Divider } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 
 import NoItems from "./NoItems";
@@ -104,40 +104,27 @@ function StockFilter(props) {
     <div>
       {props.reports.stocks["items"] ? (
         <>
-          <div style={{ padding: 10 }}>
-            <TextField
-              variant="outlined"
-              fullWidth
-              type="search"
-              placeholder="quick search"
-            />
-          </div>
           <Grid container style={{ marginTop: 20, marginBotton: 10 }}>
             <Grid item xs>
-              <Typography align="center" variant="h6">
-                Entries
-              </Typography>
-              <Typography align="center" variant="h6">
+              <Typography align="center">Entries</Typography>
+              <Typography align="center">
                 {props.reports.stocks.count}
               </Typography>
             </Grid>
             <Grid item xs>
-              <Typography align="center" variant="h6">
-                On Credit
-              </Typography>
-              <Typography align="center" variant="h6">
+              <Typography align="center">On Credit</Typography>
+              <Typography align="center">
                 {props.reports.stocks.credit}
               </Typography>
             </Grid>
             <Grid item xs>
-              <Typography align="center" variant="h6">
-                On cash
-              </Typography>
-              <Typography align="center" variant="h6">
+              <Typography align="center">On cash</Typography>
+              <Typography align="center">
                 {props.reports.stocks.cash}
               </Typography>
             </Grid>
           </Grid>
+          <Divider />
         </>
       ) : (
         <Typography variant="h5" style={{ margin: 30 }}>

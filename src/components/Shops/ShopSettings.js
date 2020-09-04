@@ -101,12 +101,13 @@ function ShopSettings(props) {
           //remove this shop from admin default in the localstorage if its has been deleted
           if (
             id === reactLocalStorage.getObject("userdata").default_shop ||
-            reactLocalStorage.getObject("userdata").default_shop == ""
+            reactLocalStorage.getObject("userdata").default_shop === ""
           ) {
             var initialdata = reactLocalStorage.getObject("userdata");
             initialdata.default_shop = shop[0]["serialno"];
             initialdata.currentshop = shop[0];
             reactLocalStorage.setObject("userdata", initialdata);
+            reactLocalStorage.setObject("currentshop", shop[0]);
           }
           reactLocalStorage.setObject("shops", shop);
           props.history.push("/shops");
@@ -210,6 +211,7 @@ function ShopSettings(props) {
       />
       {/* </div> */}
       <Link
+        to="!#"
         fullWidth
         style={{
           padding: 15,

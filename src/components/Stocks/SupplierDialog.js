@@ -99,7 +99,7 @@ function SupplierDialog(props) {
             <CloseIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            Select a Supplier
+            Select / Add a Supplier
           </Typography>
         </Toolbar>
       </AppBar>
@@ -140,10 +140,9 @@ function SupplierDialog(props) {
         <Typography style={{ color: "red" }}>{error}</Typography>
         <Grid style={{ margin: 10 }}>
           <Grid item xs={12}>
-            <label>Name</label>
             <TextField
               fullWidth
-              placeholder="Customer Name"
+              placeholder="Name"
               id="outlined-basic"
               onChange={handleChange}
               name="name"
@@ -151,7 +150,6 @@ function SupplierDialog(props) {
             />
           </Grid>
           <Grid item xs={12} style={{ marginTop: 10 }}>
-            <label>Phone Number</label>
             <TextField
               fullWidth
               placeholder="Phone Number"

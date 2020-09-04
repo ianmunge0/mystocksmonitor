@@ -1,6 +1,11 @@
 import React, { useEffect } from "react";
 import AppBar from "@material-ui/core/AppBar";
-import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
+import {
+  makeStyles,
+  useTheme,
+  withStyles,
+  fade,
+} from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -23,6 +28,9 @@ import Avatar from "@material-ui/core/Avatar";
 import Badge from "@material-ui/core/Badge";
 import { reactLocalStorage } from "reactjs-localstorage";
 import auth from "../auth";
+
+import InputBase from "@material-ui/core/InputBase";
+import SearchIcon from "@material-ui/icons/Search";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -90,6 +98,45 @@ const useStyles = makeStyles((theme) => ({
       display: "none",
     },
   },
+  search: {
+    position: "relative",
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    "&:hover": {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    },
+    marginLeft: 0,
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: theme.spacing(1),
+      width: "auto",
+    },
+  },
+  searchIcon: {
+    padding: theme.spacing(0, 2),
+    height: "100%",
+    position: "absolute",
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  inputRoot: {
+    color: "inherit",
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      width: "12ch",
+      "&:focus": {
+        width: "20ch",
+      },
+    },
+  },
   menuButtonNormal: {
     marginRight: theme.spacing(2),
   },
@@ -131,7 +178,7 @@ function AppBarComponent(props) {
     setOpen(false);
     if (action === "delete") {
       auth.logout(() => {
-        props.history.push({ pathname: "/login/admin" });
+        props.history.push({ pathname: "/" });
         handleDrawerToggle();
       });
     }
@@ -211,48 +258,37 @@ function AppBarComponent(props) {
       </Dialog>
     </div>
   );
+
+  const handleSearch = (e) => {
+    console.log("search", e.target.value);
+    props.dispatch({
+      type: "GET_STOCK_FILTER",
+      payload: {
+        text: e.target.value,
+      },
+    });
+    // props.searchCustomer(e.target.value);
+  };
+
   const initToolbar = (title) => {
     console.log("initToolbar", title);
     switch (title) {
-      case "stockin":
+      case "dashboard":
         return (
-          <Button
-            onClick={() => {
-              props.history.push({
-                pathname: "/stockin",
-              });
-            }}
-          >
-            <Typography style={{ color: "#fff" }}>Add Stock +</Typography>
-          </Button>
+          <UnlockAccess request={["ATTENDANT_ROLE"]}>
+            <Button
+              onClick={() => {
+                auth.logout(() => {
+                  props.history.push({ pathname: "/" });
+                  handleDrawerToggle();
+                });
+              }}
+            >
+              <Typography style={{ color: "#fff" }}>Logout</Typography>
+            </Button>
+          </UnlockAccess>
         );
         break;
-      // case "sales":
-      //   return (
-      //     <Button
-      //       onClick={() => {
-      //         props.history.push({
-      //           pathname: "/newsale",
-      //         });
-      //       }}
-      //     >
-      //       <Typography style={{ color: "#fff" }}>Add +</Typography>
-      //     </Button>
-      //   );
-      //   break;
-      // case "profitnexpenses":
-      //   return (
-      //     <Button
-      //       onClick={() => {
-      //         props.history.push({
-      //           pathname: "/expenses",
-      //         });
-      //       }}
-      //     >
-      //       <Typography style={{ color: "#fff" }}>Add Expenes +</Typography>
-      //     </Button>
-      //   );
-      //   break;
       default:
         break;
     }
@@ -303,13 +339,13 @@ function AppBarComponent(props) {
             </IconButton>
           )}
           <Grid container spacing={3}>
-            <Grid item xs={props.settings ? 4 : 12}>
+            <Grid item xs={props.settings ? 8 : 12}>
               <Typography variant="h6" style={{ marginTop: 10 }} noWrap>
                 {props.statetitle.title ? props.statetitle.title : props.title}
               </Typography>
             </Grid>
             {props.settings ? (
-              <Grid item xs={8} className={classes.actionbtn}>
+              <Grid item xs={4} className={classes.actionbtn}>
                 <div className={classes.actionbtn}>
                   {initToolbar(props.settings)}
                 </div>
@@ -318,7 +354,23 @@ function AppBarComponent(props) {
               ""
             )}
           </Grid>
-          {/* </Typography> */}
+
+          {props.location.pathname === "/stocksetup" && (
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                placeholder="Search…"
+                onChange={(e) => handleSearch(e)}
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+                inputProps={{ "aria-label": "search" }}
+              />
+            </div>
+          )}
         </Toolbar>
       </AppBar>
       <UnlockAccess request={["ADMIN_ROLE"]}>

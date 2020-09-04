@@ -55,12 +55,12 @@ export const deleteReceipt = (receiptno, props) => {
       .then((res) => {
         const receiptpayments = res.data;
         console.log("receiptpayments ", receiptpayments);
-        // props.history.goBack();
-        dispatch({
-          type: "GET_RECEIPT_PAYMENTS",
-          receiptpayments,
-          deleted_receiptno: receiptno,
-        });
+        props.history.goBack();
+        // dispatch({
+        //   type: "GET_RECEIPT_PAYMENTS",
+        //   receiptpayments,
+        //   deleted_receiptno: receiptno,
+        // });
       })
       .catch((error) => {
         // your error handling goes here}

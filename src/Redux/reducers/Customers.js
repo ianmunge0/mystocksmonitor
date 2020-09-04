@@ -3,6 +3,7 @@ const initialState = {
   loading: true,
   addingerror: "",
   searchedcustomers: [],
+  copycustomers: [],
   payments: [],
 };
 
@@ -25,18 +26,22 @@ const Customers = (state = initialState, action) => {
         loading: false,
       };
     case "SEARCH_CUSTOMER":
-      console.log("vb", action.payload);
-      // return state;
+      //clone original
+      let newState = {};
+      let value = action.payload.text;
+      let filteredValues = state.copycustomers.customers.filter((customer) => {
+        return customer.name.includes(value);
+      });
+      if (value) {
+        newState = filteredValues;
+      } else {
+        newState = state.copycustomers.customers;
+      }
       return {
         ...state,
         customers: {
-          customers: action.payload.customers.customers.filter((p) =>
-            p.name.includes(action.payload.text)
-          ),
+          customers: newState,
         },
-        // customers: state.customers.customers.filter(
-        //   (value) => value.name === action.payload
-        // ),
         loading: false,
       };
     case "ADDED_CUSTOMERS":
@@ -64,6 +69,7 @@ const Customers = (state = initialState, action) => {
       return {
         ...state,
         customers: action.customers,
+        copycustomers: action.customers,
         loading: false,
       };
     default:

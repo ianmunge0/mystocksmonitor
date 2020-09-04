@@ -9,6 +9,7 @@ import Chip from "@material-ui/core/Chip";
 import FaceIcon from "@material-ui/icons/Face";
 import DoneIcon from "@material-ui/icons/Done";
 import { Divider } from "@material-ui/core";
+import NoItems from "../NoItems";
 
 function CountHistory(props) {
   useEffect(() => {
@@ -42,7 +43,15 @@ function CountHistory(props) {
       </div>
     ));
   }
-  return <>{tifOptions}</>;
+  return (
+    <>
+      {tifOptions && tifOptions.length > 0 ? (
+        tifOptions
+      ) : (
+        <NoItems text="No Stock Count" />
+      )}
+    </>
+  );
 }
 
 const mapStateToProps = (state) => ({

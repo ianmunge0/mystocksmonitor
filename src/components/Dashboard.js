@@ -57,7 +57,7 @@ function Dashboard(props) {
         </Grid>
       </UnlockAccess>
       <ShopsDialog fullScreen open={open} handleClose={handleClose} />
-      <UnlockAccess request={["ADD_SHOP", "SHOPS_MANAGER"]}>
+      <UnlockAccess request={["SHOPS_MANAGER"]}>
         <Grid item xs={12}>
           <Item
             description="add, View all shops"
@@ -68,7 +68,7 @@ function Dashboard(props) {
           />
         </Grid>
       </UnlockAccess>
-      <UnlockAccess request={["ADD_SALES"]}>
+      <UnlockAccess request={["ATTENDANT_ROLE"]}>
         <Grid item xs={12}>
           <Item
             description="add sales"
@@ -158,7 +158,7 @@ function Dashboard(props) {
           />
         </Grid>
       </UnlockAccess>
-      <UnlockAccess request={["ADMIN_ROLE"]}>
+      {/* <UnlockAccess request={["ADMIN_ROLE"]}>
         <Grid item xs={12}>
           <Item
             description="manage your subscription for better experience"
@@ -167,7 +167,7 @@ function Dashboard(props) {
             route="/"
           />
         </Grid>
-      </UnlockAccess>
+      </UnlockAccess> */}
       <UnlockAccess request={[]}>
         <Snackbar
           onClick={handleClickOpen}

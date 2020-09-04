@@ -52,7 +52,7 @@ export const countries = () => {
 export const login = (email, password, type) => {
   return (dispatch) => {
     dispatch({
-      type: LOADING,
+      type: "LOGIN_LOADING",
       loading: true,
     });
 
@@ -149,17 +149,6 @@ export const register = (
   type
 ) => {
   return (dispatch) => {
-    console.log("Register dispatch");
-
-    console.log({
-      usertypesignupkey: "admin",
-      emailaddresssignupkey: email,
-      phonenosignupkey: phone,
-      countrysignupkey: country,
-      country_code: country_code,
-      passwordsignupkey: password,
-    });
-
     dispatch({
       type: LOADING,
       loading: true,

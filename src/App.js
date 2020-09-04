@@ -51,7 +51,6 @@ function App(props) {
     <React.Fragment>
       <>
         <Switch>
-          <Route exact path="/" component={DefaultPage} />
           <Route path="/initialshopspage" component={InititalPage} />
           <Route path="/login/:type" component={Login} />
           <Route path="/reset" component={Reset} />
@@ -60,6 +59,7 @@ function App(props) {
           <ProtectedRoute
             roles={["SHOPS_MANAGER"]}
             title="All Shops"
+            backlink="dashboard"
             path="/shops"
             component={Shops}
           />
@@ -98,18 +98,18 @@ function App(props) {
           <ProtectedRoute
             title="Receipt"
             path="/singlereceipt"
-            roles={["SALES_MANAGER"]}
+            roles={["SALES_MANAGER", "ADD_SALES"]}
             component={SingleSales}
           />
           <ProtectedRoute
             title="Customers Management"
-            roles={["SALES_MANAGER"]}
+            roles={["SALES_MANAGER", "ADD_SALES"]}
             path="/customers"
             component={Customers}
           />
           <ProtectedRoute
             title="Customer Profile"
-            roles={["SALES_MANAGER"]}
+            roles={["SALES_MANAGER", "ADD_SALES"]}
             path="/customerprofile/:id"
             component={CustomerProfile}
           />
@@ -159,12 +159,13 @@ function App(props) {
             title="Dashboard"
             roles={[]}
             path="/dashboard"
+            settings="dashboard"
             component={Dashboard}
           />
           <ProtectedRoute
             title="Partial Payment"
             path="/partialpayment"
-            roles={["SALES_MANAGER"]}
+            roles={["SALES_MANAGER", "ADD_SALES"]}
             component={PartialPayment}
           />
           <ProtectedRoute
@@ -278,6 +279,7 @@ function App(props) {
             roles={["STOCK_IN"]}
             component={StockIn}
           />
+          <Route exact path="/" component={DefaultPage} />
         </Switch>
       </>
     </React.Fragment>

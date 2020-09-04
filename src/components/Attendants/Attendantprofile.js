@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import M from "materialize-css/dist/js/materialize.min.js";
 import { getprofile, updateProfile } from "../../Redux/Actions/Attendants";
 import { connect } from "react-redux";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
 import Checkbox from "@material-ui/core/Checkbox";
-import Badge from "@material-ui/core/Badge";
 import Api from "../../api/api";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
@@ -15,13 +13,25 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Icon from "@material-ui/core/Icon";
+import clsx from "clsx";
 
 import PropTypes from "prop-types";
+import IconButton from "@material-ui/core/IconButton";
 
+import InputLabel from "@material-ui/core/InputLabel";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import FormControl from "@material-ui/core/FormControl";
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import OutlinedInput from "@material-ui/core/OutlinedInput";
 function Attendantprofile(props) {
   // const [loading, setLoading] = useState(false);
   useEffect(() => {
     props.dispatch({ type: "LOADING" });
+    console.log("bb ", {
+      id: props.match.params.id,
+      action: "attendant_profile",
+    });
     Api.get(`/attendants.php`, {
       params: {
         id: props.match.params.id,
@@ -121,6 +131,7 @@ function Attendantprofile(props) {
   const [attendant, setAttendant] = useState({
     username: "",
     password: "",
+    showPassword: false,
   });
 
   const [role, setRole] = useState([]);
@@ -144,7 +155,12 @@ function Attendantprofile(props) {
     });
     console.log("handleAttendantData", attendantnew);
   };
-
+  const handleClickShowPassword = () => {
+    setAttendant({ ...attendant, showPassword: !attendant.showPassword });
+  };
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
   console.log(props);
   if (props.profile.loading) {
     return <Loader fullPage loading={props.profile.loading} />;
@@ -161,7 +177,7 @@ function Attendantprofile(props) {
           <div className="col s12">
             <p className="red-text">{error}</p>
           </div>
-          <Grid container spacing={3}>
+          <Grid container spacing={3} style={{ marginTop: 20 }}>
             <Grid item xs={12}>
               {console.log("nn", attendant.username)}
               <TextField
@@ -174,32 +190,60 @@ function Attendantprofile(props) {
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                className={classes.inputs}
-                id="password"
-                label="Password"
-                onChange={handleAttendantData}
+              <FormControl
+                className={clsx(classes.margin, classes.inputs)}
                 variant="outlined"
-              />
+              >
+                <InputLabel htmlFor="standard-adornment-password">
+                  Password
+                </InputLabel>
+                <OutlinedInput
+                  id="attendant_password"
+                  type={attendant.showPassword ? "text" : "password"}
+                  onChange={handleAttendantData}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                      >
+                        {attendant.showPassword ? (
+                          <Visibility />
+                        ) : (
+                          <VisibilityOff />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  labelWidth={70}
+                />
+              </FormControl>
             </Grid>
           </Grid>
           <div className="col s12">
             <h6 style={{ marginTop: 30, marginBottom: 20 }}>Roles</h6>
             <Divider />
-            {role.map((value, key) => (
-              <label className="col s6" key={key}>
-                <Checkbox
-                  id={value.id}
-                  name={value.name}
-                  defaultChecked={value.checked}
-                  // onChange={handleRoleData}
-                  onChange={(e) => setCheckedRole(value.id, e)}
-                  inputProps={{ "aria-label": "primary checkbox" }}
-                />
+            <Grid container>
+              {/* {console.log("role", role)} */}
+              {role.map((value, key) => (
+                <Grid item xs={6} sm={6} md={6} key={key}>
+                  <Checkbox
+                    id={value.id}
+                    name={value.name}
+                    defaultChecked={value.checked}
+                    disabled={value.id === "8" && true}
+                    // onChange={handleRoleData}
+                    onChange={(e) => setCheckedRole(value.id, e)}
+                    inputProps={{ "aria-label": "primary checkbox" }}
+                  />
 
-                <span>{value.name.split("_").join(" ").toUpperCase()}</span>
-              </label>
-            ))}
+                  <span style={{ fontSize: 12 }}>
+                    {value.name.split("_").join(" ").toUpperCase()}
+                  </span>
+                </Grid>
+              ))}
+            </Grid>
           </div>
           <h6 style={{ marginTop: 30, marginBottom: 20 }}>Settings</h6>
           <Divider />

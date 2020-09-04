@@ -7,39 +7,31 @@ import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
-import { Loader } from "react-overlay-loader";
-import "react-overlay-loader/styles.css";
 import Dialog from "./Dialog";
 import Api from "../../api/api";
 import { reactLocalStorage } from "reactjs-localstorage";
 import Grid from "@material-ui/core/Grid";
 import Icon from "@material-ui/core/Icon";
 import Messages from "../Common/Messages";
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import clsx from "clsx";
+import { getprofile } from "../../Redux/Actions/Attendants";
+
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import FormControl from "@material-ui/core/FormControl";
+import IconButton from "@material-ui/core/IconButton";
+import { Loader } from "react-overlay-loader";
+import "react-overlay-loader/styles.css";
 
 import {
-  getAdminprofile,
+  // getAdminprofile,
   updateAdminProfile,
 } from "../../Redux/Actions/Attendants";
 import { connect } from "react-redux";
 import Button from "@material-ui/core/Button";
-const countries = [
-  {
-    value: "USD",
-    label: "$",
-  },
-  {
-    value: "EUR",
-    label: "€",
-  },
-  {
-    value: "BTC",
-    label: "฿",
-  },
-  {
-    value: "JPY",
-    label: "¥",
-  },
-];
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -94,7 +86,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Profile(props) {
-  useEffect(() => {}, []);
+  useEffect(() => {
+    props.getprofile(reactLocalStorage.getObject("userdata").serialno);
+  }, []);
 
   const [countries, setCountries] = useState({});
   const classes = useStyles();
@@ -117,7 +111,6 @@ function Profile(props) {
   const handleClose = () => {
     setOpen(false);
   };
-  const [loading, setLoading] = useState(false);
 
   const updateProfile = (e) => {
     e.preventDefault();
@@ -131,8 +124,9 @@ function Profile(props) {
     }
   };
   const [password, setPassword] = useState({
-    password: "",
-    confirmpassword: "",
+    current_password: "",
+    new_password: "",
+    showPassword: false,
   });
 
   const [profile, setProfile] = useState({
@@ -146,9 +140,12 @@ function Profile(props) {
       [e.target.id]: e.target.value,
     });
   };
-  // if (!props.profile.profile) {
-  //   return <Loader fullPage loading={props.profile.loading} />;
-  // }
+  const handleClickShowPassword = () => {
+    setPassword({ ...password, showPassword: !password.showPassword });
+  };
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   const setdcountry = (data) => {
     setCountry(data);
@@ -162,21 +159,20 @@ function Profile(props) {
   const updatePassword = (e) => {
     e.preventDefault();
     setPassworderror("");
-    if (password["password"] === "" || password["confirmpassword"] === "") {
-      setPassworderror("password is empty");
+    if (
+      password["current_password"] === "" ||
+      password["new_password"] === ""
+    ) {
+      setPassworderror("both password must not be empty");
     } else {
-      if (password["password"] !== password["confirmpassword"]) {
-        setPassworderror("password must be the same");
-        return;
-      }
       password.action = "password";
       props.updateAdminProfile(password);
     }
   };
   console.log("bb", props);
+
   return (
     <div className={classes.root}>
-      <Loader fullPage loading={loading} />
       <AppBar position="static">
         <Tabs
           variant="fullWidth"
@@ -192,17 +188,13 @@ function Profile(props) {
         <Messages type="error" text={error} />
         <form onSubmit={updateProfile} autoComplete="off">
           <div className="row">
-            {profile ? (
-              <Dialog
-                countries={countries}
-                fullScreen
-                open={open}
-                setdcountry={setdcountry}
-                handleClose={handleClose}
-              />
-            ) : (
-              ""
-            )}
+            <Dialog
+              countries={countries}
+              fullScreen
+              open={open}
+              setdcountry={setdcountry}
+              handleClose={handleClose}
+            />
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <TextField
@@ -261,34 +253,85 @@ function Profile(props) {
       </TabPanel>
       <TabPanel value={value} index={1}>
         <Messages type="error" text={passworderror} />
+        {props.profile.msg && (
+          <Messages type="error" text={props.profile.msg} />
+        )}
+        <Loader fullPage loading={props.profile.loading} />
         <form onSubmit={updatePassword} autoComplete="off">
-          <div className="row">
-            <TextField
-              id="password"
-              className={classes.inputs}
-              onChange={changePassword}
-              helperText="Password"
-              onClick={() => handleClickOpen()}
-            />
-            <TextField
-              id="confirmpassword"
-              className={classes.inputs}
-              onChange={changePassword}
-              helperText="New Password"
-              onClick={() => handleClickOpen()}
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              fullWidth
-              style={{ marginTop: 20, padding: 15 }}
-              className={classes.button}
-              type="submit"
-              endIcon={<Icon>send</Icon>}
-            >
-              Update
-            </Button>
-          </div>
+          <Grid>
+            <Grid item xs={12}>
+              <FormControl
+                style={{ marginTop: 30 }}
+                className={clsx(classes.margin, classes.inputs)}
+              >
+                <InputLabel htmlFor="standard-adornment-password">
+                  Current Password
+                </InputLabel>
+                <Input
+                  id="current_password"
+                  type={password.showPassword ? "text" : "password"}
+                  onChange={changePassword}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                      >
+                        {password.showPassword ? (
+                          <Visibility />
+                        ) : (
+                          <VisibilityOff />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl
+                style={{ marginTop: 30 }}
+                className={clsx(classes.margin, classes.inputs)}
+              >
+                <InputLabel htmlFor="standard-adornment-password">
+                  New Password
+                </InputLabel>
+                <Input
+                  id="new_password"
+                  type={password.showPassword ? "text" : "password"}
+                  onChange={changePassword}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                      >
+                        {password.showPassword ? (
+                          <Visibility />
+                        ) : (
+                          <VisibilityOff />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+            </Grid>
+          </Grid>
+
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            style={{ marginTop: 20, padding: 15 }}
+            className={classes.button}
+            type="submit"
+            endIcon={<Icon>send</Icon>}
+          >
+            Update
+          </Button>
         </form>
       </TabPanel>
     </div>
@@ -301,8 +344,9 @@ const mapStateToProps = (state) => ({
 
 const mapDispacthToProps = (dispatch) => {
   return {
-    getAdminprofile: (id) => dispatch(getAdminprofile(id)),
+    // getAdminprofile: (id) => dispatch(getAdminprofile(id)),
     updateAdminProfile: (data) => dispatch(updateAdminProfile(data)),
+    getprofile: (id) => dispatch(getprofile(id)),
     dispatch,
   };
 };

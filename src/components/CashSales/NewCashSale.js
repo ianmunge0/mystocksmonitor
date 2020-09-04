@@ -229,23 +229,13 @@ function NewCashSale(props) {
 
   //STARTING COMPONENTS CODES
   const changePrice = (item, e) => {
-    setError("");
-    if (parseInt(e.target.value) < item.sellingprice) {
-      item.salessellingprice = item.sellingprice;
-      setError(item.name + " cant be sold less than " + item.sellingprice);
-    } else {
-      item.salessellingprice = e.target.value;
-    }
+    item.salessellingprice = e.target.value;
     props.dispatch({ type: "CHANGE_PRICE", sales: item });
     // props.addSales(item, props);
   };
 
   const changeQty = (item, e) => {
     setError("");
-    if (e.target.value > item.stock_qty) {
-      setError("you cant sell more than you have");
-      return;
-    }
     item.quantity = e.target.value;
     props.dispatch({ type: "CHANGE_QTY", sales: item });
   };
@@ -262,6 +252,23 @@ function NewCashSale(props) {
   const saveSales = () => {
     setError("");
 
+    if (
+      props.sales.sales.filter(
+        (value) =>
+          parseInt(value.salessellingprice) < parseInt(value.sellingprice)
+      ).length > 0
+    ) {
+      setError("you cant sell this product less than the selling price");
+      return;
+    }
+    if (
+      props.sales.sales.filter(
+        (value) => parseInt(value.quantity) > parseInt(value.stock_qty)
+      ).length > 0
+    ) {
+      setError("you cant sell more than you have");
+      return;
+    }
     //checking if there is credit sale and if the customer has been selected
     if (
       props.sales.sales.filter((value) => value.type === "credit").length > 0 &&
