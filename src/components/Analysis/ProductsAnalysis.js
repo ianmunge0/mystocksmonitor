@@ -48,6 +48,8 @@ function ProductsAnalysis(props) {
   };
 
   const handleClosee = (option) => {
+    console.log("option", option);
+    setMonth(option);
     getSales(option);
   };
 
@@ -95,6 +97,7 @@ function ProductsAnalysis(props) {
         onClick={handleClick}
       >
         <ArrowBackIosIcon />
+        {console.log("mm", month)}
         {month ? month : options[d.getMonth()]} {""}
         {d.getFullYear()}
       </Button>

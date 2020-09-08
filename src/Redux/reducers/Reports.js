@@ -14,21 +14,9 @@ const Reports = (state = initialState, action) => {
       };
     case GET_REPORTS:
       console.log("state", state);
-      var data = action.deletedstock
-        ? {
-            items: Object.keys(state.stocks.items).map((v) => {
-              var arra = {};
-              arra[v] = Object.keys(state.stocks.items[v]).map((vv) => {
-                return state.stocks.items[v][vv];
-              });
-              console.log("arra", arra);
-              return arra;
-            }),
-          }
-        : action.item;
       return {
         ...state,
-        stocks: data,
+        stocks: action.item,
         loading: false,
       };
     default:

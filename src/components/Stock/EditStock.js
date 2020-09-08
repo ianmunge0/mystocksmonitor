@@ -14,6 +14,7 @@ import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 import UnitDialog from "../Stocks/UnitDialog";
 import SupplierDialog from "../Stocks/SupplierDialog";
+import InputAdornment from "@material-ui/core/InputAdornment";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -92,22 +93,13 @@ function EditStock(props) {
       stock.stockrelationidid = stock.serialno;
       stock.unit = unit ? unit.id : "";
       stock.supplier = supplier ? supplier.id : "";
-      // if (props.location.state.data === "updatestocksupplied") {
-      //   stock.updatestocksupplied = "updatestocksupplied";
-      // }
-      console.log("here gathee", stock);
 
       Api.get(`/stocks.php`, {
         params: stock,
       })
         .then((res) => {
           const stockrespose = res.data;
-          console.log("updateStockData", stockrespose);
-          // console.log("sdfd", stockrespose);
-
           setLoading(false);
-          // props.history.push("/stocksetup");
-          console.log(stockrespose);
         })
         .catch((error) => {});
     }
@@ -159,27 +151,46 @@ function EditStock(props) {
         style={{ margin: 10 }}
       >
         <p className="red-text">{error}</p>
-        <div className={classes.label}>Name </div>
-        <TextField
-          id="name"
-          value={stock.name}
-          fullWidth
-          onChange={handleStockData}
-          variant="outlined"
-          type="text"
-        />
-        <div className={classes.label}>Quantity </div>
-        <TextField
-          id="stock_qty"
-          value={stock.stock_qty}
-          fullWidth
-          onChange={handleStockData}
-          variant="outlined"
-          type="text"
-          placeholder="Qty"
-        />
         <Grid container>
           <Grid item xs={12}>
+            <TextField
+              className={classes.inputs}
+              id="partno"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">Part No. #</InputAdornment>
+                ),
+              }}
+              fullWidth
+              value={stock.partno}
+              variant="outlined"
+              onChange={handleStockData}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <div className={classes.label}>Name </div>
+            <TextField
+              id="name"
+              value={stock.name}
+              fullWidth
+              onChange={handleStockData}
+              variant="outlined"
+              type="text"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <div className={classes.label}>Quantity </div>
+            <TextField
+              id="stock_qty"
+              value={stock.stock_qty}
+              fullWidth
+              onChange={handleStockData}
+              variant="outlined"
+              type="text"
+              placeholder="Qty"
+            />
+          </Grid>
+          <Grid item xs={6} style={{ marginRight: 15 }}>
             <div className={classes.label}>Buying Price </div>
             <TextField
               id="buyingprice"
@@ -191,7 +202,7 @@ function EditStock(props) {
               placeholder="Qty"
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={5}>
             <div className={classes.label}>Selling Price </div>
             <TextField
               id="sellingprice"
@@ -203,21 +214,34 @@ function EditStock(props) {
               placeholder="Selling Price"
             />
           </Grid>
-        </Grid>
-        <Grid item xs={12}>
-          <div className={classes.label}>Re-Order Level </div>
-          <TextField
-            id="reorder_level"
-            value={stock.reorder_level}
-            fullWidth
-            onChange={handleStockData}
-            variant="outlined"
-            pattern="[0-9]*"
-            placeholder="Re-Order Level"
-          />
-        </Grid>
+          <Grid item xs={12} style={{ marginTop: 10 }}>
+            <TextField
+              className={classes.inputs}
+              id="selling_price_options"
+              label="Price Range Options (optional)"
+              placeholder="e.g 100,200,300"
+              fullWidth
+              type="text"
+              onChange={handleStockData}
+              defaultValue={
+                props.stock ? props.stock.selling_price_options : ""
+              }
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <div className={classes.label}>Re-Order Level </div>
+            <TextField
+              id="reorder_level"
+              value={stock.reorder_level}
+              fullWidth
+              onChange={handleStockData}
+              variant="outlined"
+              pattern="[0-9]*"
+              placeholder="Re-Order Level"
+            />
+          </Grid>
 
-        <Grid container>
           <Grid item xs={12} style={{ marginTop: 20 }}>
             <Typography className={classes.root}>
               <Link

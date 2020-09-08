@@ -6,13 +6,20 @@ import {
 } from "../../Redux/Actions/StockIn";
 import { connect } from "react-redux";
 import SalesDialog from "../CashSales/SalesDialog";
+import { getStock } from "../../Redux/Actions/Stock";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
+import TextField from "@material-ui/core/TextField";
+import SupplierDialog from "../Stocks/SupplierDialog";
+import OutlinedInput from "@material-ui/core/OutlinedInput";
+import FormControl from "@material-ui/core/FormControl";
+import clsx from "clsx";
 
 import Messages from "../Common/Messages";
+import InputLabel from "@material-ui/core/InputLabel";
 
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
@@ -25,6 +32,8 @@ import "react-overlay-loader/styles.css";
 import AddingStockInItem from "../Common/AddingStockInItem";
 import StockReportItem from "../Common/StockReportItem";
 import NoItems from "../NoItems";
+import moment from "moment";
+import InputDialog from "../Stocks/InputDialog";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,6 +53,9 @@ function StockIn(props) {
   const [error, setError] = useState("");
   const [type, setType] = useState("cash");
 
+  const getRandomInt = (max) => {
+    return Math.floor(Math.random() * Math.floor(max));
+  };
   useEffect(() => {
     props.getStocksIn();
   }, []);
@@ -101,21 +113,22 @@ function StockIn(props) {
   //end of creating tabs code
 
   //STARTING COMPONENTS CODES
-  const changePrice = (item, e) => {
+  const changePrice = (item, newprice) => {
     setError("");
-    item.stockinbuyingprice = e.target.value;
+    console.log("newprice ", newprice);
+    if (newprice)
+      item.stockinbuyingprice = newprice ? newprice : item.buyingprice;
     props.dispatch({ type: "CHANGE_PRICE", stocksin: item });
-    // props.addSales(item, props);
   };
 
-  const changeQty = (item, e) => {
-    item.quantity = e.target.value;
+  const changeQty = (item, newqty) => {
+    if (newqty) item.quantity = newqty;
     props.dispatch({ type: "CHANGE_QTY", stocksin: item });
   };
 
-  const changeType = (item, e) => {
-    item.type = e.target.id;
-    props.dispatch({ type: "CHANGE_TYPE", stocksin: item });
+  const changeType = (e) => {
+    // item.type = e.target.id;
+    // props.dispatch({ type: "CHANGE_TYPE", stocksin: item });
     setType(e.target.id);
     if (e.target.id === "credit" && supplier.supplier_name === "") {
       handleClickOpenSupplier();
@@ -145,13 +158,22 @@ function StockIn(props) {
 
     // props.stocksin.stocksin.supplier = supplier;
     console.log(type);
-    props.saveStockIn(props.stocksin.stocksin, supplier);
+    // var invoice = !invoice ? props.stocksin.invoice : invoice;
+    console.log("ii", !invoice ? props.stocksin.invoice : invoice);
+    props.saveStockIn(
+      props.stocksin.stocksin,
+      supplier,
+      type,
+      !invoice ? props.stocksin.invoice : invoice
+    );
+    // setSupplier({ ...supplier, invoice: getRandomInt(1000000) });
   };
 
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
+    props.getStock();
   };
 
   const handleClose = () => {
@@ -168,23 +190,48 @@ function StockIn(props) {
   const handleCloseSupplier = () => {
     setOpenSupplier(false);
   };
-  const [supplier, setSupplier] = useState({ supplier_name: "" });
+
+  const [supplier, setSupplier] = useState({
+    supplier_name: "",
+  });
 
   const getSupplier = (supplier) => {
     console.log("set ", supplier);
     setSupplier(supplier);
   };
   const deleteStock = (stock) => {
-    props.deleteStockIn(stock, props);
+    props.deleteStockIn(stock);
   };
 
+  const [invoice, setInvoice] = useState("");
+  const changeInvoice = (e) => {
+    setInvoice(e.target.value);
+  };
+
+  //option price dialog
+  const [openoptionprice, setOpenOptionPriceDialog] = useState(false);
+  const [currentitem, setCurrentItem] = useState();
+  const [opentype, setOpenType] = useState("");
+
+  const handleOpenOptionPriceDialog = (type) => {
+    setOpenOptionPriceDialog(true);
+    setOpenType(type);
+  };
+
+  const handleCloseOptionPriceDialog = () => {
+    setOpenOptionPriceDialog(false);
+  };
+  //end optional price dialog
+
   //END COMPONENTS CODES
+  console.log("bbb ", props.stocks.stocks);
   return (
     <>
-      {open && (
+      {props.stocks && (
         <SalesDialog
           fullScreen
           open={open}
+          stocks={props.stocks.stocks}
           handleClose={handleClose}
           type="stockin"
         />
@@ -205,6 +252,33 @@ function StockIn(props) {
       </AppBar>
       <TabPanel value={value} index={0}>
         <div className={classes.root}>
+          <Grid container spacing={3}>
+            <Grid item xs={6}>
+              <FormControl
+                className={clsx(classes.margin, classes.inputs)}
+                variant="outlined"
+              >
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Invoice No#
+                </InputLabel>
+                <OutlinedInput
+                  variant="outlined"
+                  onChange={changeInvoice}
+                  value={invoice}
+                  // placeholder={props.stocksin.invoice}
+                  autoFocus
+                  labelWidth={80}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={6} align="center">
+              <Typography variant="h6">
+                Total:
+                <br />
+                {props.stocksin.total}
+              </Typography>
+            </Grid>
+          </Grid>
           <Grid container spacing={3}>
             <Grid item xs={6}>
               <Button
@@ -228,71 +302,91 @@ function StockIn(props) {
               </Button>
             </Grid>
           </Grid>
-
-          <Grid container spacing={3}>
-            <Grid item xs={3} align="center">
-              Total:
-              <br />
-              {props.stocksin.total}
-            </Grid>
-            <Grid item xs={3} align="center">
-              Items: <br />
-              {props.stocksin.length}
-            </Grid>
-            <Grid item xs={3} align="center">
-              Credit: <br />
-              {props.stocksin.credit}
-            </Grid>
-            <Grid item xs={3} align="center">
-              Cash: <br />
-              {props.stocksin.cash}
-            </Grid>
-          </Grid>
         </div>
-        {supplier.supplier_name ? (
-          <Grid
-            style={{
-              marginLeft: 10,
-              marginRight: 10,
-            }}
-            container
-          >
-            <Grid item xs={6}>
-              <Typography
-                style={{
-                  color: "blue",
-                  fontSize: 12,
-                  padding: 5,
-                }}
-                onClick={() => {
-                  handleClickOpenSupplier();
-                }}
-              >
-                Supplier: {supplier.supplier_name}
-              </Typography>
+        {props.stocksin.stocksin.length > 0 && (
+          <Grid container xs={12} style={{ marginTop: 10 }}>
+            <Grid align="center" item xs={6}>
+              {supplier.supplier_name ? (
+                <Grid
+                  style={{
+                    marginLeft: 10,
+                    marginRight: 10,
+                  }}
+                  container
+                >
+                  <Grid item xs={6}>
+                    <Typography
+                      style={{
+                        color: "blue",
+                        fontSize: 12,
+                        padding: 5,
+                      }}
+                      onClick={() => {
+                        handleClickOpenSupplier();
+                      }}
+                    >
+                      Supplier: {supplier.supplier_name}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={6} align="center">
+                    <CancelIcon
+                      onClick={() => {
+                        setSupplier({ supplier_name: "" });
+                      }}
+                    />
+                  </Grid>
+                </Grid>
+              ) : (
+                <Grid
+                  style={{
+                    marginLeft: 10,
+                    marginRight: 10,
+                    color: "blue",
+                    fontSize: 12,
+                    padding: 5,
+                  }}
+                  onClick={() => {
+                    handleClickOpenSupplier();
+                  }}
+                >
+                  + Add Supplier
+                </Grid>
+              )}
             </Grid>
-            <Grid item xs={6} align="center">
-              <CancelIcon
-                onClick={() => {
-                  setSupplier({ supplier_name: "" });
-                }}
-              />
+            <Grid align="center" item xs={3}>
+              <label>
+                <input
+                  className="with-gap"
+                  name={value.serialno}
+                  checked={type === "credit"}
+                  id="credit"
+                  onChange={(e) => changeType(e)}
+                  type="radio"
+                />
+                <span>Credit</span>
+              </label>
+              {opensupplier && (
+                <SupplierDialog
+                  fullScreen
+                  getSupplier={getSupplier}
+                  open={opensupplier}
+                  handleClose={handleCloseSupplier}
+                />
+              )}
             </Grid>
-          </Grid>
-        ) : (
-          <Grid
-            style={{
-              marginLeft: 10,
-              marginRight: 10,
-              color: "blue",
-              fontSize: 12,
-              padding: 5,
-            }}
-            onClick={() => {
-              handleClickOpenSupplier();
-            }}
-          >
-            + Add Supplier
+            <Grid align="center" item xs={3}>
+              <label>
+                <input
+                  className="with-gap"
+                  onChange={(e) => changeType(e)}
+                  name={value.serialno}
+                  checked={type === "cash"}
+                  id="cash"
+                  type="radio"
+                />
+                <span>Cash</span>
+              </label>
+            </Grid>
           </Grid>
         )}
 
@@ -300,10 +394,10 @@ function StockIn(props) {
           ? props.stocksin.stocksin.map((value, index) => (
               <AddingStockInItem
                 value={value}
-                changeQty={changeQty}
-                changePrice={changePrice}
-                type={type}
-                changeType={changeType}
+                // changeQty={changeQty}
+                // changePrice={changePrice}
+                setCurrentItem={setCurrentItem}
+                handleOpenOptionPriceDialog={handleOpenOptionPriceDialog}
                 opensupplier={opensupplier}
                 getSupplier={getSupplier}
                 handleClose={handleClose}
@@ -312,8 +406,17 @@ function StockIn(props) {
               />
             ))
           : ""}
+        <InputDialog
+          openoptionprice={openoptionprice}
+          handleCloseOptionPriceDialog={handleCloseOptionPriceDialog}
+          changeQty={changeQty}
+          type={opentype}
+          changePrice={changePrice}
+          currentitem={currentitem}
+        />
       </TabPanel>
       <TabPanel value={value} index={1}>
+        <Loader fullPage loading={props.stocksin.loading} />
         {props.stocksin.stocks.length > 0 ? (
           props.stocksin.stocks.map((value, index) => {
             return (
@@ -332,14 +435,16 @@ function StockIn(props) {
   );
 }
 const mapStateToProps = (state) => ({
-  stocks: state.stocks,
+  stocks: state.stock,
   stocksin: state.stocksin,
 });
 
 const mapDispacthToProps = (dispatch) => ({
-  saveStockIn: (stocks, supplier) => dispatch(saveStockIn(stocks, supplier)),
+  saveStockIn: (stocks, supplier, type, invoice) =>
+    dispatch(saveStockIn(stocks, supplier, type, invoice)),
   getStocksIn: () => dispatch(getStocksIn()),
-  deleteStockIn: (item, props) => dispatch(deleteStockIn(item, props)),
+  getStock: () => dispatch(getStock()),
+  deleteStockIn: (item) => dispatch(deleteStockIn(item)),
   dispatch, // ← Add this
 });
 

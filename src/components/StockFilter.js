@@ -54,12 +54,15 @@ function StockFilter(props) {
     );
   }
 
+  console.log(props.location.state);
+  console.log(fromtimeStamp, totimestamp);
+
   useEffect(() => {
     props.getReport(fromtimeStamp, totimestamp);
   }, []);
 
   const deleteStock = (stock) => {
-    props.deleteStockIn(stock);
+    props.deleteStockIn(stock, fromtimeStamp, totimestamp);
   };
 
   var tifOptions = null;
@@ -142,7 +145,8 @@ const mapDispacthToProps = (dispatch) => {
   return {
     getReport: (timeStamp, totimestamp) =>
       dispatch(getReport(timeStamp, totimestamp)),
-    deleteStockIn: (item) => dispatch(deleteStockIn(item)),
+    deleteStockIn: (item, fromtimeStamp, totimestamp) =>
+      dispatch(deleteStockIn(item, fromtimeStamp, totimestamp)),
   };
 };
 export default connect(mapStateToProps, mapDispacthToProps)(StockFilter);

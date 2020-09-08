@@ -13,11 +13,11 @@ import { Divider, Typography } from "@material-ui/core";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import Grid from "@material-ui/core/Grid";
 function ProfitExpenseSummary(props) {
-  var fromtimestamp = props.location.state.fromdate;
-  var totimestamp = props.location.state.todate;
-  var type = props.location.state.type;
+  var fromtimestamp = props.location.state && props.location.state.fromdate;
+  var totimestamp = props.location.state && props.location.state.todate;
+  var type = props.location.state && props.location.state.type;
 
-  console.log("ProfitExpenseSummary", props);
+  // console.log("ProfitExpenseSummary", props);
   if (props.location.state === "today") {
     fromtimestamp = moment(new Date()).format("YYYY-MM-DD hh:mm:ss");
     totimestamp = moment(new Date()).format("YYYY-MM-DD hh:mm:ss");

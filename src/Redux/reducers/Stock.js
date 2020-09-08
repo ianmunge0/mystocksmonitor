@@ -20,6 +20,7 @@ const initialState = {
   stockcounthistory: [],
   filteredstocks: [],
   loading: true,
+  stockloading: true,
   stockscopy: [],
 };
 
@@ -39,8 +40,10 @@ const Stock = (state = initialState, action) => {
           title: state.stockcounthistory.title,
           over_stocked: state.stockcounthistory.over_stocked,
           under_stocked: state.stockcounthistory.under_stocked,
-          items: state.stockcounthistory.items.filter((p) =>
-            p.name.includes(action.string)
+          items: state.stockcounthistory.items.filter(
+            (p) =>
+              p.name.includes(action.string) ||
+              (p.partno && p.partno.includes(action.string))
           ),
         },
       };
@@ -88,10 +91,13 @@ const Stock = (state = initialState, action) => {
     //   };
     case "GET_STOCK_FILTER":
       let newState = {};
-      console.log(state);
+      console.log("GET_STOCK_FILTER", state);
       let value = action.payload.text;
       let filteredValues = state.stockscopy.filter((stock) => {
-        return stock.name.includes(value);
+        return (
+          stock.name.includes(value) ||
+          (stock.partno && stock.partno.includes(value))
+        );
       });
       if (value) {
         newState = filteredValues;

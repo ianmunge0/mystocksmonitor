@@ -12,7 +12,14 @@ import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import TextField from "@material-ui/core/TextField";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CancelIcon from "@material-ui/icons/Cancel";
-import SupplierDialog from "../Stocks/SupplierDialog";
+import clsx from "clsx";
+
+import OutlinedInput from "@material-ui/core/OutlinedInput";
+import InputLabel from "@material-ui/core/InputLabel";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -27,152 +34,109 @@ const useStyles = makeStyles((theme) => ({
 }));
 function StockInProductItem(props, key) {
   const classes = useStyles();
+
   const {
     value,
     changeQty,
     changePrice,
-    type,
-    changeType,
-    opensupplier,
-    getSupplier,
-    handleCloseSupplier,
+    setCurrentItem,
+    handleOpenOptionPriceDialog,
   } = props;
   return (
     <Card className={classes.root} key={key}>
-      <Typography variant="h6">{value.name}</Typography>
+      <Grid container>
+        <Grid xs={10}>
+          <Typography variant="h6">{value.name}</Typography>
+        </Grid>
+        <Grid xs={2}>
+          <Typography align="center" style={{ width: "100%" }}>
+            <CancelIcon
+              onClick={() =>
+                props.dispatch({
+                  type: "REMOVE_ITEM",
+                  sales: value,
+                })
+              }
+            />
+          </Typography>
+        </Grid>
+      </Grid>
       <Divider />
       <Grid container xs={12} style={{ marginTop: 10 }}>
-        <Grid container xs={12}>
-          <Grid item xs={6}>
-            New Qty
-          </Grid>
-          <Grid item xs={6}>
-            Unit Buying Price:
-            {value.stockinbuyingprice
-              ? value.stockinbuyingprice
-              : value.buyingprice}
-          </Grid>
+        <Grid item xs={5}>
+          <FormControl
+            className={clsx(classes.margin, classes.textField)}
+            variant="outlined"
+          >
+            <InputLabel htmlFor="outlined-adornment-password">
+              New Qty
+            </InputLabel>
+
+            <OutlinedInput
+              id="outlined-adornment-password"
+              value={value.quantity}
+              onClick={() => {
+                setCurrentItem(value);
+                handleOpenOptionPriceDialog("qty");
+              }}
+              // startAdornment={
+              //   <InputAdornment position="start">
+              //     <RemoveCircleIcon
+              //       onClick={() =>
+              //         props.dispatch({
+              //           type: "REMOVE_QTY",
+              //           stocksin: value,
+              //         })
+              //       }
+              //       edge="end"
+              //     ></RemoveCircleIcon>
+              //   </InputAdornment>
+              // }
+              // endAdornment={
+              //   <InputAdornment position="end">
+              //     <AddCircleIcon
+              //       aria-label="toggle password visibility"
+              //       onClick={() =>
+              //         props.dispatch({
+              //           type: "ADD_QTY",
+              //           stocksin: value,
+              //         })
+              //       }
+              //       edge="end"
+              //     ></AddCircleIcon>
+              //   </InputAdornment>
+              // }
+              labelWidth={70}
+            />
+          </FormControl>
         </Grid>
-
-        <Grid container xs={12} style={{ marginTop: 10 }}>
-          <Grid container xs={10} style={{ marginTop: 10 }}>
-            <Grid item align="center" xs={3}>
-              <Link
-                to="#"
-                className="col s3 item-custom"
-                onClick={() =>
-                  props.dispatch({
-                    type: "REMOVE_QTY",
-                    stocksin: value,
-                  })
-                }
-                style={{ margin: 0 }}
-              >
-                <RemoveCircleIcon />
-              </Link>
-            </Grid>
-            <Grid align="center" item xs={3}>
-              <TextField
-                placeholder="0"
-                id="outlined-basic"
-                label="New Qty"
-                variant="outlined"
-                defaultValue={value.quantity}
-                type="number"
-                pattern="[0-9]*"
-                inputMode="numeric"
-                onChange={(e) => {
-                  changeQty(value, e);
-                }}
-              />
-            </Grid>
-
-            <Grid align="center" item xs={3}>
-              <Link
-                to="#"
-                onClick={() =>
-                  props.dispatch({
-                    type: "ADD_QTY",
-                    stocksin: value,
-                  })
-                }
-                className="col s3 item-custom"
-                style={{ margin: 0 }}
-              >
-                <AddCircleIcon />
-              </Link>
-            </Grid>
-            <Grid align="center" item xs={3}>
-              <TextField
-                placeholder="0"
-                className="salesinput"
-                variant="outlined"
-                type="number"
-                pattern="[0-9]*"
-                inputMode="numeric"
-                defaultValue={
-                  value.stockinbuyingprice
-                    ? value.stockinbuyingprice
-                    : value.buyingprice
-                }
-                onChange={(e) => {
-                  changePrice(value, e);
-                }}
-              />
-            </Grid>
-          </Grid>
-
-          <Grid container xs={2} style={{ marginTop: 10 }}>
-            <Typography align="center" style={{ width: "100%" }}>
-              <CancelIcon
-                onClick={() =>
-                  props.dispatch({
-                    type: "REMOVE_ITEM",
-                    stocksin: value,
-                  })
-                }
-              />
-            </Typography>
-          </Grid>
+        <Grid item xs={6} style={{ marginLeft: 10 }}>
+          <TextField
+            id="filled-number"
+            label="Buying Price"
+            type="number"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onClick={() => {
+              setCurrentItem(value);
+              handleOpenOptionPriceDialog("price");
+            }}
+            variant="outlined"
+            defaultValue={
+              value.stockinbuyingprice
+                ? value.stockinbuyingprice
+                : value.buyingprice
+            }
+          />
         </Grid>
-        <Grid container xs={12} style={{ marginTop: 10 }}>
-          <Grid align="center" item xs={4}>
-            <label>
-              <input
-                className="with-gap"
-                name={value.serialno}
-                checked={type === "credit"}
-                id="credit"
-                onChange={(e) => changeType(value, e)}
-                type="radio"
-              />
-              <span>Credit</span>
-            </label>
-            {opensupplier && (
-              <SupplierDialog
-                fullScreen
-                getSupplier={getSupplier}
-                open={opensupplier}
-                handleClose={handleCloseSupplier}
-              />
-            )}
-          </Grid>
-          <Grid align="center" item xs={4}>
-            <label>
-              <input
-                className="with-gap"
-                onChange={(e) => changeType(value, e)}
-                name={value.serialno}
-                checked={type === "cash"}
-                id="cash"
-                type="radio"
-              />
-              <span>Cash</span>
-            </label>
-          </Grid>
-          <Grid align="center" item xs={4}>
-            <span className="right">{value.total}/=</span>
-          </Grid>
+      </Grid>
+      <Grid container xs={12} style={{ marginTop: 10 }}>
+        <Grid item xs={6}>
+          Current B.P: {value.buyingprice}
+        </Grid>
+        <Grid item xs={6}>
+          Total: {value.total}
         </Grid>
       </Grid>
     </Card>

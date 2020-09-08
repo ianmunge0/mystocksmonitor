@@ -14,6 +14,7 @@ import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
 import SupplierDialog from "./SupplierDialog";
 import UnitDialog from "./UnitDialog";
+import InputAdornment from "@material-ui/core/InputAdornment";
 
 const useStyles = makeStyles((theme) => ({
   inputs: {
@@ -112,7 +113,6 @@ function NewStock(props) {
     setSupplier(supplier);
   };
 
-  const preventDefault = (event) => event.preventDefault();
   return (
     <>
       <Loader fullPage loading={props.stockresponse.loading} />
@@ -135,6 +135,22 @@ function NewStock(props) {
           <Grid item xs={12}>
             <TextField
               className={classes.inputs}
+              id="partno"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">Part No. #</InputAdornment>
+                ),
+              }}
+              fullWidth
+              defaultValue={props.item ? props.item.partno : ""}
+              variant="outlined"
+              onChange={handleStockData}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              className={classes.inputs}
+              style={{ marginTop: 10 }}
               id="name"
               label="Product Name"
               defaultValue={props.item ? props.item.name : ""}
@@ -147,6 +163,7 @@ function NewStock(props) {
               className={classes.inputs}
               style={{ marginTop: 10 }}
               id="stock_qty"
+              type="number"
               defaultValue={props.stock ? props.stock.stock_qty : ""}
               label="Quantity"
               variant="outlined"
@@ -154,26 +171,42 @@ function NewStock(props) {
             />
           </Grid>
         </Grid>
-        <Grid container>
-          <Grid item xs={12}>
+        <Grid container style={{ marginTop: 10 }}>
+          <Grid item xs={6} style={{ marginRight: 10 }}>
             <TextField
               className={classes.inputs}
-              style={{ marginTop: 10 }}
               id="buyingprice"
               label="Buying Price"
+              type="number"
               onChange={handleStockData}
               defaultValue={props.stock ? props.stock.buyingprice : ""}
               variant="outlined"
             />
           </Grid>
+          <Grid item xs={5}>
+            <TextField
+              className={classes.inputs}
+              id="sellingprice"
+              label="Selling Price"
+              type="number"
+              onChange={handleStockData}
+              defaultValue={props.stock ? props.stock.sellingprice : ""}
+              variant="outlined"
+            />
+          </Grid>
+        </Grid>
+        <Grid container style={{ marginTop: 10 }}>
           <Grid item xs={12}>
             <TextField
               className={classes.inputs}
-              style={{ marginTop: 10 }}
-              id="sellingprice"
-              label="Selling Price"
+              id="selling_price_options"
+              label="Price Range Options (optional)"
+              placeholder="e.g 100,200,300"
+              type="text"
               onChange={handleStockData}
-              defaultValue={props.stock ? props.stock.sellingprice : ""}
+              defaultValue={
+                props.stock ? props.stock.selling_price_options : ""
+              }
               variant="outlined"
             />
           </Grid>
@@ -183,6 +216,7 @@ function NewStock(props) {
               id="reorder_level"
               style={{ marginTop: 10 }}
               label="Re-order level"
+              type="number"
               onChange={handleStockData}
               defaultValue={props.stock ? props.stock.reorder_level : ""}
               variant="outlined"

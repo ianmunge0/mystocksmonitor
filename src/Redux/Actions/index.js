@@ -66,7 +66,7 @@ export const login = (email, password, type) => {
           console.log(res.data);
 
           dispatch({
-            type: LOADING,
+            type: "LOGIN_LOADING",
             loading: false,
           });
 

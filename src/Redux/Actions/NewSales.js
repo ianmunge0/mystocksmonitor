@@ -9,6 +9,7 @@ export const addSales = (item, props) => {
     item.quantity = 1;
     item.type = "cash";
     item.total = item.sellingprice;
+    item.salessellingprice = item.sellingprice;
     dispatch({
       type: ADD_SALES,
       sales: item,
@@ -18,7 +19,7 @@ export const addSales = (item, props) => {
   };
 };
 
-export const saveSales = (sales, customer) => {
+export const saveSales = (sales, customer, type) => {
   return (dispatch) => {
     console.log("sales", sales);
     var dd = new Date().getTime();
@@ -30,6 +31,18 @@ export const saveSales = (sales, customer) => {
     if (reactLocalStorage.get("user_type") === "attendant") {
       attendant_key = reactLocalStorage.getObject("userdata").serialno;
     }
+    console.log("save sale", {
+      sales,
+      customer_id: customer ? customer.serialno : 0,
+      attendant_key,
+      type: reactLocalStorage.get("user_type"),
+      shop: reactLocalStorage.getObject("userdata").default_shop,
+      initialamount: customer ? customer.amount : 0,
+      oncredit_due_date: customer ? customer.duedate : "",
+      action: "save",
+      saletype: type,
+      date_time: moment(dd).format("YYYY-MM-DD hh:mm:ss"),
+    });
     Api.get(`/sales.php`, {
       params: {
         sales,
@@ -40,6 +53,7 @@ export const saveSales = (sales, customer) => {
         initialamount: customer ? customer.amount : 0,
         oncredit_due_date: customer ? customer.duedate : "",
         action: "save",
+        saletype: type,
         date_time: moment(dd).format("YYYY-MM-DD hh:mm:ss"),
       },
     })

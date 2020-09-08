@@ -50,6 +50,15 @@ const Sales = (state = initialState, action) => {
               }
             : state.sales[index]
         ),
+        total: state.sales.map(
+          (item) =>
+            item.quantity *
+            parseInt(
+              item.salessellingprice
+                ? item.salessellingprice
+                : item.sellingprice
+            )
+        ),
       };
     case "ADD_QTY":
       return {
@@ -69,6 +78,15 @@ const Sales = (state = initialState, action) => {
               }
             : state.sales[index]
         ),
+        total: state.sales.map(
+          (item) =>
+            item.quantity *
+            parseInt(
+              item.salessellingprice
+                ? item.salessellingprice
+                : item.sellingprice
+            )
+        ),
       };
     case "CHANGE_TYPE":
       var creditcount = state.sales.filter((item) => item.type === "credit");
@@ -79,6 +97,7 @@ const Sales = (state = initialState, action) => {
         cash: cashcount.length,
       };
     case "CHANGE_QTY":
+      console.log("CHANGE_QTY");
       return {
         ...state,
         sales: state.sales.map((item, index) =>
@@ -95,11 +114,30 @@ const Sales = (state = initialState, action) => {
       var items = state.sales.filter(
         (item) => item.serialno !== action.sales.serialno
       );
+      if (items.length == 0) {
+        return {
+          ...state,
+          sales: [],
+          total: 0,
+          credit: [],
+          cash: [],
+        };
+      }
       return {
         ...state,
         sales: items,
+        total: items.map(
+          (item) =>
+            item.quantity *
+            parseInt(
+              item.salessellingprice
+                ? item.salessellingprice
+                : item.sellingprice
+            )
+        ),
       };
     case "CHANGE_PRICE":
+      console.log("CHANGE_PRICE ");
       return {
         ...state,
         sales: state.sales.map((item, index) =>
@@ -110,15 +148,17 @@ const Sales = (state = initialState, action) => {
               }
             : state.sales[index]
         ),
+        total: state.sales.map(
+          (item) =>
+            item.quantity *
+            parseInt(
+              item.salessellingprice
+                ? item.salessellingprice
+                : item.sellingprice
+            )
+        ),
       };
     case ADD_SALES:
-      console.log("reducer", action.sales);
-
-      //   var creditcount = action.sales.filter((item) => item.type === "credit");
-      //   var cashcount = action.sales.filter((item) => item.type === "cash");
-
-      //   if (existed_item) {
-      // addedItem.quantity += 1;
       var price = action.sales.salessellingprice
         ? parseInt(action.sales.salessellingprice)
         : parseInt(action.sales.sellingprice);
@@ -136,19 +176,21 @@ const Sales = (state = initialState, action) => {
                   quantity: item.quantity + 1,
                   total:
                     (item.quantity + 1) *
-                    (state.sales[index].salessellingprice
-                      ? state.sales[index].salessellingprice
-                      : state.sales[index].sellingprice),
+                    parseInt(
+                      state.sales[index].salessellingprice
+                        ? state.sales[index].salessellingprice
+                        : state.sales[index].sellingprice
+                    ),
                 }
               : state.sales[index]
           ),
-          total: state.total + price,
+          total: state.total + parseInt(price),
         };
       } else {
         return {
           ...state,
           sales: [...state.sales, action.sales],
-          total: state.total + price,
+          total: state.total + parseInt(price),
           credit: [...state.sales, action.sales].filter(
             (item) => item.type === "credit"
           ).length,
@@ -162,9 +204,3 @@ const Sales = (state = initialState, action) => {
   }
 };
 export default Sales;
-
-// state.sales.map((item) =>
-// item.serialno === action.serialno
-//   ? { ...state.sales, sales.quantity: item.quantity + 1 }
-//   : { ...state.sales, sales: action.sales }
-// )

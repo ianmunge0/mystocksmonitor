@@ -1,6 +1,7 @@
 import { ADD_SUPPLIER, GET_SUPPLIERS, LOADING } from "../Actions/actions";
 const initialState = {
   suppliers: [],
+  unpaid: 0,
 };
 
 const Suppliers = (state = initialState, action) => {
@@ -21,7 +22,23 @@ const Suppliers = (state = initialState, action) => {
     case GET_SUPPLIERS:
       return {
         ...state,
-        suppliers: action.suppliers,
+        suppliers: action.suppliers.suppliers,
+        unpaid: action.suppliers.totalunpaid,
+        nodebtors: action.suppliers.nodebtors,
+        debtors: action.suppliers.debtors,
+        suppliertotaldebt: action.suppliers.suppliertotaldebt,
+        loading: false,
+      };
+    case "GET_SUPPLIER_PROFILE":
+      return {
+        ...state,
+        supplier: action.supplier,
+        loading: false,
+      };
+    case "GET_INVOICE_PAYMENTS":
+      return {
+        ...state,
+        invoicepayments: action.invoicepayments,
         loading: false,
       };
 

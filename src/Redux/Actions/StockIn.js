@@ -48,7 +48,7 @@ export const getStocksIn = () => {
   };
 };
 
-export const saveStockIn = (stocks, supplier) => {
+export const saveStockIn = (stocks, supplier, type, invoiceno) => {
   return (dispatch) => {
     console.log("stockin", stocks);
     var dd = new Date().getTime();
@@ -60,10 +60,13 @@ export const saveStockIn = (stocks, supplier) => {
     if (reactLocalStorage.get("user_type") === "attendant") {
       attendant_id = reactLocalStorage.getObject("userdata").serialno;
     }
-    console.log({
+
+    console.log("saving stock", {
       stocks,
       supplier_id: supplier ? supplier.id : 0,
+      invoiceno,
       attendant_id,
+      type,
       user_type: reactLocalStorage.get("user_type"),
       shopid: reactLocalStorage.getObject("userdata").default_shop,
       action: "stockin",
@@ -74,8 +77,10 @@ export const saveStockIn = (stocks, supplier) => {
       params: {
         stocks,
         supplier_id: supplier ? supplier.id : 0,
+        invoiceno,
         attendant_id,
         user_type: reactLocalStorage.get("user_type"),
+        type,
         shopid: reactLocalStorage.getObject("userdata").default_shop,
         action: "stockin",
         date_time: moment(dd).format("YYYY-MM-DD hh:mm:ss"),
@@ -101,28 +106,35 @@ export const saveStockIn = (stocks, supplier) => {
   };
 };
 
-export const deleteStockIn = (stock, props) => {
+export const deleteStockIn = (stock, fromtime, totime) => {
   return (dispatch) => {
-    console.log("deleteStockIn", stock);
     dispatch({
       type: LOADING,
-      loading: true,
+    });
+
+    console.log({
+      stock,
+      action: "deletestockin",
+      fromtimeStamp: fromtime,
+      totimeStamp: totime,
     });
 
     Api.get(`/stocks.php`, {
       params: {
         stock,
         action: "deletestockin",
+        fromtimeStamp: fromtime,
+        totimeStamp: totime,
       },
     })
       .then((res) => {
         const response = res.data;
         // props.history.goBack();
         console.log("After deleting ", response);
-        // dispatch({
-        //   type: "GET_REPORTS",
-        //   deletedstock: stock,
-        // });
+        dispatch({
+          type: "GET_REPORTS",
+          item: response,
+        });
         dispatch({
           type: "GET_STOCKS_IN",
           deletedstock: stock,

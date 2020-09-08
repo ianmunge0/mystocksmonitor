@@ -37,8 +37,12 @@ import Reset from "./components/Initial/Reset";
 import ProductsAnalysis from "./components/Analysis/ProductsAnalysis";
 import ProfitandExpenseAnalysis from "./components/Analysis/ProfitandExpenseAnalysis";
 import Customers from "./components/Sales/Customers";
+import Suppliers from "./components/Stocks/Suppliers";
 import CustomerProfile from "./components/Sales/CustomerProfile";
+import SupplierProfile from "./components/Stocks/SupplierProfile";
 import PartialPayment from "./components/Sales/PartialPayment";
+import InvoicePayments from "./components/Stocks/InvoicePayments";
+
 import ProductHistory from "./components/Stocks/Product/ProductHistory";
 import SingleProductSales from "./components/Stocks/Product/SingleProductSales";
 import Export from "./components/Shops/Export";
@@ -108,10 +112,22 @@ function App(props) {
             component={Customers}
           />
           <ProtectedRoute
+            title="Suppliers Management"
+            roles={["STOCK_MANAGER", "STOCK_IN"]}
+            path="/suppliers"
+            component={Suppliers}
+          />
+          <ProtectedRoute
             title="Customer Profile"
             roles={["SALES_MANAGER", "ADD_SALES"]}
             path="/customerprofile/:id"
             component={CustomerProfile}
+          />
+          <ProtectedRoute
+            title="Supplier Profile"
+            roles={["STOCK_MANAGER", "STOCK_IN"]}
+            path="/supplierprofile/:id"
+            component={SupplierProfile}
           />
           <ProtectedRoute
             backlink="dashboard"
@@ -161,6 +177,12 @@ function App(props) {
             path="/dashboard"
             settings="dashboard"
             component={Dashboard}
+          />
+          <ProtectedRoute
+            title="Invoice Payment"
+            path="/invoicepayment"
+            roles={["STOCK_MANAGER", "STOCK_IN"]}
+            component={InvoicePayments}
           />
           <ProtectedRoute
             title="Partial Payment"

@@ -7,6 +7,7 @@ const initialState = {
   receipts: [],
   loading: true,
   stocks: [],
+  invoice: Math.floor(Math.random() * Math.floor(1000000)),
 };
 
 const StocksIn = (state = initialState, action) => {
@@ -60,12 +61,6 @@ const StocksIn = (state = initialState, action) => {
           ...state,
           stocksin: [...state.stocksin, action.stocksin],
           total: state.total + price,
-          credit: [...state.stocksin, action.stocksin].filter(
-            (item) => item.type === "credit"
-          ).length,
-          cash: [...state.stocksin, action.stocksin].filter(
-            (item) => item.type === "cash"
-          ).length,
         };
       }
     case "CLEAR_STOCKIN":
@@ -86,7 +81,7 @@ const StocksIn = (state = initialState, action) => {
                 quantity: item.quantity - 1 < 1 ? 1 : item.quantity - 1,
                 total:
                   (item.quantity - 1 < 1 ? 1 : item.quantity - 1) *
-                  parseInt(action.stocksin.buyingprice),
+                  parseInt(action.stocksin.stockinbuyingprice),
               }
             : state.stocksin[index]
         ),
@@ -99,15 +94,10 @@ const StocksIn = (state = initialState, action) => {
           item.serialno === action.stocksin.serialno
             ? {
                 ...state.stocksin[index],
-                quantity:
-                  item.quantity + 1 > item.stock_qty
-                    ? item.stock_qty
-                    : item.quantity + 1,
+                quantity: parseInt(item.quantity) + 1,
                 total:
-                  (item.quantity + 1 > item.stock_qty
-                    ? item.stock_qty
-                    : item.quantity + 1) *
-                  parseInt(action.stocksin.buyingprice),
+                  (item.quantity + 1) *
+                  parseInt(action.stocksin.stockinbuyingprice),
               }
             : state.stocksin[index]
         ),
@@ -130,9 +120,13 @@ const StocksIn = (state = initialState, action) => {
             ? {
                 ...state.stocksin[index],
                 quantity: item.quantity,
-                total: item.quantity * parseInt(action.stocksin.buyingprice),
+                total:
+                  item.stockinbuyingprice * parseInt(action.stocksin.quantity),
               }
             : state.stocksin[index]
+        ),
+        total: state.stocksin.map(
+          (item) => item.quantity * parseInt(action.stocksin.stockinbuyingprice)
         ),
       };
     case "REMOVE_ITEM":
@@ -154,6 +148,9 @@ const StocksIn = (state = initialState, action) => {
                   item.quantity * parseInt(action.stocksin.stockinbuyingprice),
               }
             : state.stocksin[index]
+        ),
+        total: state.stocksin.map(
+          (item) => item.quantity * parseInt(action.stocksin.stockinbuyingprice)
         ),
       };
 

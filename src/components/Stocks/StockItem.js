@@ -10,7 +10,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
-import { Divider } from "@material-ui/core";
+import { Divider, Grid } from "@material-ui/core";
 import clsx from "clsx";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -147,7 +147,20 @@ function StockItem(props, key) {
             )}
           </ListItemAvatar>
           <ListItemText
-            primary={row.name}
+            primary={
+              <Grid container>
+                <Grid item xs={6}>
+                  {row.name}
+                </Grid>
+                <Grid item xs={6}>
+                  {row.partno && (
+                    <Typography style={{ fontSize: 12 }}>
+                      ~ Part No. {row.partno}
+                    </Typography>
+                  )}
+                </Grid>
+              </Grid>
+            }
             secondary={
               <>
                 <Typography

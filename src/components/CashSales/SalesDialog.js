@@ -13,7 +13,6 @@ import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import { addSales } from "../../Redux/Actions/NewSales";
 import { addStockIn } from "../../Redux/Actions/StockIn";
-import { getStock } from "../../Redux/Actions/Stock";
 import { connect } from "react-redux";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
@@ -32,9 +31,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 function SalesDialog(props) {
-  useEffect(() => {
-    props.getStock();
-  }, []);
   const classes = useStyles();
 
   console.log(props.type);
@@ -47,6 +43,8 @@ function SalesDialog(props) {
       props.addSales(item, props);
     }
   };
+
+  console.log(props.stockresponse);
 
   return (
     <Dialog
@@ -108,13 +106,11 @@ function SalesDialog(props) {
 
 const mapStateToProps = (state) => ({
   sales: state,
-  stocks: state.stock.stocks,
   stockresponse: state.stock,
 });
 
 const mapDispacthToProps = (dispatch) => {
   return {
-    getStock: () => dispatch(getStock()),
     addStockIn: (item, props) => dispatch(addStockIn(item, props)),
     addSales: (item, props) => dispatch(addSales(item, props)),
   };

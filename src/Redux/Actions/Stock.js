@@ -210,6 +210,7 @@ export const getStock = () => {
     console.log("calling loading");
     dispatch({
       type: LOADING,
+      loading: true,
     });
 
     Api.get(`/stocks.php`, {

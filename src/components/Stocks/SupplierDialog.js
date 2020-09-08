@@ -45,7 +45,7 @@ function SupplierDialog(props) {
   const [chipData, setChipData] = useState([]);
 
   useEffect(() => {
-    props.getSuppliers();
+    props.getSuppliers("get");
   }, []);
   const classes = useStyles();
 
@@ -185,7 +185,7 @@ const mapStateToProps = (state) => ({
 const mapDispacthToProps = (dispatch) => {
   return {
     saveSupplier: (supplier, event) => dispatch(saveSupplier(supplier, event)),
-    getSuppliers: () => dispatch(getSuppliers()),
+    getSuppliers: (action) => dispatch(getSuppliers(action)),
     deleteSupplier: (data) => dispatch(deleteSupplier(data)),
   };
 };
