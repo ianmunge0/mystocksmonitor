@@ -13,7 +13,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import SubscriptionPackage from './SubscriptionPackage';
 import { connect } from "react-redux";
-import { getSubscriptions } from "../../Redux/Actions/Subscription";
 
 const useStyles = makeStyles((theme) => ({
    paper: {
@@ -75,7 +74,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispacthToProps = (dispatch) => {
   return {
-    getSubscriptions: () => dispatch(getSubscriptions())
   };
 };
 
