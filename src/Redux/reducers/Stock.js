@@ -22,6 +22,7 @@ const initialState = {
   loading: true,
   stockloading: true,
   stockscopy: [],
+  badstocks: [],
 };
 
 const Stock = (state = initialState, action) => {
@@ -76,7 +77,7 @@ const Stock = (state = initialState, action) => {
     case "GET_BAD_STOCKS":
       return {
         ...state,
-        stocks: action.stocks,
+        badstocks: action.stocks,
         loading: false,
       };
     // case "UPDATE_STOCK":

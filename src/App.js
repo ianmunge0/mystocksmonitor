@@ -295,13 +295,19 @@ function App(props) {
             roles={["ADD_SALES"]}
             component={Customers}
           />
+          {/* <ProtectedRoute
+            title="Bad Stocks"
+            path="/badstock"
+            roles={["ADD_SALES"]}
+            component={BadStock}
+          /> */}
           <ProtectedRoute
             title="STOCK IN"
             path="/stockin"
             roles={["STOCK_IN"]}
             component={StockIn}
           />
-          <Route exact path="/" component={DefaultPage} />
+          <Route exact basename="/" component={DefaultPage} />
         </Switch>
       </>
     </React.Fragment>

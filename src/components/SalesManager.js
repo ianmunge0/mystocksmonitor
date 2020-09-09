@@ -141,6 +141,19 @@ function SalesManager(props) {
         icon={<PeopleAltIcon fontSize="large" />}
         data="customers"
       />
+      {/* props.history.push({
+                  pathname: "/badstocks",
+                  state: {
+                    fromtimestamp,
+                    totimestamp,
+                  },
+                }) */}
+      <Item
+        description="Bad Stock"
+        title="Bad Stock"
+        route="badstocks"
+        icon={<PeopleAltIcon fontSize="large" />}
+      />
     </div>
   );
 }

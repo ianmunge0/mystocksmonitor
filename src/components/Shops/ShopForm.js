@@ -5,6 +5,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
+import { withRouter } from "react-router-dom";
 
 function ShopForm(props) {
   const [error, setError] = useState();
@@ -19,7 +20,7 @@ function ShopForm(props) {
     if (shopinput.shop_name === "") {
       setError("shop name is required");
     } else {
-      props.addShop(shopinput);
+      props.addShop(shopinput, props);
       e.target.reset();
     }
   };
@@ -36,7 +37,7 @@ function ShopForm(props) {
 
   return (
     <>
-      <Loader fullPage loading={props.shops.loading} />
+      {/* <Loader fullPage loading={props.shops.loading} /> */}
       <form
         className="col s12"
         onSubmit={addShop}
@@ -102,7 +103,10 @@ const mapStateToProps = (state) => ({
 
 const mapDispacthToProps = (dispatch) => {
   return {
-    addShop: (shop) => dispatch(addShop(shop)),
+    addShop: (shop, props) => dispatch(addShop(shop, props)),
   };
 };
-export default connect(mapStateToProps, mapDispacthToProps)(ShopForm);
+export default connect(
+  mapStateToProps,
+  mapDispacthToProps
+)(withRouter(ShopForm));

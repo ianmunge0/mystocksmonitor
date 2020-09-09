@@ -187,8 +187,9 @@ export const getBadStocks = (objectparam) => {
             ? reactLocalStorage.getObject("userdata").serialno
             : "",
         action: "badstocks",
-        fromtimestamp: objectparam.fromtimestamp,
-        totimestamp: objectparam.totimestamp,
+        fromtimestamp: objectparam ? objectparam.fromtimestamp : "",
+        totimestamp: objectparam ? objectparam.totimestamp : "",
+        user_type: reactLocalStorage.get("user_type"),
       },
     })
       .then((res) => {
@@ -326,22 +327,18 @@ export const getCountHistory = (timestamp) => {
   };
 };
 
-export const deleteBadStock = (id) => {
+export const deleteBadStock = (item) => {
   return (dispatch) => {
     dispatch({
       type: LOADING,
     });
-
-    console.log({
-      id,
-      currentshopidkey: reactLocalStorage.getObject("userdata").default_shop,
-      action: "deletebadstock",
-    });
-
+    console.log("new_stock_qty", item);
     Api.get(`/stocks.php`, {
       params: {
-        id,
-        currentshopidkey: reactLocalStorage.getObject("userdata").default_shop,
+        badstock_key: item.badstock_key,
+        stockserial_key: item.stockserial_key,
+        stock_qty: item.stock_qty,
+        shopserial_key: reactLocalStorage.getObject("userdata").default_shop,
         attendantserial_key:
           reactLocalStorage.get("user_type") === "attendant"
             ? reactLocalStorage.getObject("userdata").serialno
@@ -388,6 +385,33 @@ export const deleteStock = (id) => {
           type: GET_STOCK,
           stocks: res.data,
         });
+      })
+      .catch((error) => {
+        // your error handling goes here}
+        console.log("error", error);
+      });
+  };
+};
+
+export const addBadStock = (product, props) => {
+  return (dispatch) => {
+    dispatch({
+      type: LOADING,
+    });
+    console.log("add bad stock ", product);
+    Api.get(`/stocks.php`, {
+      params: {
+        product,
+        action: "addbadstock",
+      },
+    })
+      .then((res) => {
+        console.log("addbadstock ", res.data);
+        dispatch({
+          type: "GET_BAD_STOCKS",
+          stocks: res.data,
+        });
+        props.reset();
       })
       .catch((error) => {
         // your error handling goes here}

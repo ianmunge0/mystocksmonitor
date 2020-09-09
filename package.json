@@ -1,6 +1,6 @@
 {
-  "homepage": ".",
   "name": "pos",
+  "homepage": "https://remotepaywallet.com/public/stockapp2/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

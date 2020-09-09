@@ -40,7 +40,10 @@ export const addShop = (shop, props) => {
         );
         //check if its an attendant with role ADD_SHOP
         if (reactLocalStorage.get("user_type") === "admin") {
-          if (reactLocalStorage.getObject("userdata").default_shop === "") {
+          if (
+            reactLocalStorage.getObject("userdata").default_shop == null ||
+            reactLocalStorage.getObject("userdata").default_shop === ""
+          ) {
             var initialdata = reactLocalStorage.getObject("userdata");
             initialdata.default_shop =
               shops.shops[shops.shops.length - 1]["serialno"];
@@ -58,7 +61,7 @@ export const addShop = (shop, props) => {
           type: ADDED_SHOP,
           shops,
         });
-        window.location = "/dashboard";
+        props.history.push("/dashboard");
       })
       .catch((error) => {
         // your error handling goes here}
@@ -71,10 +74,9 @@ export const getShops = (id) => {
   return (dispatch) => {
     console.log("getting shops ");
 
-    dispatch({
-      type: LOADING,
-      loading: true,
-    });
+    // dispatch({
+    //   type: LOADING,
+    // });
 
     var admin_id = reactLocalStorage.getObject("userdata").serialno;
     if (reactLocalStorage.getObject("userdata").serialno) {

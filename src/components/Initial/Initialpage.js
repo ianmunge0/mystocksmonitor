@@ -7,6 +7,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import NewShop from "../Shops/ShopForm";
 import { reactLocalStorage } from "reactjs-localstorage";
+import auth from "../auth";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,7 +38,9 @@ export default function HorizontalLabelPositionBelowStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
   useEffect(() => {
-    if (reactLocalStorage.getObject("userdata").default_shop !== "") {
+    console.log("login check", auth.isAuthenticated());
+    if (!auth.isAuthenticated()) window.location = "/login/admin";
+    if (reactLocalStorage.getObject("shops").length > 0) {
       window.location = "/dashboard";
     }
   }, []);

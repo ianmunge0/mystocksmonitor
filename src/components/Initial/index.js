@@ -38,10 +38,10 @@ function Initial(props) {
     if (reactLocalStorage.getObject("user_type") === "attendant") {
       props.history.push("/user");
     } else {
-      if (reactLocalStorage.getObject("shops").length > 0) {
-        props.history.push("/dashboard");
+      if (reactLocalStorage.getObject("shops").length == 0) {
+        props.history.push("initialshopspage");
       } else {
-        props.history.push("/initialshopspage");
+        // props.history.push("/dashboard");
       }
     }
   }

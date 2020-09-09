@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, fade } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -17,6 +17,9 @@ import { connect } from "react-redux";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
 import Slide from "@material-ui/core/Slide";
+import InputBase from "@material-ui/core/InputBase";
+import SearchIcon from "@material-ui/icons/Search";
+import { Grid } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -25,6 +28,45 @@ const useStyles = makeStyles((theme) => ({
   title: {
     marginLeft: theme.spacing(2),
     flex: 1,
+  },
+  search: {
+    position: "relative",
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    "&:hover": {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    },
+    marginLeft: 0,
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: theme.spacing(1),
+      width: "auto",
+    },
+  },
+  searchIcon: {
+    padding: theme.spacing(0, 2),
+    height: "100%",
+    position: "absolute",
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  inputRoot: {
+    color: "inherit",
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      width: "12ch",
+      "&:focus": {
+        width: "20ch",
+      },
+    },
   },
 }));
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -36,12 +78,25 @@ function SalesDialog(props) {
   console.log(props.type);
 
   const additemOnsaleList = (item) => {
-    console.log("additemOnsaleList ", item);
+    console.log("additemOnsaleList ", props.type);
     if (props.type === "stockin") {
       props.addStockIn(item, props);
+    } else if (props.type === "badstock") {
+      props.addbadstock(item, props);
     } else {
       props.addSales(item, props);
     }
+  };
+
+  const handleSearch = (e) => {
+    console.log("search", e.target.value);
+    props.dispatch({
+      type: "GET_STOCK_FILTER",
+      payload: {
+        text: e.target.value,
+      },
+    });
+    // props.searchCustomer(e.target.value);
   };
 
   console.log(props.stockresponse);
@@ -64,9 +119,29 @@ function SalesDialog(props) {
           >
             <CloseIcon />
           </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            Select a product
-          </Typography>
+          <Grid container>
+            <Grid item xs={6} display={{ xs: "none", xl: "block" }}>
+              <Typography variant="h6" className={classes.title}>
+                Select a product
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <div className={classes.search}>
+                <div className={classes.searchIcon}>
+                  <SearchIcon />
+                </div>
+                <InputBase
+                  placeholder="Search…"
+                  onChange={(e) => handleSearch(e)}
+                  classes={{
+                    root: classes.inputRoot,
+                    input: classes.inputInput,
+                  }}
+                  inputProps={{ "aria-label": "search" }}
+                />
+              </div>
+            </Grid>
+          </Grid>
         </Toolbar>
       </AppBar>
       <List>
@@ -113,6 +188,7 @@ const mapDispacthToProps = (dispatch) => {
   return {
     addStockIn: (item, props) => dispatch(addStockIn(item, props)),
     addSales: (item, props) => dispatch(addSales(item, props)),
+    dispatch,
   };
 };
 export default connect(mapStateToProps, mapDispacthToProps)(SalesDialog);
