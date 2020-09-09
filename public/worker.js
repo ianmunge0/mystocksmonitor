@@ -17,97 +17,97 @@ self.addEventListener("install", (event) => {
 
 // Cache and return requests
 self.addEventListener( "fetch", function ( event ) {
-  if(event.request.url.indexOf('remotepaywallet.com') !== -1){
-    event.respondWith(
+  // if(event.request.url.indexOf('remotepaywallet.com') !== -1){
+  //   event.respondWith(
   
-      fetch(event.request)
-      // .then(console.log("fetch made"))
-      .then((res) =>{
-        console.log("fetch made", res);
-        ifonline = true;
-        let db1;
-        let dbReq1 = indexedDB.open('Newstockdb', 1);
-        dbReq1.onupgradeneeded = function(event) {
-          // Set the db variable to our database so we can use it!  
-          db1 = event.target.result;
+  //     fetch(event.request)
+  //     // .then(console.log("fetch made"))
+  //     .then((res) =>{
+  //       console.log("fetch made", res);
+  //       ifonline = true;
+  //       let db1;
+  //       let dbReq1 = indexedDB.open('Newstockdb', 1);
+  //       dbReq1.onupgradeneeded = function(event) {
+  //         // Set the db variable to our database so we can use it!  
+  //         db1 = event.target.result;
   
-          // Create an object store named notes. Object stores
-          // in databases are where data are stored.
-          let notes = db1.createObjectStore('notes', {autoIncrement: true});
+  //         // Create an object store named notes. Object stores
+  //         // in databases are where data are stored.
+  //         let notes = db1.createObjectStore('notes', {autoIncrement: true});
           
-          let notes1;
-          if (!db1.objectStoreNames.contains('notes')) {
-            notes1 = db1.createObjectStore('notes', {autoIncrement: true});
-          } else {
-            notes1 = dbReq1.transaction.objectStore('notes');
-          }
+  //         let notes1;
+  //         if (!db1.objectStoreNames.contains('notes')) {
+  //           notes1 = db1.createObjectStore('notes', {autoIncrement: true});
+  //         } else {
+  //           notes1 = dbReq1.transaction.objectStore('notes');
+  //         }
           
-        }
-        dbReq1.onsuccess = function(event) {
-          db1 = event.target.result;
-          updateentry(db1);
-          getAndDisplayNotes(db1);
+  //       }
+  //       dbReq1.onsuccess = function(event) {
+  //         db1 = event.target.result;
+  //         updateentry(db1);
+  //         getAndDisplayNotes(db1);
           
   
-        }
-        dbReq1.onerror = function(event) {
-          console.log("error opening indexdb when online",event.target.errorCode);
-        }
-      })
-      .catch(err => {
-        //this catch block handles all requests made when offline
-        console.log("fetch error", err);
-        ifonline = false;
-        let db;
-        let dbReq = indexedDB.open('Newstockdb', 1);
-        dbReq.onupgradeneeded = function(event) {
-          // Set the db variable to our database so we can use it!  
-          db = event.target.result;
+  //       }
+  //       dbReq1.onerror = function(event) {
+  //         console.log("error opening indexdb when online",event.target.errorCode);
+  //       }
+  //     })
+  //     .catch(err => {
+  //       //this catch block handles all requests made when offline
+  //       console.log("fetch error", err);
+  //       ifonline = false;
+  //       let db;
+  //       let dbReq = indexedDB.open('Newstockdb', 1);
+  //       dbReq.onupgradeneeded = function(event) {
+  //         // Set the db variable to our database so we can use it!  
+  //         db = event.target.result;
   
-          // Create an object store named notes. Object stores
-          // in databases are where data are stored.
-          let notes = db.createObjectStore('notes', {autoIncrement: true});
-          let friends = db.createObjectStore('friends', {
-            //name field will be a keypath to age
-            friends: '++id, name, age'
-          });
+  //         // Create an object store named notes. Object stores
+  //         // in databases are where data are stored.
+  //         let notes = db.createObjectStore('notes', {autoIncrement: true});
+  //         let friends = db.createObjectStore('friends', {
+  //           //name field will be a keypath to age
+  //           friends: '++id, name, age'
+  //         });
   
-          let notes1;
-          if (!db.objectStoreNames.contains('notes')) {
-            notes1 = db.createObjectStore('notes', {autoIncrement: true});
-          } else {
-            notes1 = dbReq.transaction.objectStore('notes');
-          }
-          // If there isn't already a timestamp index, make one so we
-          // can query notes by their timestamps
-          if (!notes1.indexNames.contains('timestamp')) {
-            notes1.createIndex('timestamp', 'timestampkeypath');
-          }
-        }
-        dbReq.onsuccess = function(event) {
-          db = event.target.result;
+  //         let notes1;
+  //         if (!db.objectStoreNames.contains('notes')) {
+  //           notes1 = db.createObjectStore('notes', {autoIncrement: true});
+  //         } else {
+  //           notes1 = dbReq.transaction.objectStore('notes');
+  //         }
+  //         // If there isn't already a timestamp index, make one so we
+  //         // can query notes by their timestamps
+  //         if (!notes1.indexNames.contains('timestamp')) {
+  //           notes1.createIndex('timestamp', 'timestampkeypath');
+  //         }
+  //       }
+  //       dbReq.onsuccess = function(event) {
+  //         db = event.target.result;
   
-            // Add some sticky notes
-            addStickyNote(db, 'Sloths are awesome!');
-            addStickyNote(db, 'Order more hibiscus tea');
-            addStickyNote(db, 'And Green Sheen shampoo, the best for sloth fur algae grooming!');
-            //read the added sticky notes
-            //getAndDisplayNotes(db);
+  //           // Add some sticky notes
+  //           addStickyNote(db, 'Sloths are awesome!');
+  //           addStickyNote(db, 'Order more hibiscus tea');
+  //           addStickyNote(db, 'And Green Sheen shampoo, the best for sloth fur algae grooming!');
+  //           //read the added sticky notes
+  //           //getAndDisplayNotes(db);
   
-        }
-        dbReq.onerror = function(event) {
-          console.log("error opening database",event.target);
-        }
+  //       }
+  //       dbReq.onerror = function(event) {
+  //         console.log("error opening database",event.target);
+  //       }
   
-        //assume offline as everything else should be handled
-        // return caches.match( doc_fallback, {
-        //     ignoreSearch: true
-        // } );
+  //       //assume offline as everything else should be handled
+  //       // return caches.match( doc_fallback, {
+  //       //     ignoreSearch: true
+  //       // } );
   
-      })
+  //     })
     
-    );
-  }
+  //   );
+  // }
 
 
   } );

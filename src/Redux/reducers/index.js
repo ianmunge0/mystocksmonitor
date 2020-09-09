@@ -13,6 +13,7 @@ import { combineReducers } from "redux";
 import ProductSummary from "./Product";
 import Titles from "./Titles";
 import Suppliers from "./Suppliers";
+import Subscription from "./Subscription";
 
 const allReducers = combineReducers({
   login: AuthenticationReducer,
@@ -28,6 +29,7 @@ const allReducers = combineReducers({
   title: Titles,
   stocksin: StockIn,
   suppliers: Suppliers,
+  subscription: Subscription
 });
 
 export default allReducers;
