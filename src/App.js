@@ -4,7 +4,7 @@ import "./App.css";
 import { connect } from "react-redux";
 import { logout } from "./Redux/Actions";
 
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Router } from "react-router-dom";
 import EditStock from "./components/Stock/EditStock";
 import Dashboard from "./components/Dashboard";
 import StockInManager from "./components/StockInManager";
@@ -50,6 +50,7 @@ import Index from "./components/Users/Index";
 import BadStock from "./components/CashSales/BadStock";
 import ExpesensesList from "./components/CashSales/ExpesensesList";
 import StockIn from "./components/Stocks/StockIn";
+import Subscription from "./components/Subscription/Subscription";
 function App(props) {
   return (
     <React.Fragment>
@@ -300,6 +301,13 @@ function App(props) {
             path="/stockin"
             roles={["STOCK_IN"]}
             component={StockIn}
+          />
+          //SUBSCRIPTION ROUTE
+          <ProtectedRoute
+            roles={["ADMIN_ROLE"]}
+            title="Subscriptions"
+            path="/subscriptions"
+            component={Subscription}
           />
           <Route exact path="/" component={DefaultPage} />
         </Switch>
