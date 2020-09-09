@@ -45,4 +45,4 @@ function SubscriptionPackage(props) {
     );
 }
 
-export default SubscriptionPackage
+export default SubscriptionPackage;

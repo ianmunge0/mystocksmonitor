@@ -68,13 +68,4 @@ function Subscription(props) {
 
 }
 
-const mapStateToProps = (state) => ({
-  subscriptions: state.subscriptions,
-});
-
-const mapDispacthToProps = (dispatch) => {
-  return {
-  };
-};
-
-export default connect(mapStateToProps, mapDispacthToProps)(Subscription);
+export default Subscription;
