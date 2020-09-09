@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
@@ -9,8 +10,31 @@ import Item from "../../components/Item";
 import TodayIcon from "@material-ui/icons/Today";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import Months from "../Months";
-import { reactLocalStorage } from "reactjs-localstorage";
-import Button from "@material-ui/core/Button";
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
+import { green } from "@material-ui/core/colors";
+import { grantPermission } from "../Common/GrantPermission";
+import Zoom from "@material-ui/core/Zoom";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    backgroundColor: theme.palette.background.paper,
+    position: "relative",
+  },
+  fab: {
+    position: "absolute",
+    top: theme.spacing(2),
+    right: theme.spacing(2),
+  },
+  fabGreen: {
+    color: theme.palette.common.white,
+    backgroundColor: green[500],
+    "&:hover": {
+      backgroundColor: green[600],
+    },
+  },
+}));
+
 const d = new Date();
 const options = [
   "January",
@@ -27,6 +51,12 @@ const options = [
   "December",
 ];
 const ProfitExpensesManager = (props) => {
+  const classes = useStyles();
+  const theme = useTheme();
+  const transitionDuration = {
+    enter: theme.transitions.duration.enteringScreen,
+    exit: theme.transitions.duration.leavingScreen,
+  };
   const getMonth = (monthStr) => {
     return new Date(monthStr + "-1-01").getMonth() + 1;
   };
@@ -73,7 +103,7 @@ const ProfitExpensesManager = (props) => {
   };
 
   return (
-    <>
+    <div className={classes.root}>
       <div className="row">
         <DateRange
           editableDateInputs={false}
@@ -84,6 +114,23 @@ const ProfitExpensesManager = (props) => {
           ranges={state}
         />
       </div>
+      {grantPermission(["ADD_EXPENSES"]) && (
+        <Zoom
+          onClick={() => {
+            props.history.push({
+              pathname: "/expenses",
+            });
+          }}
+          key="primary"
+          in={true}
+          timeout={transitionDuration}
+          unmountOnExit
+        >
+          <Fab aria-label="Add" className={classes.fab} color="primary">
+            <AddIcon />
+          </Fab>
+        </Zoom>
+      )}
 
       <Item
         description="View today profit and expenses summary"
@@ -116,7 +163,7 @@ const ProfitExpensesManager = (props) => {
         icon={<TodayIcon fontSize="large" />}
         data="today"
       /> */}
-    </>
+    </div>
   );
   // }
 };

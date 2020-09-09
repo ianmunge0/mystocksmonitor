@@ -1,4 +1,5 @@
 import { GET_REPORTS, LOADING } from "../Actions/actions";
+import { getOverlappingDaysInIntervals } from "date-fns/esm";
 const initialState = {
   stocks: [],
   loading: true,
@@ -12,6 +13,7 @@ const Reports = (state = initialState, action) => {
         loading: true,
       };
     case GET_REPORTS:
+      console.log("state", state);
       return {
         ...state,
         stocks: action.item,

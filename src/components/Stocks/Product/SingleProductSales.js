@@ -87,16 +87,6 @@ function SingleProductSales(props) {
                           {props.productsales.data[key].items[keyy].name}
                         </Typography>
                       }
-                      onClick={() => {
-                        props.history.push({
-                          pathname: "/singlereceipt",
-                          state: {
-                            data: props.receipts.receipts[value][itemdata],
-                            receiptno: itemdata,
-                            user: props.receipts.receipts[value][itemdata].user,
-                          },
-                        });
-                      }}
                       secondary={
                         <>
                           <Typography

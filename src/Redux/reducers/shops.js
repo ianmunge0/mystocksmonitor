@@ -7,7 +7,7 @@ import {
 } from "../Actions/actions";
 const initialState = {
   shops: [],
-  loading: true,
+  loading: false,
   addingerror: "",
   currentshop: null,
 };

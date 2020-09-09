@@ -4,8 +4,6 @@ import {
   ADDING_STOCK,
   ADD_UNIT,
   GET_UNITS,
-  ADD_SUPPLIER,
-  GET_SUPPLIERS,
   LOADING,
   GET_SINGLE_ITEM,
   UPDATE_STOCK_COUNT,
@@ -53,6 +51,12 @@ export const addStock = (stockinput, e) => {
     stockinput.time_ = parseInt((dd / 1000).toFixed(0)); //new Date().getTime();
     stockinput.action = "insert";
     stockinput.shopid = reactLocalStorage.getObject("userdata").default_shop;
+    if (reactLocalStorage.get("user_type") === "attendant") {
+      stockinput.attendantserial_key = reactLocalStorage.getObject(
+        "userdata"
+      ).serialno;
+    }
+
     console.log("stockinput", stockinput);
 
     Api.get(`/stocks.php`, {
@@ -77,68 +81,6 @@ export const addStock = (stockinput, e) => {
   };
 };
 
-export const getSuppliers = () => {
-  console.log("getSuppliers");
-
-  return (dispatch) => {
-    dispatch({
-      type: LOADING,
-    });
-    Api.get(`/supplier.php`, {
-      params: {
-        action: "get",
-        owner: reactLocalStorage.getObject("userdata").serialno,
-      },
-    })
-      .then((res) => {
-        console.log("database", res.data);
-        dispatch({
-          type: GET_SUPPLIERS,
-          suppliers: res.data.suppliers,
-        });
-      })
-      .catch((error) => {
-        // your error handling goes here}
-        console.log("error", error);
-      });
-  };
-};
-
-export const saveSupplier = (supplier, e) => {
-  return (dispatch) => {
-    dispatch({
-      type: LOADING,
-    });
-
-    console.log({
-      supplier_name: supplier.name,
-      supplier_phone: supplier.phone,
-      action: "add",
-      owner: reactLocalStorage.getObject("userdata").serialno,
-    });
-
-    Api.get(`/supplier.php`, {
-      params: {
-        supplier_name: supplier.name,
-        supplier_phone: supplier.phone,
-        action: "add",
-        owner: reactLocalStorage.getObject("userdata").serialno,
-      },
-    })
-      .then((res) => {
-        console.log(res.data);
-        dispatch({
-          type: ADD_SUPPLIER,
-          suppliers: res.data.suppliers,
-        });
-        e.reset();
-      })
-      .catch((error) => {
-        // your error handling goes here}
-        console.log("error", error);
-      });
-  };
-};
 export const saveUnit = (unit, e) => {
   return (dispatch) => {
     dispatch({
@@ -165,40 +107,6 @@ export const saveUnit = (unit, e) => {
           units: res.data.unit,
         });
         e.reset();
-      })
-      .catch((error) => {
-        // your error handling goes here}
-        console.log("error", error);
-      });
-  };
-};
-
-export const deleteSupplier = (supplier) => {
-  return (dispatch) => {
-    dispatch({
-      type: LOADING,
-    });
-
-    console.log({
-      id: supplier.id,
-      action: "delete",
-      owner: reactLocalStorage.getObject("userdata").serialno,
-    });
-
-    Api.get(`/supplier.php`, {
-      params: {
-        id: supplier.id,
-        action: "delete",
-        owner: reactLocalStorage.getObject("userdata").serialno,
-      },
-    })
-      .then((res) => {
-        console.log(res.data);
-
-        dispatch({
-          type: GET_SUPPLIERS,
-          suppliers: res.data.suppliers,
-        });
       })
       .catch((error) => {
         // your error handling goes here}
@@ -264,12 +172,45 @@ export const getUnits = () => {
       });
   };
 };
+export const getBadStocks = (objectparam) => {
+  return (dispatch) => {
+    console.log("calling loading");
+    dispatch({
+      type: LOADING,
+    });
+
+    Api.get(`/stocks.php`, {
+      params: {
+        shopid: reactLocalStorage.getObject("userdata").default_shop,
+        attendantserial_key:
+          reactLocalStorage.get("user_type") === "attendant"
+            ? reactLocalStorage.getObject("userdata").serialno
+            : "",
+        action: "badstocks",
+        fromtimestamp: objectparam.fromtimestamp,
+        totimestamp: objectparam.totimestamp,
+      },
+    })
+      .then((res) => {
+        console.log("getBadStocks", res.data);
+        dispatch({
+          type: "GET_BAD_STOCKS",
+          stocks: res.data,
+        });
+      })
+      .catch((error) => {
+        // your error handling goes here}
+        console.log("error", error);
+      });
+  };
+};
 
 export const getStock = () => {
   return (dispatch) => {
     console.log("calling loading");
     dispatch({
       type: LOADING,
+      loading: true,
     });
 
     Api.get(`/stocks.php`, {
@@ -297,22 +238,6 @@ export const filter = (data, string) => {
       type: STOCK_FILTER,
       string: string,
     });
-    // let filtered = [];
-    // // var copydata = data;
-    // if (data) {
-    //   console.log("filter ", data);
-    //   data.items = data.items.filter((t) => t.name.includes(string));
-    //   console.log("after filter ", data);
-    // }
-    // filtered = data;
-    // if (string === "") {
-    //   data = [];
-    // }
-
-    // dispatch({
-    //   type: STOCK_FILTER,
-    //   stocks: filtered,
-    // });
   };
 };
 
@@ -329,16 +254,11 @@ export const saveStockCount = (newcount, item) => {
     item.action = "updatecount";
     console.log("saveStockCount ", moment(dd).format("YYYY-MM-DD hh:mm:ss"));
 
-    console.log({
-      item,
-      action: "updatecount",
-    });
-
     Api.get(`/stocks.php`, {
       params: item,
     })
       .then((res) => {
-        console.log("from db ", res.data);
+        console.log("res ", res.data);
         dispatch({
           type: UPDATE_STOCK_COUNT,
           stocks: res.data.items,
@@ -406,6 +326,42 @@ export const getCountHistory = (timestamp) => {
   };
 };
 
+export const deleteBadStock = (id) => {
+  return (dispatch) => {
+    dispatch({
+      type: LOADING,
+    });
+
+    console.log({
+      id,
+      currentshopidkey: reactLocalStorage.getObject("userdata").default_shop,
+      action: "deletebadstock",
+    });
+
+    Api.get(`/stocks.php`, {
+      params: {
+        id,
+        currentshopidkey: reactLocalStorage.getObject("userdata").default_shop,
+        attendantserial_key:
+          reactLocalStorage.get("user_type") === "attendant"
+            ? reactLocalStorage.getObject("userdata").serialno
+            : "",
+        action: "deletebadstock",
+      },
+    })
+      .then((res) => {
+        console.log("deleteStock ", res.data);
+        dispatch({
+          type: "GET_BAD_STOCKS",
+          stocks: res.data,
+        });
+      })
+      .catch((error) => {
+        // your error handling goes here}
+        console.log("error", error);
+      });
+  };
+};
 export const deleteStock = (id) => {
   return (dispatch) => {
     dispatch({
@@ -422,6 +378,7 @@ export const deleteStock = (id) => {
       params: {
         id,
         currentshopidkey: reactLocalStorage.getObject("userdata").default_shop,
+
         action: "delete",
       },
     })

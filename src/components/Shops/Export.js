@@ -111,19 +111,6 @@ function Export(props) {
     }
   };
 
-  //stock count
-
-  const [count, setCount] = useState([]);
-
-  const handleCount = (v, e) => {
-    console.log(e.target.id);
-
-    setCount({
-      ...count,
-      [e.target.id]: e.target.value,
-    });
-  };
-
   const handleQtyChange = (newcount, item) => {
     console.log("new qty", newcount.target.value);
     console.log("item ", item);
@@ -320,22 +307,12 @@ function Export(props) {
         : activeStep + 1;
     setActiveStep(newActiveStep);
   };
-  const handleStepCheck = () => {
-    if (activeStep === 0 && exportdata.shopid === "") {
-      setActiveStep(activeStep);
-    } else {
-      const newActiveStep =
-        isLastStep() && !allStepsCompleted()
-          ? // It's the last step, but not all steps have been completed
-            // find the first step that has been completed
-            steps.findIndex((step, i) => !completed.has(i))
-          : activeStep + 1;
-      setActiveStep(newActiveStep);
-    }
-  };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    if (allStepsCompleted()) {
+      handleReset();
+    }
   };
 
   const handleStep = (step) => () => {
@@ -395,8 +372,6 @@ function Export(props) {
     return completed.has(step);
   }
 
-  console.log(props);
-
   return (
     <div className={classes.root}>
       <div style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }}>
@@ -435,12 +410,7 @@ function Export(props) {
           {activeStep === 2 ? "Setup stock quantity to transfer" : ""}
         </Typography>
       </Grid>
-      <Stepper
-        alternativeLabel
-        nonLinear
-        activeStep={activeStep}
-        style={{ padding: 0 }}
-      >
+      <Stepper alternativeLabel nonLinear activeStep={activeStep}>
         {steps.map((label, index) => {
           const stepProps = {};
           const buttonProps = {};

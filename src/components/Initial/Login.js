@@ -11,6 +11,16 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 
+import InputLabel from "@material-ui/core/InputLabel";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import clsx from "clsx";
+import Input from "@material-ui/core/Input";
+import IconButton from "@material-ui/core/IconButton";
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
+
 import { connect } from "react-redux";
 import { login } from "../../Redux/Actions";
 import auth from "../auth";
@@ -19,6 +29,7 @@ import "react-overlay-loader/styles.css";
 import { useSelector } from "react-redux";
 import NormalAppBar from "../Navigations/NormalAppBar";
 import Messages from "../Common/Messages";
+import OutlinedInput from "@material-ui/core/OutlinedInput";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -46,6 +57,11 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "none",
     fontSize: 14,
   },
+  inputs: {
+    width: "100%",
+    float: "left",
+    marginTop: 20,
+  },
 }));
 function Login(props) {
   const classes = useStyles();
@@ -55,9 +71,16 @@ function Login(props) {
   const [inputs, setInputs] = useState({
     username: "",
     password: "",
+    showPassword: false,
   });
   const { username, password } = inputs;
 
+  const handleClickShowPassword = () => {
+    setInputs({ ...inputs, showPassword: !inputs.showPassword });
+  };
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
     setInputs((inputs) => ({ ...inputs, [name]: value }));
@@ -73,22 +96,18 @@ function Login(props) {
     }
   };
 
-  if (auth.isAuthenticated()) {
-    props.history.push("/dashboard");
-  }
+  console.log("login", auth.isAuthenticated());
+  // if (auth.isAuthenticated()) {
+  //   props.history.push("/dashboard");
+  // }
   if (props.loggedin) {
     auth.login(() => {
       props.history.push("/dashboard");
     });
   }
 
-  // setError(props.message);
-
-  console.log("lohin", loggedin.login.loading);
-
   return (
     <Container component="main" maxWidth="xs">
-      {/* <NormalAppBar /> */}
       <NormalAppBar backlink="/" title="Login" />
       <CssBaseline />
       <div className={classes.paper}>
@@ -106,9 +125,14 @@ function Login(props) {
           autoComplete="off"
         >
           <Messages type="error" text={error} />
-          <Messages type="success" text={props.message} />
+          <Messages
+            type="error"
+            text={
+              props.userdata.message ? props.userdata.message : props.message
+            }
+          />
 
-          <Loader fullPage loading={loggedin.login.loading} />
+          <Loader fullPage loading={loggedin.login.loginloading} />
           <TextField
             variant="outlined"
             margin="normal"
@@ -119,10 +143,38 @@ function Login(props) {
             fullWidth
             id="username"
             name="username"
-            label="username or email"
+            label={
+              props.match.params.type === "admin" ? "email" : "Attendant ID"
+            }
             autoFocus
           />
-          <TextField
+          <FormControl
+            className={clsx(classes.margin, classes.inputs)}
+            variant="outlined"
+          >
+            <InputLabel htmlFor="password">Password</InputLabel>
+            <OutlinedInput
+              id="password"
+              className={classes.customfieldinput}
+              type={inputs.showPassword ? "text" : "password"}
+              value={inputs.password}
+              name="password"
+              onChange={handleChange}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                  >
+                    {inputs.showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              labelWidth={70}
+            />
+          </FormControl>
+          {/* <TextField
             variant="outlined"
             margin="normal"
             required
@@ -134,7 +186,7 @@ function Login(props) {
             type="password"
             id="password"
             autoComplete="current-password"
-          />
+          /> */}
           <Button
             type="submit"
             fullWidth
@@ -144,18 +196,28 @@ function Login(props) {
           >
             Sign In
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link to={"/reset"} variant="body2" className={classes.links}>
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link to={`/register`} variant="body2" className={classes.links}>
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
+          {props.match.params.type === "admin" ? (
+            <>
+              <Grid container>
+                <Grid item xs={12}>
+                  <Link to={"/reset"} variant="body2" className={classes.links}>
+                    Forgot password
+                  </Link>
+                </Grid>
+                <Grid item xs={12} style={{ marginTop: 30 }}>
+                  <Link
+                    to={`/register`}
+                    variant="body2"
+                    className={classes.links}
+                  >
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
+              </Grid>
+            </>
+          ) : (
+            ""
+          )}
         </form>
       </div>
     </Container>
@@ -173,6 +235,7 @@ const mapDispacthToProps = (dispatch) => {
   return {
     login: (username, password, type) =>
       dispatch(login(username, password, type)),
+    dispatch,
   };
 };
 export default connect(mapStateToProps, mapDispacthToProps)(Login);

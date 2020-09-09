@@ -11,8 +11,8 @@ import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
-import { addSales } from "../../Redux/Actions/Sales";
-import { getStock } from "../../Redux/Actions/Stock";
+import { addSales } from "../../Redux/Actions/NewSales";
+import { addStockIn } from "../../Redux/Actions/StockIn";
 import { connect } from "react-redux";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
@@ -31,14 +31,20 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 function SalesDialog(props) {
-  useEffect(() => {
-    props.getStock();
-  }, []);
   const classes = useStyles();
 
+  console.log(props.type);
+
   const additemOnsaleList = (item) => {
-    props.addSales(item, props);
+    console.log("additemOnsaleList ", item);
+    if (props.type === "stockin") {
+      props.addStockIn(item, props);
+    } else {
+      props.addSales(item, props);
+    }
   };
+
+  console.log(props.stockresponse);
 
   return (
     <Dialog
@@ -47,7 +53,7 @@ function SalesDialog(props) {
       onClose={props.handleClose}
       TransitionComponent={Transition}
     >
-      {/* <Loader fullPage loading={props.sales.loading} /> */}
+      <Loader fullPage loading={props.stockresponse.loading} />
       <AppBar className={classes.appBar}>
         <Toolbar>
           <IconButton
@@ -68,7 +74,13 @@ function SalesDialog(props) {
           ? props.stocks.map((value, index) => (
               <div key={index}>
                 <ListItem
-                  disabled={value.stock_qty > 0 ? false : true}
+                  disabled={
+                    props.type === "stockin"
+                      ? false
+                      : value.stock_qty > 0
+                      ? false
+                      : true
+                  }
                   button
                   onClick={() => additemOnsaleList(value)}
                 >
@@ -94,14 +106,13 @@ function SalesDialog(props) {
 
 const mapStateToProps = (state) => ({
   sales: state,
-  stocks: state.stock.stocks,
   stockresponse: state.stock,
 });
 
 const mapDispacthToProps = (dispatch) => {
   return {
+    addStockIn: (item, props) => dispatch(addStockIn(item, props)),
     addSales: (item, props) => dispatch(addSales(item, props)),
-    getStock: () => dispatch(getStock()),
   };
 };
 export default connect(mapStateToProps, mapDispacthToProps)(SalesDialog);

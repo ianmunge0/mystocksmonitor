@@ -1,6 +1,7 @@
 import { LOG_IN, REG, LOG_OUT, LOADING } from "../Actions/actions";
 const initialState = {
   loggedin: false,
+  loginloading: false,
   loading: false,
   userdata: [],
   logout: false,
@@ -9,10 +10,15 @@ const initialState = {
 
 const AuthenticationReducer = (state = initialState, action) => {
   switch (action.type) {
+    case "LOGIN_LOADING":
+      return {
+        ...state,
+        loginloading: action.loading,
+      };
     case LOADING:
       return {
         ...state,
-        loading: true,
+        loading: action.loading,
       };
     case "RESET_PASSWORD":
       return {
@@ -33,8 +39,7 @@ const AuthenticationReducer = (state = initialState, action) => {
         ...state,
         userdata: action.userdata,
         loggedin: action.userdata.status,
-        message:
-          action.userdata.status === false ? "wrong username or password" : "",
+        message: action.userdata.status === false ? action.userdata.msg : "",
         loading: false,
       };
     case REG:

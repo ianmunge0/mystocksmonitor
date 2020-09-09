@@ -16,6 +16,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import List from "@material-ui/core/List";
 import FolderIcon from "@material-ui/icons/Folder";
+import { grantPermission } from "../Common/GrantPermission";
 
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import { Divider, Typography } from "@material-ui/core";
@@ -95,14 +96,17 @@ function Shops(props) {
             aria-label="nav tabs example"
           >
             <LinkTab label="All Shops" href="/drafts" {...a11yProps(0)} />
-            <LinkTab label="New Shop" href="/trash" {...a11yProps(1)} />
+
+            {grantPermission(["ADD_SHOP"]) && (
+              <LinkTab label="New Shop" href="/trash" {...a11yProps(1)} />
+            )}
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0}>
           <List>
             {props.shops.shops.length > 0 ? (
               props.shops.shops.map((value, index) => (
-                <>
+                <div key={index}>
                   <ListItem
                     key={index}
                     onClick={() =>
@@ -125,7 +129,7 @@ function Shops(props) {
                     />
                   </ListItem>
                   <Divider />
-                </>
+                </div>
               ))
             ) : (
               <div style={{ position: "relative" }}>

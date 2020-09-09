@@ -3,6 +3,8 @@ import { addShop } from "../../Redux/Actions/Shops";
 import { connect } from "react-redux";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
+import { Loader } from "react-overlay-loader";
+import "react-overlay-loader/styles.css";
 
 function ShopForm(props) {
   const [error, setError] = useState();
@@ -30,107 +32,66 @@ function ShopForm(props) {
     });
   };
 
+  console.log("mm", props);
+
   return (
-    <form
-      className="col s12"
-      onSubmit={addShop}
-      noValidate
-      autoComplete="off"
-      style={{ margin: 10 }}
-    >
-      <span style={{ color: "red" }}>{error}</span>
-      <TextField
-        variant="outlined"
-        margin="normal"
-        required
-        fullWidth
-        onChange={handleShopData}
-        placeholder="shop name"
-        name="shop_name"
-        type="text"
-        id="shop_name"
-      />
-
-      <TextField
-        variant="outlined"
-        margin="normal"
-        required
-        fullWidth
-        onChange={handleShopData}
-        placeholder="shop type"
-        name="shop_type"
-        type="text"
-        id="shop_type"
-      />
-      <TextField
-        variant="outlined"
-        margin="normal"
-        required
-        fullWidth
-        onChange={handleShopData}
-        placeholder="shop location"
-        name="shop_location"
-        type="text"
-        id="shop_location"
-      />
-      {props.shops.addingerror}
-
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        color="primary"
-        style={{ padding: 15, marginTop: 20 }}
+    <>
+      <Loader fullPage loading={props.shops.loading} />
+      <form
+        className="col s12"
+        onSubmit={addShop}
+        noValidate
+        autoComplete="off"
+        style={{ margin: 10 }}
       >
-        Update
-      </Button>
+        <span style={{ color: "red" }}>{error}</span>
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          onChange={handleShopData}
+          placeholder="shop name"
+          name="shop_name"
+          type="text"
+          id="shop_name"
+        />
 
-      {/* 
-      <div className="row">
-        {error}
-        <div className="input-field col s12">
-          <i className="material-icons prefix">account_circle</i>
-          <input
-            onChange={handleShopData}
-            id="shop_name"
-            type="text"
-            className="validate"
-          />
-          <label htmlFor="shop_name">Name</label>
-        </div>
-        <div className="input-field col s12">
-          <i className="material-icons prefix">account_circle</i>
-          <input
-            onChange={handleShopData}
-            id="shop_type"
-            type="text"
-            className="validate"
-          />
-          <label htmlFor="shop_type">Type</label>
-        </div>
-        <div className="input-field col s12">
-          <i className="material-icons prefix">account_circle</i>
-          <input
-            onChange={handleShopData}
-            id="shop_location"
-            type="text"
-            className="validate"
-          />
-          <label htmlFor="shop_location">Location</label>
-        </div>
-      </div>
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          onChange={handleShopData}
+          placeholder="shop type"
+          name="shop_type"
+          type="text"
+          id="shop_type"
+        />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          onChange={handleShopData}
+          placeholder="shop location"
+          name="shop_location"
+          type="text"
+          id="shop_location"
+        />
+        {props.shops.addingerror}
 
-      <div className="row">
-        <p className="red-text" style={{ marginLeft: 20 }}>
-          
-        </p>
-        <div className="input-field col s12 center">
-          <button className="btn btn-primary">
-            <i className="material-icons left ">save</i>Save
-          </button>
-        </div>
-      </div> */}
-    </form>
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          style={{ padding: 15, marginTop: 20 }}
+        >
+          Update
+        </Button>
+      </form>
+    </>
   );
 }
 

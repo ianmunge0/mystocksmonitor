@@ -118,13 +118,17 @@ function Customers(props) {
     event.preventDefault();
     var send = true;
 
-    Object.keys(inputs).forEach(function (key) {
-      if (inputs[key] === "") {
-        setError(key + " must not be empty");
-        send = false;
-      }
-    });
-    console.log(send);
+    //check if this customer is being added for a sale that is on credit,
+    //if the sale is on credit then all fields check must be comlied with but
+    //if not then no need to comply with field checks
+    if (props.type === "credit") {
+      Object.keys(inputs).forEach(function (key) {
+        if (inputs[key] === "") {
+          setError(key + " must not be empty");
+          send = false;
+        }
+      });
+    }
 
     if (send) {
       setLoading(true);
@@ -149,12 +153,8 @@ function Customers(props) {
         .catch((error) => {
           console.log("error", error);
         });
-
-      // props.register(name, phone, amount, duedate, props.match.params.type);
     }
   };
-
-  console.log(customers);
   return (
     <Dialog
       fullScreen

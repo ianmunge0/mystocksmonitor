@@ -3,9 +3,11 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
-import MessageIcon from "@material-ui/icons/Message";
-import WhatsAppIcon from "@material-ui/icons/WhatsApp";
-import CallIcon from "@material-ui/icons/Call";
+import DeleteIcon from "@material-ui/icons/Delete";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Button from "@material-ui/core/Button";
+import DialogActions from "@material-ui/core/DialogActions";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
@@ -13,7 +15,11 @@ import PropTypes from "prop-types";
 import Api from "../../api/api";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
-import { getcustomer, updateCustomer } from "../../Redux/Actions/Customers";
+import {
+  getcustomer,
+  updateCustomer,
+  deletecustomer,
+} from "../../Redux/Actions/Customers";
 import { connect } from "react-redux";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -22,6 +28,11 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+import Slide from "@material-ui/core/Slide";
+import Messages from "../Common/Messages";
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -86,10 +97,31 @@ function CustomerProfile(props) {
     setValueInner(newValueInner);
   };
 
+  const [open, setOpen] = React.useState(false);
+  const [error, setError] = useState("");
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (action) => {
+    setError("");
+    setOpen(false);
+    if (action === "delete") {
+      if (
+        props.customer.customer.items.filter(
+          (value) => value.credit_status === "0"
+        ).length > 0
+      ) {
+        setError("you cant delete customer with active credit sales");
+      } else {
+        props.deletecustomer(props.match.params.id, props);
+      }
+    }
+  };
   useEffect(() => {
     props.getcustomer(props.match.params.id);
   }, []);
-  console.log("cc", props.customer);
   if (props.customer.loading) {
     return <Loader fullPage loading={props.customer.loading} />;
   }
@@ -127,19 +159,16 @@ function CustomerProfile(props) {
         </Grid>
         <Grid item xs={3} align="center">
           <Grid container>
-            <Grid item xs={4}>
-              <MessageIcon />
-            </Grid>
-            <Grid item xs={4}>
-              <CallIcon />
-            </Grid>
-            <Grid item xs={4}>
-              <WhatsAppIcon />
+            <Grid item xs={12}>
+              <DeleteIcon
+                onClick={() => handleClickOpen()}
+                style={{ color: "red" }}
+              />
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-
+      <Messages type="error" text={error} />
       <Tabs
         variant="fullWidth"
         value={valueinner}
@@ -254,7 +283,11 @@ function CustomerProfile(props) {
                             Totals: {value.qtysold * value.onsalesellprice} /={" "}
                           </span>
                           <span style={{ color: "green", fontSize: 13 }}>
-                            Paid: {value.totalpaid} /={" "}
+                            Paid:{" "}
+                            {value.totalpaid
+                              ? value.totalpaid
+                              : value.qtysold * value.onsalesellprice}{" "}
+                            /={" "}
                           </span>
                           <br />
                           <span style={{ fontSize: 13 }}>
@@ -312,15 +345,25 @@ function CustomerProfile(props) {
                         <span style={{ color: "green", fontSize: 13 }}>
                           Totals: {value.qtysold * value.onsalesellprice} /={" "}
                         </span>
-                        <span style={{ color: "green", fontSize: 13 }}>
-                          Paid: {value.totalpaid} /={" "}
-                        </span>{" "}
-                        <span style={{ color: "red", fontSize: 13 }}>
-                          UnPaid:{" "}
-                          {value.qtysold * value.onsalesellprice -
-                            value.totalpaid}{" "}
-                        </span>
-                        /=
+                        {value.credit_status === "0" ? (
+                          <>
+                            <span style={{ color: "green", fontSize: 13 }}>
+                              Paid:{" "}
+                              {value.totalpaid
+                                ? value.totalpaid
+                                : value.qtysold * value.onsalesellprice}{" "}
+                              /={" "}
+                            </span>
+                            <span style={{ color: "red", fontSize: 13 }}>
+                              UnPaid:{" "}
+                              {value.qtysold * value.onsalesellprice -
+                                value.totalpaid}{" "}
+                              /=
+                            </span>
+                          </>
+                        ) : (
+                          ""
+                        )}
                         <br />
                         <span style={{ fontSize: 13 }}>
                           Date: {value.date_time}
@@ -344,6 +387,27 @@ function CustomerProfile(props) {
           <h5>No customers yet</h5>
         )}
       </TabPanel>
+      <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle id="alert-dialog-slide-title">
+          {"Are you sure you want to delete customer?"}
+        </DialogTitle>
+
+        <DialogActions>
+          <Button onClick={() => handleClose("close")} color="primary">
+            Not Yet
+          </Button>
+          <Button onClick={() => handleClose("delete")} color="primary">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
@@ -355,6 +419,7 @@ const mapStateToProps = (state) => ({
 const mapDispacthToProps = (dispatch) => {
   return {
     getcustomer: (id) => dispatch(getcustomer(id)),
+    deletecustomer: (id, props) => dispatch(deletecustomer(id, props)),
     updateCustomer: (data) => dispatch(updateCustomer(data)),
     dispatch,
   };

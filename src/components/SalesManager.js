@@ -1,37 +1,48 @@
-import React from "react";
+import React, { useState } from "react";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { DateRange } from "react-date-range";
 import Item from "./Item";
+import { connect } from "react-redux";
 import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import TodayIcon from "@material-ui/icons/Today";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import Months from "../components/Months";
-const d = new Date();
-const options = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
+import { green } from "@material-ui/core/colors";
+import { grantPermission } from "./Common/GrantPermission";
 
-export default function SalesManager(props) {
-  const getMonth = (monthStr) => {
-    return new Date(monthStr + "-1-01").getMonth() + 1;
+import Zoom from "@material-ui/core/Zoom";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    backgroundColor: theme.palette.background.paper,
+    position: "relative",
+  },
+  fab: {
+    position: "absolute",
+    top: theme.spacing(2),
+    right: theme.spacing(2),
+  },
+  fabGreen: {
+    color: theme.palette.common.white,
+    backgroundColor: green[500],
+    "&:hover": {
+      backgroundColor: green[600],
+    },
+  },
+}));
+function SalesManager(props) {
+  const classes = useStyles();
+  const theme = useTheme();
+  const transitionDuration = {
+    enter: theme.transitions.duration.enteringScreen,
+    exit: theme.transitions.duration.leavingScreen,
   };
-
-  var month = options[d.getMonth()];
-
   const selectedSalesDate = (item) => {
     props.history.push({
       pathname: "/salesreceipts",
@@ -41,7 +52,13 @@ export default function SalesManager(props) {
       },
     });
   };
-
+  const [state, setState] = useState([
+    {
+      startDate: new Date(),
+      endDate: new Date(),
+      key: "selection",
+    },
+  ]);
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -51,15 +68,34 @@ export default function SalesManager(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
   return (
-    <>
+    <div className={classes.root}>
       <DateRange
         editableDateInputs={false}
         onChange={(item) => {
           selectedSalesDate(item);
         }}
         moveRangeOnFirstSelection={false}
+        ranges={state}
       />
+      {grantPermission(["ADD_SALES"]) && (
+        <Zoom
+          onClick={() => {
+            props.history.push({
+              pathname: "/newsale",
+            });
+          }}
+          key="primary"
+          in={true}
+          timeout={transitionDuration}
+          unmountOnExit
+        >
+          <Fab aria-label="Add" className={classes.fab} color="primary">
+            <AddIcon />
+          </Fab>
+        </Zoom>
+      )}
       <Item
         description="View today's sales"
         className="datepicker"
@@ -105,7 +141,17 @@ export default function SalesManager(props) {
         icon={<PeopleAltIcon fontSize="large" />}
         data="customers"
       />
-    </>
+    </div>
   );
-  // }
 }
+
+const mapStateToProps = (state) => ({
+  titles: state.titles,
+});
+
+const mapDispacthToProps = (dispatch) => {
+  return {
+    dispatch,
+  };
+};
+export default connect(mapStateToProps, mapDispacthToProps)(SalesManager);

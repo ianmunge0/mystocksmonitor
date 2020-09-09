@@ -8,6 +8,7 @@ import Box from "@material-ui/core/Box";
 import NewStock from "../Stocks/NewStock";
 import AllStocks from "../Stocks/AllStocks";
 import StockCount from "../Stock/StockCount";
+import { grantPermission } from "../Common/GrantPermission";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -78,7 +79,9 @@ export default function StockSetup() {
           aria-label="nav tabs example"
         >
           <LinkTab label="Stocks" href="/drafts" {...a11yProps(0)} />
-          <LinkTab label="Add New" href="/trash" {...a11yProps(1)} />
+          {grantPermission(["ADD_STOCK"]) && (
+            <LinkTab label="Add New" href="/trash" {...a11yProps(1)} />
+          )}
           <LinkTab label="Counts" href="/spam" {...a11yProps(2)} />
         </Tabs>
       </AppBar>

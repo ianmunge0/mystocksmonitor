@@ -20,6 +20,8 @@ const initialState = {
   stockcounthistory: [],
   filteredstocks: [],
   loading: true,
+  stockloading: true,
+  stockscopy: [],
 };
 
 const Stock = (state = initialState, action) => {
@@ -38,8 +40,10 @@ const Stock = (state = initialState, action) => {
           title: state.stockcounthistory.title,
           over_stocked: state.stockcounthistory.over_stocked,
           under_stocked: state.stockcounthistory.under_stocked,
-          items: state.stockcounthistory.items.filter((p) =>
-            p.name.includes(action.string)
+          items: state.stockcounthistory.items.filter(
+            (p) =>
+              p.name.includes(action.string) ||
+              (p.partno && p.partno.includes(action.string))
           ),
         },
       };
@@ -68,10 +72,49 @@ const Stock = (state = initialState, action) => {
         item: action.item,
         loading: false,
       };
+
+    case "GET_BAD_STOCKS":
+      return {
+        ...state,
+        stocks: action.stocks,
+        loading: false,
+      };
+    // case "UPDATE_STOCK":
+    //   return {
+    //     ...state,
+    //     stocks: {
+    //       stock_qty : state.stocks.filter((item)=> {
+    //         if(item.stockserial_key === )
+    //       })
+    //     },
+    //     loading: false,
+    //   };
+    case "GET_STOCK_FILTER":
+      let newState = {};
+      console.log("GET_STOCK_FILTER", state);
+      let value = action.payload.text;
+      let filteredValues = state.stockscopy.filter((stock) => {
+        return (
+          stock.name.includes(value) ||
+          (stock.partno && stock.partno.includes(value))
+        );
+      });
+      if (value) {
+        newState = filteredValues;
+      } else {
+        newState = state.stockscopy;
+      }
+
+      return {
+        ...state,
+        stocks: newState,
+        loading: false,
+      };
     case GET_STOCK:
       return {
         ...state,
         stocks: action.stocks,
+        stockscopy: action.stocks,
         loading: false,
       };
     case ADD_STOCK:

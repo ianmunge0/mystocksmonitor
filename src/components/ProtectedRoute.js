@@ -8,6 +8,14 @@ import { withRouter } from "react-router-dom";
 import Api from "../api/api";
 import AppBarComponent from "../components/Navigations/AppBarComponent";
 import auth from "./auth";
+import { grantPermission } from "./Common/GrantPermission";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Slide from "@material-ui/core/Slide";
+import { Button } from "@material-ui/core";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -59,11 +67,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 // import Main from "../components/Main";
 
-export const ProtectedRoute = ({ component: Component, ...rest }) => {
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+export const ProtectedRoute = ({ component: Component, roles, ...rest }) => {
   // const classes = useStyles();
   const classes = useStyles();
 
-  // console.log("rest", props);
+  const [open, setOpen] = React.useState(true);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = (action, props) => {
+    setOpen(false);
+
+    props.history.goBack();
+  };
 
   return (
     <Route
@@ -87,23 +106,27 @@ export const ProtectedRoute = ({ component: Component, ...rest }) => {
             );
           } else {
             return (
-              <div className={classes.root}>
-                <CssBaseline />
-                <AppBarComponent
-                  data={props}
-                  title={rest.title}
-                  backlink={rest.backlink}
-                  settings={rest.settings}
-                />
+              <>
+                {grantPermission(roles) && (
+                  <div className={classes.root}>
+                    <CssBaseline />
+                    <AppBarComponent
+                      data={props}
+                      title={rest.title}
+                      backlink={rest.backlink}
+                      settings={rest.settings}
+                    />
 
-                <main className={classes.content}>
-                  <div className={classes.toolbar} />
-                  <Component title={rest.title} {...props} />
-                </main>
-              </div>
-              // <Main>
-              //   <Component title={rest.title} {...props} />
-              // </Main>
+                    <main className={classes.content}>
+                      <div className={classes.toolbar} />
+                      <Component title={rest.title} {...props} />
+                    </main>
+                  </div>
+                )}
+                {console.log("log", props.location)}
+
+                {!grantPermission(roles) && props.history.goBack()}
+              </>
             );
           }
         } else {

@@ -32,3 +32,4 @@ export const SET_DEFAULT = "SET_DEFAULT";
 export const ADD_SALES = "ADD_SALES";
 export const GET_SALES = "GET_SALES";
 export const GET_RECEIPTS = "GET_RECEIPTS";
+export const GET_RECEIPT_PAYMENTS = "GET_RECEIPT_PAYMENTS";

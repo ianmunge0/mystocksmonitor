@@ -89,6 +89,9 @@ export const getprofile = (id) => {
 
 export const getAttendants = (shopid) => {
   return (dispatch) => {
+    dispatch({
+      type: LOADING,
+    });
     Api.get(`/attendants.php`, {
       params: {
         shopid: reactLocalStorage.getObject("userdata").default_shop,
@@ -148,11 +151,15 @@ export const updateAdminProfile = (data) => {
     })
       .then((res) => {
         const profile = res.data;
-        console.log("updateProfile actions ", profile);
+        console.log("profile ", profile);
 
-        reactLocalStorage.setObject("userdata", profile.profile);
-        reactLocalStorage.setObject("shops", profile.shops);
-        reactLocalStorage.setObject("countries", profile.countries);
+        if (profile.status) {
+          console.log("updateProfile actions ", profile);
+
+          reactLocalStorage.setObject("userdata", profile.profile);
+          reactLocalStorage.setObject("shops", profile.shops);
+          reactLocalStorage.setObject("countries", profile.countries);
+        }
 
         dispatch({
           type: GET_PROFILE,

@@ -60,12 +60,6 @@ function Singlecashflow(props) {
 
   const [month, setMonth] = useState("");
   const [type, setType] = useState("");
-  const [inputs, setInputs] = useState({
-    email: "",
-    country: "",
-    password: "",
-    phone: "",
-  });
 
   const [open, setOpen] = React.useState(false);
 
@@ -128,8 +122,6 @@ function Singlecashflow(props) {
 
   const classes = useStyles();
 
-  console.log("props", props.expenses.profitnexpense.todayexpenses);
-
   if (props.expenses.profitnexpense.loading) {
     return <Loader fullPage loading={props.expenses.profitnexpense.loading} />;
   }
@@ -172,12 +164,12 @@ function Singlecashflow(props) {
         ))}
       </Menu>
       <Grid container>
-        <Grid xs={12}>
+        <Grid item xs={12}>
           <Typography variant="h6" align="center">
             Profit Today
           </Typography>
         </Grid>
-        <Grid xs={12}>
+        <Grid item xs={12}>
           {" "}
           <Typography variant="h6" align="center">
             {props.expenses.profitnexpense.todayexpenses.cash_in_hand}

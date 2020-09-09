@@ -1,12 +1,18 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import AppBar from "@material-ui/core/AppBar";
-import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
+import {
+  makeStyles,
+  useTheme,
+  withStyles,
+  fade,
+} from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import Grid from "@material-ui/core/Grid";
+import { connect } from "react-redux";
 import { Button } from "@material-ui/core";
 import { Link, withRouter } from "react-router-dom";
 import Drawer from "@material-ui/core/Drawer";
@@ -23,12 +29,16 @@ import Badge from "@material-ui/core/Badge";
 import { reactLocalStorage } from "reactjs-localstorage";
 import auth from "../auth";
 
+import InputBase from "@material-ui/core/InputBase";
+import SearchIcon from "@material-ui/icons/Search";
+
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
+import { UnlockAccess } from "../Common/UnlockAccess";
+
+import { grantPermission } from "../Common/GrantPermission";
 const drawerWidth = 240;
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -88,6 +98,45 @@ const useStyles = makeStyles((theme) => ({
       display: "none",
     },
   },
+  search: {
+    position: "relative",
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    "&:hover": {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    },
+    marginLeft: 0,
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: theme.spacing(1),
+      width: "auto",
+    },
+  },
+  searchIcon: {
+    padding: theme.spacing(0, 2),
+    height: "100%",
+    position: "absolute",
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  inputRoot: {
+    color: "inherit",
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      width: "12ch",
+      "&:focus": {
+        width: "20ch",
+      },
+    },
+  },
   menuButtonNormal: {
     marginRight: theme.spacing(2),
   },
@@ -112,6 +161,7 @@ const useStyles = makeStyles((theme) => ({
 function AppBarComponent(props) {
   const classes = useStyles();
   //   render() {
+  useEffect(() => {}, []);
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -128,7 +178,7 @@ function AppBarComponent(props) {
     setOpen(false);
     if (action === "delete") {
       auth.logout(() => {
-        props.history.push({ pathname: "/login/admin" });
+        props.history.push({ pathname: "/" });
         handleDrawerToggle();
       });
     }
@@ -208,33 +258,35 @@ function AppBarComponent(props) {
       </Dialog>
     </div>
   );
+
+  const handleSearch = (e) => {
+    console.log("search", e.target.value);
+    props.dispatch({
+      type: "GET_STOCK_FILTER",
+      payload: {
+        text: e.target.value,
+      },
+    });
+    // props.searchCustomer(e.target.value);
+  };
+
   const initToolbar = (title) => {
     console.log("initToolbar", title);
     switch (title) {
-      case "sales":
+      case "dashboard":
         return (
-          <Button
-            onClick={() => {
-              props.history.push({
-                pathname: "/newsale",
-              });
-            }}
-          >
-            <Typography style={{ color: "#fff" }}>Add +</Typography>
-          </Button>
-        );
-        break;
-      case "profitnexpenses":
-        return (
-          <Button
-            onClick={() => {
-              props.history.push({
-                pathname: "/expenses",
-              });
-            }}
-          >
-            <Typography style={{ color: "#fff" }}>Add Expenes +</Typography>
-          </Button>
+          <UnlockAccess request={["ATTENDANT_ROLE"]}>
+            <Button
+              onClick={() => {
+                auth.logout(() => {
+                  props.history.push({ pathname: "/" });
+                  handleDrawerToggle();
+                });
+              }}
+            >
+              <Typography style={{ color: "#fff" }}>Logout</Typography>
+            </Button>
+          </UnlockAccess>
         );
         break;
       default:
@@ -250,46 +302,50 @@ function AppBarComponent(props) {
 
   return (
     <div>
-      <AppBar position="fixed" className={classes.appBar}>
+      <AppBar
+        position="fixed"
+        className={
+          !grantPermission(["ATTENDANT_ROLE"]) ? classes.appBar : "none"
+        }
+      >
         <Toolbar>
           {props.title === "Dashboard" ? (
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              onClick={handleDrawerToggle}
-              className={classes.menuButton}
-            >
-              <MenuIcon />
-            </IconButton>
+            <UnlockAccess request={["ADMIN_ROLE"]}>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={handleDrawerToggle}
+                className={classes.menuButton}
+              >
+                <MenuIcon />
+              </IconButton>
+            </UnlockAccess>
           ) : (
             <IconButton
               color="inherit"
               aria-label="open drawer"
               edge="start"
-              onClick={
-                () => {
-                  props.backlink
-                    ? props.history.push({
-                        pathname: "/" + `${props.backlink}`,
-                      })
-                    : props.history.goBack();
-                }
-                // props.history.push({ pathname: (`${props.backlink}` ? `${props.backlink}` : ) })
-              }
+              onClick={() => {
+                props.backlink
+                  ? props.history.push({
+                      pathname: "/" + `${props.backlink}`,
+                    })
+                  : props.history.goBack();
+              }}
               className={classes.menuButtonNormal}
             >
               <ArrowBackIosIcon />
             </IconButton>
           )}
           <Grid container spacing={3}>
-            <Grid item xs={props.settings ? 4 : 12}>
+            <Grid item xs={props.settings ? 8 : 12}>
               <Typography variant="h6" style={{ marginTop: 10 }} noWrap>
-                {props.title}
+                {props.statetitle.title ? props.statetitle.title : props.title}
               </Typography>
             </Grid>
             {props.settings ? (
-              <Grid item xs={8} className={classes.actionbtn}>
+              <Grid item xs={4} className={classes.actionbtn}>
                 <div className={classes.actionbtn}>
                   {initToolbar(props.settings)}
                 </div>
@@ -298,44 +354,72 @@ function AppBarComponent(props) {
               ""
             )}
           </Grid>
-          {/* </Typography> */}
+
+          {props.location.pathname === "/stocksetup" && (
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                placeholder="Search…"
+                onChange={(e) => handleSearch(e)}
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+                inputProps={{ "aria-label": "search" }}
+              />
+            </div>
+          )}
         </Toolbar>
       </AppBar>
-
-      <nav className={classes.drawer} aria-label="mailbox folders">
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Hidden smUp implementation="css">
-          <Drawer
-            container={container}
-            variant="temporary"
-            anchor={theme.direction === "rtl" ? "right" : "left"}
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        <Hidden xsDown implementation="css">
-          <Drawer
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            variant="permanent"
-            open
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-      </nav>
+      <UnlockAccess request={["ADMIN_ROLE"]}>
+        <nav className={classes.drawer} aria-label="mailbox folders">
+          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+          <Hidden smUp implementation="css">
+            <Drawer
+              container={container}
+              variant="temporary"
+              anchor={theme.direction === "rtl" ? "right" : "left"}
+              open={mobileOpen}
+              onClose={handleDrawerToggle}
+              classes={{
+                paper: classes.drawerPaper,
+              }}
+              ModalProps={{
+                keepMounted: true, // Better open performance on mobile.
+              }}
+            >
+              {drawer}
+            </Drawer>
+          </Hidden>
+          <Hidden xsDown implementation="css">
+            <Drawer
+              classes={{
+                paper: classes.drawerPaper,
+              }}
+              variant="permanent"
+              open
+            >
+              {drawer}
+            </Drawer>
+          </Hidden>
+        </nav>
+      </UnlockAccess>
     </div>
   );
   //   }
 }
-
-export default withRouter(AppBarComponent);
+const mapStateToProps = (state) => ({
+  statetitle: state.title,
+});
+const mapDispacthToProps = (dispatch) => {
+  return {
+    dispatch,
+  };
+};
+export default connect(
+  mapStateToProps,
+  mapDispacthToProps
+)(withRouter(AppBarComponent));
+// export default withRouter(AppBarComponent);

@@ -108,7 +108,6 @@ function Customers(props) {
   const handleChangeCustomerInputs = (e) => {
     const { name, value } = e.target;
     setInputs((inputs) => ({ ...inputs, [name]: value }));
-    console.log(inputs);
   };
 
   const saveCustomer = (event) => {
@@ -151,7 +150,19 @@ function Customers(props) {
     }
   };
 
-  console.log(props.customers.customers["customers"]);
+  const handleSearch = (e) => {
+    console.log("search", e.target.value);
+    props.dispatch({
+      type: "SEARCH_CUSTOMER",
+      payload: {
+        text: e.target.value,
+        displaycustomers: props.customers.customers,
+      },
+    });
+    // props.searchCustomer(e.target.value);
+  };
+
+  console.log("cu", props.customers.customers);
 
   return (
     <div className={classes.root}>
@@ -164,7 +175,6 @@ function Customers(props) {
         >
           <LinkTab label="All" href="/trash" {...a11yProps(1)} />
           <LinkTab label="New" href="/drafts" {...a11yProps(0)} />
-          <LinkTab label="Sms" href="/drafts" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
 
@@ -183,12 +193,15 @@ function Customers(props) {
 
         <Divider />
         <div style={{ padding: 10 }} className={classes.searchinputwrap}>
-          <TextField
-            variant="outlined"
-            fullWidth
-            type="search"
-            placeholder="quick search"
-          />
+          <form>
+            <TextField
+              variant="outlined"
+              fullWidth
+              type="search"
+              onChange={(e) => handleSearch(e)}
+              placeholder="quick search"
+            />
+          </form>
         </div>
         <Tabs
           variant="fullWidth"
@@ -351,7 +364,6 @@ function Customers(props) {
           </div>
         </form>
       </TabPanel>
-      <TabPanel value={value} index={2}></TabPanel>
     </div>
   );
 }

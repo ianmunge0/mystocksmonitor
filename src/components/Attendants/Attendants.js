@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import M from "materialize-css/dist/js/materialize.min.js";
 import { getAttendants, addAttendant } from "../../Redux/Actions/Attendants";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -13,6 +12,8 @@ import Box from "@material-ui/core/Box";
 import Api from "../../api/api";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
+import clsx from "clsx";
+import IconButton from "@material-ui/core/IconButton";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -25,6 +26,16 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Icon from "@material-ui/core/Icon";
+import Checkbox from "@material-ui/core/Checkbox";
+
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import Messages from "../Common/Messages";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -111,6 +122,7 @@ function Attendants(props) {
   const [attendant, setAttendant] = useState({
     attendant_name: "",
     attendant_password: "",
+    showPassword: false,
   });
 
   const addAttendant = (e) => {
@@ -152,7 +164,12 @@ function Attendants(props) {
       setRole(newrole);
     }
   };
-
+  const handleClickShowPassword = () => {
+    setAttendant({ ...attendant, showPassword: !attendant.showPassword });
+  };
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
   return (
     <div className={classes.root}>
       <Loader fullPage loading={props.attendants.loading} />
@@ -170,16 +187,15 @@ function Attendants(props) {
       <TabPanel value={value} index={0}>
         {props.attendants.attendants.length > 0 ? (
           props.attendants.attendants.map((value, index) => (
-            <List
-              className={classes.root}
-              key={index}
-              onClick={() => {
-                props.history.push({
-                  pathname: `/attendantsprofile/${value.serialno}`,
-                });
-              }}
-            >
-              <ListItem alignItems="flex-start">
+            <List className={classes.root} key={index}>
+              <ListItem
+                onClick={() => {
+                  props.history.push({
+                    pathname: `/attendantsprofile/${value.serialno}`,
+                  });
+                }}
+                alignItems="flex-start"
+              >
                 <ListItemAvatar>
                   <Avatar
                     alt={value.username}
@@ -187,23 +203,10 @@ function Attendants(props) {
                   />
                 </ListItemAvatar>
                 <ListItemText
-                  primary={value.username}
-                  secondary={
-                    <React.Fragment>
-                      <Typography
-                        component="span"
-                        variant="body2"
-                        className={classes.inline}
-                        color="textPrimary"
-                      >
-                        Roles:{" "}
-                        {value.roles.map((v, i) => (
-                          <span key={i}>{v.name.split("_").join(" ")}</span>
-                        ))}
-                      </Typography>
-                      {/* {value.roles} */}
-                    </React.Fragment>
+                  primary={
+                    <Typography variant="h5">{value.username}</Typography>
                   }
+                  secondary={<Typography>ID: {value.attendant_id}</Typography>}
                 />
               </ListItem>
               <Divider variant="inset" component="li" />
@@ -220,8 +223,8 @@ function Attendants(props) {
           autoComplete="off"
           style={{ margin: 10 }}
         >
-          <Grid container spacing={3}>
-            <Grid item xs>
+          <Grid container>
+            <Grid item xs={12}>
               <TextField
                 className={classes.inputs}
                 id="attendant_name"
@@ -230,17 +233,54 @@ function Attendants(props) {
                 variant="outlined"
               />
             </Grid>
-            <Grid item xs>
-              <TextField
-                className={classes.inputs}
-                id="attendant_password"
-                label="Password"
-                onChange={handleAttendantData}
-                variant="outlined"
-              />
+            <Grid item xs={12} style={{ marginTop: 20 }}>
+              <FormControl className={clsx(classes.margin, classes.inputs)}>
+                <InputLabel htmlFor="standard-adornment-password">
+                  Password
+                </InputLabel>
+                <Input
+                  id="attendant_password"
+                  type={attendant.showPassword ? "text" : "password"}
+                  onChange={handleAttendantData}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                      >
+                        {attendant.showPassword ? (
+                          <Visibility />
+                        ) : (
+                          <VisibilityOff />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
             </Grid>
           </Grid>
-          <div style={{ marginTop: 10, marginBottom: 10 }}>
+          <div className="col s12">
+            <h5 style={{ marginTop: 30, marginBottom: 20 }}>Roles</h5>
+            <Divider />
+            <Grid container>
+              {roles.map((value, key) => (
+                <Grid item xs={4} key={key}>
+                  <Checkbox
+                    id={value.id}
+                    name={value.name}
+                    defaultChecked={value.checked}
+                    onChange={(e) => setCheckedRole(value.id, e)}
+                    inputProps={{ "aria-label": "primary checkbox" }}
+                  />
+
+                  <span>{value.name.split("_").join(" ").toUpperCase()}</span>
+                </Grid>
+              ))}
+            </Grid>
+          </div>
+          {/* <div style={{ marginTop: 10, marginBottom: 10 }}>
             <div style={{ marginTop: 10, marginBottom: 10 }}>Select A Role</div>
             {roles.map((value, key) => (
               <label className="col s6" key={key}>
@@ -255,15 +295,11 @@ function Attendants(props) {
                 <span>{value.name.split("_").join(" ")}</span>
               </label>
             ))}
-          </div>
+          </div> */}
 
           <div className="row">
-            <div className="col s12">
-              <span className="red-text">{error}</span>
-            </div>
-            <p className="red-text" style={{ marginLeft: 20 }}>
-              {props.attendants.addingerror}
-            </p>
+            <Messages text={error} type="error" />
+            <Messages text={error} type="error" />
             <Button
               variant="contained"
               color="primary"

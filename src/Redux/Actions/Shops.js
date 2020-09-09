@@ -16,9 +16,16 @@ export const addShop = (shop, props) => {
       loading: true,
     });
     shop.action = "add";
-    console.log("Adding", shop);
+    //check if its an attendant with role ADD_SHOP and change shop admin to attendant admin
+    if (reactLocalStorage.get("user_type") === "admin") {
+      shop.adminserial_key = reactLocalStorage.getObject("userdata").serialno;
+    } else {
+      shop.user_type = "attendant";
+      shop.adminserial_key = reactLocalStorage.getObject(
+        "userdata"
+      ).adminserial_key;
+    }
 
-    shop.adminserial_key = reactLocalStorage.getObject("userdata").serialno;
     Api.get(`/shops.php`, {
       params: shop,
     })
@@ -26,23 +33,32 @@ export const addShop = (shop, props) => {
         const shops = res.data;
         console.log("ADDED SHOP", shops);
 
-        if (
-          shop.id === reactLocalStorage.getObject("userdata").default_shop ||
-          reactLocalStorage.getObject("userdata").default_shop == ""
-        ) {
-          var initialdata = reactLocalStorage.getObject("userdata");
-          initialdata.default_shop =
-            shops.shops[shops.shops.length - 1]["serialno"];
-          initialdata.currentshop = shops.shops[shops.shops.length - 1];
-          reactLocalStorage.setObject("userdata", initialdata);
+        console.log("shop ", shop);
+        console.log(
+          "default_shop ",
+          reactLocalStorage.getObject("userdata").default_shop
+        );
+        //check if its an attendant with role ADD_SHOP
+        if (reactLocalStorage.get("user_type") === "admin") {
+          if (reactLocalStorage.getObject("userdata").default_shop === "") {
+            var initialdata = reactLocalStorage.getObject("userdata");
+            initialdata.default_shop =
+              shops.shops[shops.shops.length - 1]["serialno"];
+            initialdata.currentshop = shops.shops[shops.shops.length - 1];
+            reactLocalStorage.setObject("userdata", initialdata);
+            reactLocalStorage.setObject(
+              "currentshop",
+              shops.shops[shops.shops.length - 1]
+            );
+          }
+          reactLocalStorage.setObject("shops", shops.shops);
         }
-        reactLocalStorage.setObject("shops", shops.shops);
+
         dispatch({
           type: ADDED_SHOP,
           shops,
         });
         window.location = "/dashboard";
-        // props.history.push("/dashboard");
       })
       .catch((error) => {
         // your error handling goes here}
@@ -55,39 +71,36 @@ export const getShops = (id) => {
   return (dispatch) => {
     console.log("getting shops ");
 
-    console.log({
-      id: reactLocalStorage.getObject("userdata").serialno,
-      action: "all",
-    });
-
     dispatch({
       type: LOADING,
       loading: true,
     });
 
+    var admin_id = reactLocalStorage.getObject("userdata").serialno;
     if (reactLocalStorage.getObject("userdata").serialno) {
-      Api.get(`/shops.php`, {
-        params: {
-          id: reactLocalStorage.getObject("userdata").serialno,
-          action: "all",
-        },
-      })
-        .then((res) => {
-          const shops = res.data;
-          console.log("getShops", shops);
-
-          dispatch({
-            type: GET_SHOPS,
-            shops,
-          });
-        })
-        .catch((error) => {
-          // your error handling goes here}
-          console.log("error", error);
-        });
+      if (reactLocalStorage.get("user_type") === "attendant") {
+        admin_id = reactLocalStorage.getObject("userdata").adminserial_key;
+      }
     } else {
       window.location = "/login/admin";
     }
+    Api.get(`/shops.php`, {
+      params: {
+        id: admin_id,
+        action: "all",
+      },
+    })
+      .then((res) => {
+        const shops = res.data;
+
+        dispatch({
+          type: GET_SHOPS,
+          shops,
+        });
+      })
+      .catch((error) => {
+        // console.log("error", error);
+      });
   };
 };
 
@@ -107,6 +120,28 @@ export const deleteShop = (id) => {
     })
       .then((res) => {
         const shop = res.data;
+        //check if the deleted shop is the same as the currenct shop
+        // if (reactLocalStorage.get("user_type") === "admin") {
+        if (id === reactLocalStorage.getObject("userdata").default_shop) {
+          var initialdata = reactLocalStorage.getObject("userdata");
+          var prevShops = reactLocalStorage.getObject("shops");
+          if (prevShops.length > 0) {
+            initialdata.default_shop = prevShops[0].serialno;
+            initialdata.currentshop = prevShops[0];
+          } else {
+            initialdata.default_shop = "";
+            initialdata.currentshop = "";
+            reactLocalStorage.setObject("currentshop", "");
+          }
+          reactLocalStorage.setObject("userdata", initialdata);
+          if (reactLocalStorage.getObject("userdata").default_shop == "") {
+            reactLocalStorage.setObject("currentshop", prevShops[0]);
+          }
+        }
+        // reactLocalStorage.setObject("shops", shops.shops);
+        // }
+        // if (id === reactLocalStorage.getObject("userdata").default_shop) {
+        // }
         console.log("delete shop actions ", shop);
 
         dispatch({
@@ -196,8 +231,8 @@ export const setDeafultShop = (shopid, props) => {
       .then((res) => {
         const response = res.data;
         console.log("setDeafultShop actions ", response);
+        reactLocalStorage.setObject("currentshop", response.currentshop);
         var data = reactLocalStorage.getObject("userdata");
-        data.currentshop = response.currentshop;
         data.default_shop = response.currentshop.serialno;
         reactLocalStorage.setObject("userdata", data);
         dispatch({

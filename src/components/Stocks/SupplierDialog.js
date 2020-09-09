@@ -25,7 +25,7 @@ import {
   saveSupplier,
   getSuppliers,
   deleteSupplier,
-} from "../../Redux/Actions/Stock";
+} from "../../Redux/Actions/Suppliers";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -44,23 +44,8 @@ function SupplierDialog(props) {
   const [selectedsupplier, setSelectedSuppliers] = useState({});
   const [chipData, setChipData] = useState([]);
 
-  const [openalert, setOpenAlert] = React.useState(false);
-
-  const handleAlertClickOpen = () => {
-    setOpenAlert(true);
-  };
-
-  const handleAlertClose = () => {
-    setOpenAlert(false);
-  };
-
   useEffect(() => {
-    // console.log({
-    //   action: "all",
-    //   shopid: reactLocalStorage.getObject("userdata").default_shop,
-    // });
-    // setLoading(true);
-    props.getSuppliers();
+    props.getSuppliers("get");
   }, []);
   const classes = useStyles();
 
@@ -114,7 +99,7 @@ function SupplierDialog(props) {
             <CloseIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            Select a Supplier
+            Select / Add a Supplier
           </Typography>
         </Toolbar>
       </AppBar>
@@ -155,10 +140,9 @@ function SupplierDialog(props) {
         <Typography style={{ color: "red" }}>{error}</Typography>
         <Grid style={{ margin: 10 }}>
           <Grid item xs={12}>
-            <label>Name</label>
             <TextField
               fullWidth
-              placeholder="Customer Name"
+              placeholder="Name"
               id="outlined-basic"
               onChange={handleChange}
               name="name"
@@ -166,7 +150,6 @@ function SupplierDialog(props) {
             />
           </Grid>
           <Grid item xs={12} style={{ marginTop: 10 }}>
-            <label>Phone Number</label>
             <TextField
               fullWidth
               placeholder="Phone Number"
@@ -195,14 +178,14 @@ function SupplierDialog(props) {
 }
 
 const mapStateToProps = (state) => ({
-  waiting: state.stock,
-  suppliers: state.stock.suppliers,
+  waiting: state.suppliers,
+  suppliers: state.suppliers.suppliers,
 });
 
 const mapDispacthToProps = (dispatch) => {
   return {
     saveSupplier: (supplier, event) => dispatch(saveSupplier(supplier, event)),
-    getSuppliers: () => dispatch(getSuppliers()),
+    getSuppliers: (action) => dispatch(getSuppliers(action)),
     deleteSupplier: (data) => dispatch(deleteSupplier(data)),
   };
 };

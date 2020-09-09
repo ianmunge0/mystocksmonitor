@@ -52,8 +52,11 @@ export const countries = () => {
 export const login = (email, password, type) => {
   return (dispatch) => {
     dispatch({
-      type: LOADING,
+      type: "LOGIN_LOADING",
+      loading: true,
     });
+
+    console.log({ attendant_id: email, password, type });
 
     if (type === "attendant") {
       Api.get(`/login.php`, {
@@ -62,13 +65,18 @@ export const login = (email, password, type) => {
         .then((res) => {
           console.log(res.data);
 
-          const userdata = res.data;
+          dispatch({
+            type: "LOGIN_LOADING",
+            loading: false,
+          });
 
+          const userdata = res.data;
           if (userdata.status) {
             console.log("saving to localstorage login", res.data);
             reactLocalStorage.setObject("userdata", userdata);
             reactLocalStorage.set("loggedin", true);
             reactLocalStorage.set("user_type", type);
+            reactLocalStorage.setObject("roles", userdata.role);
           }
           dispatch({
             type: LOG_IN,
@@ -90,14 +98,22 @@ export const login = (email, password, type) => {
         .then((res) => {
           console.log(res.data);
 
+          dispatch({
+            type: LOADING,
+            loading: false,
+          });
+
           const userdata = res.data;
           console.log("userdata", userdata);
 
           if (userdata.status) {
             console.log("saving to localstorage login", res.data);
             reactLocalStorage.setObject("userdata", userdata.profile);
+            reactLocalStorage.setObject("currentshop", userdata.currentshop);
             reactLocalStorage.setObject("shops", userdata.shops);
             reactLocalStorage.setObject("countries", userdata.countries);
+            reactLocalStorage.setObject("roles", userdata.roles);
+
             reactLocalStorage.set("loggedin", true);
             reactLocalStorage.set("user_type", type);
           }
@@ -133,17 +149,6 @@ export const register = (
   type
 ) => {
   return (dispatch) => {
-    console.log("Register dispatch");
-
-    console.log({
-      usertypesignupkey: "admin",
-      emailaddresssignupkey: email,
-      phonenosignupkey: phone,
-      countrysignupkey: country,
-      country_code: country_code,
-      passwordsignupkey: password,
-    });
-
     dispatch({
       type: LOADING,
       loading: true,

@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Loader } from "react-overlay-loader";
 import "react-overlay-loader/styles.css";
-import { reactLocalStorage } from "reactjs-localstorage";
 
 function NewShop(props) {
   useEffect(() => {
@@ -35,6 +34,7 @@ function NewShop(props) {
     console.log(shop);
   };
 
+  console.log("loading", props);
   return (
     <div>
       <div className="container">

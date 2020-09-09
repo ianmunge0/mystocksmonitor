@@ -206,18 +206,22 @@ function Register(props) {
               />
             )}
           />
+
           <TextField
             variant="outlined"
             margin="normal"
             required
-            onChange={handleChange}
-            className={classes.customfieldinput}
-            value={password}
             fullWidth
-            id="password"
+            value={password}
+            onChange={handleChange}
             name="password"
             label="password"
+            type="password"
+            id="password"
+            className={classes.customfieldinput}
             autoFocus
+            id="password"
+            autoComplete="current-password"
           />
           <Button
             type="submit"

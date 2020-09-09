@@ -109,7 +109,7 @@ function UnitDialog(props) {
             <CloseIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            Select a Unit
+            Select / Add a Unit
           </Typography>
         </Toolbar>
       </AppBar>

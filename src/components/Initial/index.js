@@ -35,10 +35,14 @@ const useStyles = makeStyles((theme) => ({
 function Initial(props) {
   console.log("index", reactLocalStorage.get("loggedin"));
   if (auth.isAuthenticated()) {
-    if (reactLocalStorage.getObject("shops").length > 0) {
-      props.history.push("/dashboard");
+    if (reactLocalStorage.getObject("user_type") === "attendant") {
+      props.history.push("/user");
     } else {
-      props.history.push("/initialshopspage");
+      if (reactLocalStorage.getObject("shops").length > 0) {
+        props.history.push("/dashboard");
+      } else {
+        props.history.push("/initialshopspage");
+      }
     }
   }
   const classes = useStyles();

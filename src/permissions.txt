@@ -1,0 +1,21 @@
+array(
+    ADD_SHOP => "user can add shop", - DONE
+    SHOPS_MANAGER => "user can add shop,delete shop",
+
+    ADD_STOCK => "user can add new stock",
+    STOCK_MANAGER => "can view, count, stocks",
+
+    ADD_EXPENSES => "add expenses"
+    EXPENSES_MANAGER => "can view expense"
+    DELETE_SALES => "user can delete sales"
+    ADD_SALES => "user can add sales"
+    ATTENDANT_ROLE => 'for all attendants'
+
+
+    STOCK_IN => "user can add new stock qty",
+    STOCK_REPORT => "user can view stock reports",
+    SALES_MANAGER => "can view sales reports, product sales, product analysis, view receipts"
+    PROFIT_EXPENSES_MANAGER => "can view profit and expenses"
+    CASH_FLOW => "can view cashflows"
+
+)
