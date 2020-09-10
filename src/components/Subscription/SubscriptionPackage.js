@@ -21,6 +21,8 @@ const useStyles1 = makeStyles((theme) => ({
 
 function SubscriptionPackage(props) {
     const classes1 = useStyles1();
+    const {packageitem} = props;
+    console.log("SubscriptionPackage ",packageitem);
     return (
         <div>
             <Paper className={classes1.paper}>
@@ -30,12 +32,12 @@ function SubscriptionPackage(props) {
                 <Grid item xs container direction="column">
                     <Grid item xs>
                     <Typography gutterBottom variant="subtitle1">
-                        90 days
+                        {packageitem.plan}
                     </Typography>
                     </Grid>
                 </Grid>
                 <Grid item>
-                    <Typography variant="subtitle1">KES. 1350</Typography>
+    <Typography variant="subtitle1">{packageitem.price}</Typography>
                 </Grid>
                 </Grid>
             </Grid>

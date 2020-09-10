@@ -7,24 +7,25 @@ import { reactLocalStorage } from "reactjs-localstorage";
 export const getSubscriptions = () => {
     return (dispatch) => {
       
-      // Api.get(`/subscribe.php`, {
-      //   params: {
-      //     adminemailorphonekey: reactLocalStorage.getObject("userdata").phoneno,
-      //     subscriptions: "true",
-      //   },
-      // })
-      //   .then((res) => {
-      //     const subscriptions = res.data;
-      //     console.log("getAttendants", subscriptions);
+  console.log("getSubscriptions");
+      Api.get(`/subscribe.php`, {
+        params: {
+          adminemailorphonekey: reactLocalStorage.getObject("userdata").phoneno,
+          subscriptions: "true",
+        },
+      })
+        .then((res) => {
+          const subscriptions = res.data;
+          console.log("ggetSubscription", subscriptions);
   
-      //     dispatch({
-      //       type: GET_SUBSCRIPTIONS,
-      //       subscriptions,
-      //     });
-      //   })
-      //   .catch((error) => {
-      //     // your error handling goes here}
-      //     console.log("subscerror", error);
-      //   });
+          dispatch({
+            type: GET_SUBSCRIPTIONS,
+            subscriptions,
+          });
+        })
+        .catch((error) => {
+          // your error handling goes here}
+          console.log("subscerror", error);
+        });
     };
 };

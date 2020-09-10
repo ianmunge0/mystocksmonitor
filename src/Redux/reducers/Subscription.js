@@ -1,7 +1,8 @@
 import { GET_SUBSCRIPTIONS } from "../Actions/actions";
 
 const initialState = {
-    subscriptions: "",
+    subscriptions: [],
+    loading:true
 };
 
 const getAllSubscriptions = (state = initialState, action) =>{
@@ -9,7 +10,8 @@ const getAllSubscriptions = (state = initialState, action) =>{
         case GET_SUBSCRIPTIONS:
             return{
                 ...state,
-                subscriptions: action.subscriptions
+                subscriptions: action.subscriptions,
+                loading:false
             };
         default:
             return{
