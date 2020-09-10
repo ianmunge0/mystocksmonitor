@@ -1,5 +1,5 @@
 import {
-    GET_SUBSCRIPTIONS, LOADING
+    GET_SUBSCRIPTIONS, LOADING, GET_CURRENT_SUBSCRIPTION
   } from "./actions";
 import Api from "../../api/api";
 import { reactLocalStorage } from "reactjs-localstorage";
@@ -10,8 +10,8 @@ export const getSubscriptions = () => {
   console.log("getSubscriptions");
       Api.get(`/subscribe.php`, {
         params: {
-          adminemailorphonekey: reactLocalStorage.getObject("userdata").phoneno,
           subscriptions: "true",
+          action:"allpackages"
         },
       })
         .then((res) => {
@@ -28,4 +28,30 @@ export const getSubscriptions = () => {
           console.log("subscerror", error);
         });
     };
+};
+
+export const getCurrentSubscription = () => {
+  return (dispatch) => {
+    
+    Api.get(`/subscribe.php`, {
+      params: {
+          admin_key: reactLocalStorage.getObject("userdata").serialno,
+        currentsubsckey: "true",
+        action:"current_subs"
+      },
+    })
+      .then((res) => {
+        const currentsubscription = res.data;
+        console.log("currentSubsc", currentsubscription);
+
+        dispatch({
+          type: GET_CURRENT_SUBSCRIPTION,
+          currentsubscription,
+        });
+      })
+      .catch((error) => {
+        // your error handling goes here}
+        console.log("currsubscerr", error);
+      });
+  };
 };

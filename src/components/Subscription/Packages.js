@@ -13,7 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import SubscriptionPackage from './SubscriptionPackage';
 import { connect } from "react-redux";
-import { getSubscriptions } from "../../Redux/Actions/Subscription";
+import { getSubscriptions, getCurrentSubscription } from "../../Redux/Actions/Subscription";
 
 const useStyles = makeStyles((theme) => ({
    paper: {
@@ -38,15 +38,17 @@ const useStyles = makeStyles((theme) => ({
 
  }));
 
-function Subscription(props) {
+function Packages(props) {
    const classes = useStyles();
    const classes1 = useStyles1();
 
    useEffect(() => {
     props.getSubscriptions();
+    props.getCurrentSubscription();
    }, [])
 
    console.log("subscriptions", props.subscription.subscriptions);
+   console.log("cUrrsubscriptions", props.currentsubscription);
    if(!props.subscription.subscriptions){
      return <>Loading....</>
    }
@@ -66,7 +68,7 @@ function Subscription(props) {
       <Container>
           {
             props.subscription.subscriptions.map((v,k) =>{
-                return <SubscriptionPackage packageitem={v} key={k}/>;
+               return props.currentsubscription && <SubscriptionPackage current={props.currentsubscription} packageitem={v} key={k}/>;
             })
           }
         
@@ -78,12 +80,14 @@ function Subscription(props) {
 }
 
 const mapStateToProps = (state) => ({
-  subscription: state.subscription
+  subscription: state.subscription,
+  currentsubscription: state.subscription.currentsubscription
 });
 
 const mapDispacthToProps = (dispatch) => {
   return {
-    getSubscriptions: () => dispatch(getSubscriptions())
+    getSubscriptions: () => dispatch(getSubscriptions()),
+    getCurrentSubscription: () => dispatch(getCurrentSubscription()),
   };
 };
-export default connect(mapStateToProps, mapDispacthToProps)(Subscription);
+export default connect(mapStateToProps, mapDispacthToProps)(Packages);

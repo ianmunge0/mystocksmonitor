@@ -14,42 +14,67 @@ import ButtonBase from '@material-ui/core/ButtonBase';
 import SubscriptionPackage from './SubscriptionPackage';
 import { connect } from "react-redux";
 import { getSubscriptions } from "../../Redux/Actions/Subscription";
+import Button from '@material-ui/core/Button';
+import { Link } from 'react-router-dom';
+
+ const useStyles2 = makeStyles((theme) => ({
+  margin: {
+    margin: theme.spacing(1),
+  },
+  extendedIcon: {
+    marginRight: theme.spacing(1),
+  },
+}));
+
+const useStyles1 = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    padding: theme.spacing(2),
+    margin: 'auto'
+  },
+  image: {
+     width: 128,
+     height: 128
+  },
+
+}));
 
 const useStyles = makeStyles((theme) => ({
-   paper: {
-     padding: theme.spacing(2),
-     textAlign: 'center',
-     color: theme.palette.text.secondary,
-   },
- }));
-
- const useStyles1 = makeStyles((theme) => ({
-   root: {
-     flexGrow: 1,
-   },
-   paper: {
-     padding: theme.spacing(2),
-     margin: 'auto'
-   },
-   image: {
-      width: 128,
-      height: 128
-   },
-
- }));
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    padding: theme.spacing(2),
+    margin: 'auto',
+  },
+  image: {
+    width: 128,
+    height: 128,
+  },
+  img: {
+    margin: 'auto',
+    display: 'block',
+    maxWidth: '100%',
+    maxHeight: '100%',
+  },
+}));
 
 function Subscription(props) {
-   const classes = useStyles();
+  
+   const classes2 = useStyles2();
    const classes1 = useStyles1();
+   const classes = useStyles();
 
    useEffect(() => {
     props.getSubscriptions();
    }, [])
 
    console.log("subscriptions", props.subscription.subscriptions);
-   if(!props.subscription.subscriptions){
-     return <>Loading....</>
-   }
+  //  if(!props.subscription.subscriptions){
+  //    return <>Loading....</>
+  //  }
   return (
     <React.Fragment>
       
@@ -64,11 +89,48 @@ function Subscription(props) {
       </Grid>
       
       <Container>
-          {
-            props.subscription.subscriptions.map((v,k) =>{
-                return <SubscriptionPackage packageitem={v} key={k}/>;
-            })
-          }
+
+
+      <Paper className={classes.paper}>
+        <Grid container spacing={2}>
+          <Grid item>
+            
+          </Grid>
+          <Grid item xs={12} sm container>
+            <Grid item xs container direction="column" spacing={2}>
+              <Grid item xs>
+                <Typography gutterBottom variant="subtitle1">
+                  Standard license
+                </Typography>
+                <Typography variant="body2" gutterBottom>
+                  Full resolution 1920x1080 • JPEG
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  ID: 1030114
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="body2" style={{ cursor: 'pointer' }}>
+                  Remove
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid item>
+              <Typography variant="subtitle1">$19.00</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Paper>
+
+
+            <br/>
+            <Grid item xs={12} justify="center">
+            <Button component={ Link } to="/subscriptionpackages" variant="outlined" size="large" color="primary" className={classes2.margin} >
+          Extend Usage
+          </Button>
+            </Grid>
+          
+          
         
       </Container>
     </React.Fragment>

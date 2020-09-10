@@ -1,7 +1,8 @@
-import { GET_SUBSCRIPTIONS } from "../Actions/actions";
+import { GET_SUBSCRIPTIONS, GET_CURRENT_SUBSCRIPTION } from "../Actions/actions";
 
 const initialState = {
     subscriptions: [],
+    currentsubscription: [],
     loading:true
 };
 
@@ -11,6 +12,12 @@ const getAllSubscriptions = (state = initialState, action) =>{
             return{
                 ...state,
                 subscriptions: action.subscriptions,
+                loading:false
+            };
+        case GET_CURRENT_SUBSCRIPTION:
+            return{
+                ...state,
+                currentsubscription: action.currentsubscription,
                 loading:false
             };
         default:
