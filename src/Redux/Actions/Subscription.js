@@ -56,20 +56,27 @@ export const getCurrentSubscription = () => {
   };
 };
 
-export const makeSubscription = (plan, price) => {
+export const makeSubscription = (plan) => {
   return (dispatch) => {
+
+    console.log('ssss',{
+      admin_key: reactLocalStorage.getObject("userdata").serialno,
+      plankey: plan,
+      action:"subscribe",
+    });
     
     Api.get(`/subscribe.php`, {
       params: {
-        adminemailorphonekey: reactLocalStorage.getObject("userdata").phoneno,
+        admin_key: reactLocalStorage.getObject("userdata").serialno,
         plankey: plan,
         action:"subscribe",
-        amountpaidkey: price
       },
     })
       .then((res) => {
         const madesubscription = res.data;
         console.log("madeSubsc", madesubscription);
+        reactLocalStorage.setObject("currentpackage", madesubscription);
+        
 
         dispatch({
           type: MAKE_SUBSCRIPTION,

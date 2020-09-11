@@ -58,11 +58,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function handleClick(props, plan, price){
-  console.log("subsc clicked", props);
-  console.log("subsc clicked", plan);
-  console.log("subsc clicked", price);
-  props.makeSubscription_(plan, price);
+function handleClick(props, plan){
+  props.makeSubscription_(plan);
 }
 
 function PaymentOptions(props) {
@@ -136,7 +133,7 @@ function PaymentOptions(props) {
         </Grid>
         <br/>
         <Grid container direction="row" justify="flex-start" alignItems="center" >
-            <Button variant="contained" size="large" color="primary" onClick={() => handleClick(props, packagename.plan, packagename.price)}>COMPLETE</Button>
+            <Button variant="contained" size="large" color="primary" onClick={() => handleClick(props, packagename.serialno)}>COMPLETE</Button>
         </Grid>
         
     
@@ -157,7 +154,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispacthToProps = (dispatch) => {
   return {
-    makeSubscription_: (plan, price) => dispatch(makeSubscription(plan, price))
+    makeSubscription_: (plan) => dispatch(makeSubscription(plan))
   };
 };
 export default connect(mapStateToProps, mapDispacthToProps)(PaymentOptions);

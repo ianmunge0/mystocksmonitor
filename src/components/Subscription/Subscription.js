@@ -16,7 +16,9 @@ import { connect } from "react-redux";
 import { getSubscriptions } from "../../Redux/Actions/Subscription";
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
+import { reactLocalStorage } from 'reactjs-localstorage';
 
+import moment from "moment";
  const useStyles2 = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(1),
@@ -48,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2),
     margin: 'auto',
+    maxWidth: 850
   },
   image: {
     width: 128,
@@ -61,6 +64,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function setDate(params) {
+  var by1000 = params * 1000;
+  var dateTime = new Date(by1000);
+ 
+  return  moment(dateTime.toISOString()).format(
+    "YYYY-MMM-DD HH:mm:ss"
+  );
+}
+
 function Subscription(props) {
   
    const classes2 = useStyles2();
@@ -72,9 +84,9 @@ function Subscription(props) {
    }, [])
 
    console.log("subscriptions", props.subscription.subscriptions);
-  //  if(!props.subscription.subscriptions){
-  //    return <>Loading....</>
-  //  }
+   if(!props.subscription.subscriptions){
+     return <>Loading....</>
+   }
   return (
     <React.Fragment>
       
@@ -100,9 +112,11 @@ function Subscription(props) {
             <Grid item xs container direction="column" spacing={2}>
               <Grid item xs>
                 <Typography gutterBottom variant="subtitle1">
-                  30 days plan
+                  <strong>{reactLocalStorage.getObject("currentpackage").plan} plan is active</strong>
                 </Typography>
                 <Typography variant="body2" gutterBottom>
+                  Ending on {setDate(reactLocalStorage.getObject("currentpackage").endson)}
+                  
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
                 </Typography>
@@ -113,7 +127,7 @@ function Subscription(props) {
               </Grid>
             </Grid>
             <Grid item>
-              <Typography variant="subtitle1">KES 200</Typography>
+              <Typography variant="subtitle1"></Typography>
             </Grid>
           </Grid>
         </Grid>
@@ -121,10 +135,10 @@ function Subscription(props) {
 
 
             <br/>
-            <Grid item xs={12} justify="center">
-            <Button component={ Link } to="/subscriptionpackages" variant="outlined" size="large" color="primary" className={classes2.margin} >
-          Extend Usage
-          </Button>
+            <Grid container xs={12} direction="row" justify="center" alignItems="center">
+              <Button component={ Link } to="/subscriptionpackages" variant="outlined" size="large" color="primary" className={classes2.margin} >
+                Extend Usage
+              </Button>
             </Grid>
           
           
