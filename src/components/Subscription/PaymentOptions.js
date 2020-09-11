@@ -14,6 +14,8 @@ import Button from '@material-ui/core/Button';
 import Switch from '@material-ui/core/Switch';
 import {Link} from 'react-router-dom';
 import { reactLocalStorage } from 'reactjs-localstorage';
+import { connect } from "react-redux";
+import { makeSubscription } from "../../Redux/Actions/Subscription";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -56,11 +58,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function handleClick(){
-  console.log("subsc clicked");
+function handleClick(props, plan, price){
+  console.log("subsc clicked", props);
+  console.log("subsc clicked", plan);
+  console.log("subsc clicked", price);
+  props.makeSubscription_(plan, price);
 }
 
-export default function PaymentOptions(props) {
+function PaymentOptions(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
@@ -77,7 +82,7 @@ export default function PaymentOptions(props) {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
   var packagename = props.location.state.data;
-console.log("clicked package", props.location.state.data);
+  console.log("clicked package", props.location.state.data);
   return (
     <div className={classes.root}>
       <AppBar position="static" color="default">
@@ -103,11 +108,11 @@ console.log("clicked package", props.location.state.data);
   <label>Amount: </label><h5>{packagename.price}</h5>
         </Grid>
         <Grid
-  container
-  direction="row"
-  justify="flex-end"
-  alignItems="center"
-><Button onClick={()=>props.history.push({pathname:"/subscriptionpackages"})}><h5>Change</h5></Button></Grid>
+    container
+    direction="row"
+    justify="flex-end"
+    alignItems="center"
+  ><Button onClick={()=>props.history.push({pathname:"/subscriptionpackages"})}><h5>Change</h5></Button></Grid>
         
         <Grid container direction="row" justify="flex-start" alignItems="center">
             <PhoneIcon/>
@@ -131,7 +136,7 @@ console.log("clicked package", props.location.state.data);
         </Grid>
         <br/>
         <Grid container direction="row" justify="flex-start" alignItems="center" >
-            <Button variant="contained" size="large" color="primary" onClick={handleClick}>COMPLETE</Button>
+            <Button variant="contained" size="large" color="primary" onClick={() => handleClick(props, packagename.plan, packagename.price)}>COMPLETE</Button>
         </Grid>
         
     
@@ -145,3 +150,14 @@ console.log("clicked package", props.location.state.data);
     </div>
   );
 }
+
+const mapStateToProps = (state) => ({
+  //subscription: state.subscription
+});
+
+const mapDispacthToProps = (dispatch) => {
+  return {
+    makeSubscription_: (plan, price) => dispatch(makeSubscription(plan, price))
+  };
+};
+export default connect(mapStateToProps, mapDispacthToProps)(PaymentOptions);

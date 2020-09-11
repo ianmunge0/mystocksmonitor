@@ -1,5 +1,5 @@
 import {
-    GET_SUBSCRIPTIONS, LOADING, GET_CURRENT_SUBSCRIPTION
+    GET_SUBSCRIPTIONS, LOADING, GET_CURRENT_SUBSCRIPTION, MAKE_SUBSCRIPTION
   } from "./actions";
 import Api from "../../api/api";
 import { reactLocalStorage } from "reactjs-localstorage";
@@ -52,6 +52,33 @@ export const getCurrentSubscription = () => {
       .catch((error) => {
         // your error handling goes here}
         console.log("currsubscerr", error);
+      });
+  };
+};
+
+export const makeSubscription = (plan, price) => {
+  return (dispatch) => {
+    
+    Api.get(`/subscribe.php`, {
+      params: {
+        adminemailorphonekey: reactLocalStorage.getObject("userdata").phoneno,
+        plankey: plan,
+        action:"subscribe",
+        amountpaidkey: price
+      },
+    })
+      .then((res) => {
+        const madesubscription = res.data;
+        console.log("madeSubsc", madesubscription);
+
+        dispatch({
+          type: MAKE_SUBSCRIPTION,
+          madesubscription,
+        });
+      })
+      .catch((error) => {
+        // your error handling goes here}
+        console.log("madesubscerr", error);
       });
   };
 };
