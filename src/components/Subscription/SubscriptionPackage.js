@@ -33,7 +33,7 @@ function SubscriptionPackage(props) {
     return (
         <div>
             <Paper className={[classes1.paper,current.serialno === packageitem.serialno && classes1.active]} onClick={()=>{
-                props.history.push({pathname:"paymentoptions"})
+                props.history.push({pathname:"paymentoptions", state:{data:packageitem}})
             }}>
             <Grid container spacing={2}>
                 

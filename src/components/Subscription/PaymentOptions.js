@@ -13,6 +13,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from '@material-ui/core/Button';
 import Switch from '@material-ui/core/Switch';
 import {Link} from 'react-router-dom';
+import { reactLocalStorage } from 'reactjs-localstorage';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -55,9 +56,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function handleClick(){
+  console.log("subsc clicked");
+}
 
-
-export default function PaymentOptions() {
+export default function PaymentOptions(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
@@ -73,7 +76,8 @@ export default function PaymentOptions() {
   const handleChangeSwitch = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
-
+  var packagename = props.location.state.data;
+console.log("clicked package", props.location.state.data);
   return (
     <div className={classes.root}>
       <AppBar position="static" color="default">
@@ -92,12 +96,25 @@ export default function PaymentOptions() {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
+        <Grid container direction="row" justify="flex-start" alignItems="center">
+  <label>Plan: </label><h5>{packagename.plan}</h5>
+        </Grid>
+        <Grid container direction="row" justify="flex-start" alignItems="center">
+  <label>Amount: </label><h5>{packagename.price}</h5>
+        </Grid>
+        <Grid
+  container
+  direction="row"
+  justify="flex-end"
+  alignItems="center"
+><Button onClick={()=>props.history.push({pathname:"/subscriptionpackages"})}><h5>Change</h5></Button></Grid>
         
         <Grid container direction="row" justify="flex-start" alignItems="center">
             <PhoneIcon/>
             <TextField
             id="phoneno"
             label="Phone No"
+            defaultValue={reactLocalStorage.getObject("userdata").phoneno}
             variant="outlined"
             />
         </Grid>
@@ -114,7 +131,7 @@ export default function PaymentOptions() {
         </Grid>
         <br/>
         <Grid container direction="row" justify="flex-start" alignItems="center" >
-            <Button variant="contained" size="large" color="primary" >COMPLETE</Button>
+            <Button variant="contained" size="large" color="primary" onClick={handleClick}>COMPLETE</Button>
         </Grid>
         
     
