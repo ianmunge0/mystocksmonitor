@@ -1,6 +1,7 @@
 import { PROFIT, TOTAL_SALES, TOTAL_PURCHASES, TOTAL_EXPENSES, TOTAL_BAD_STOCK } from "./actions";
 import axios from 'axios';
-import Api from '../../api/api'
+import Api from '../../api/api';
+import { reactLocalStorage } from "reactjs-localstorage";
 
 export const getCashAtHand = (cashathandcreds) => {
     return (dispatch) => {
@@ -10,12 +11,12 @@ export const getCashAtHand = (cashathandcreds) => {
         
         Api.get(`/profitandexpense.php`,{
             params: {
-                adminemailorphonekey: "0700111222",
-                currentshopkey: "ashop",
+                adminemailorphonekey: reactLocalStorage.getObject("userdata").phoneno,
+                currentshopkey: reactLocalStorage.getObject("currentshop").shopname,
                 pecategkey: "timerangedefined",
                 startdate: unixstarttime,
                 enddate: unixendtime,
-                shopidcashathandkey: "1"
+                shopidcashathandkey: reactLocalStorage.getObject("currentshop").serialno
             }
         })
         .then((res) => {
