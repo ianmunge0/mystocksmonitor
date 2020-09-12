@@ -58,8 +58,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function handleClick(props, plan){
-  props.makeSubscription_(plan);
+function handleClick(props, plan, state){
+  
+  if (state.checkedB) {
+    props.makeSubscription_(plan);
+  }
+  else{
+    alert("You need to accept terms and conditions")
+  }
+  
 }
 
 function PaymentOptions(props) {
@@ -71,7 +78,6 @@ function PaymentOptions(props) {
   };
 
   const [state, setState] = React.useState({
-    checkedA: true,
     checkedB: true,
   });
 
@@ -133,7 +139,7 @@ function PaymentOptions(props) {
         </Grid>
         <br/>
         <Grid container direction="row" justify="flex-start" alignItems="center" >
-            <Button variant="contained" size="large" color="primary" onClick={() => handleClick(props, packagename.serialno)}>COMPLETE</Button>
+            <Button variant="contained" size="large" color="primary" onClick={() => handleClick(props, packagename.serialno, state)}>COMPLETE</Button>
         </Grid>
         
     
