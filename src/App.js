@@ -312,7 +312,6 @@ function App(props) {
             roles={["STOCK_IN"]}
             component={StockIn}
           />
-          <Route exact basename="/" component={DefaultPage} />
           //SUBSCRIPTIONS ROUTE
           <ProtectedRoute
             roles={["ADMIN_ROLE"]}
@@ -332,7 +331,8 @@ function App(props) {
             path="/paymentoptions"
             component={PaymentOptions}
           />
-          <Route exact path="/" component={DefaultPage} />
+          <Route exact basename="/" component={DefaultPage} />
+          
         </Switch>
       </>
     </React.Fragment>
