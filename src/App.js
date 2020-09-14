@@ -4,7 +4,7 @@ import "./App.css";
 import { connect } from "react-redux";
 import { logout } from "./Redux/Actions";
 
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Router } from "react-router-dom";
 import EditStock from "./components/Stock/EditStock";
 import Dashboard from "./components/Dashboard";
 import StockInManager from "./components/StockInManager";
@@ -52,6 +52,9 @@ import ExpesensesList from "./components/CashSales/ExpesensesList";
 import StockIn from "./components/Stocks/StockIn";
 import NetworkDetector from "./components/Common/NetworkDetector";
 
+import Subscription from "./components/Subscription/Subscription";
+import Packages from "./components/Subscription/Packages";
+import PaymentOptions from "./components/Subscription/PaymentOptions";
 function App(props) {
   return (
     <React.Fragment>
@@ -310,6 +313,26 @@ function App(props) {
             component={StockIn}
           />
           <Route exact basename="/" component={DefaultPage} />
+          //SUBSCRIPTIONS ROUTE
+          <ProtectedRoute
+            roles={["ADMIN_ROLE"]}
+            title="Subscriptions"
+            path="/subscriptions"
+            component={Subscription}
+          />
+          <ProtectedRoute
+            roles={["ADMIN_ROLE"]}
+            title="Packages"
+            path="/subscriptionpackages"
+            component={Packages}
+          />
+          <ProtectedRoute
+            roles={["ADMIN_ROLE"]}
+            title="Payment Options"
+            path="/paymentoptions"
+            component={PaymentOptions}
+          />
+          <Route exact path="/" component={DefaultPage} />
         </Switch>
       </>
     </React.Fragment>

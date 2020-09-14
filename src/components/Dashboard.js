@@ -166,16 +166,16 @@ function Dashboard(props) {
           />
         </Grid>
       </UnlockAccess>
-      {/* <UnlockAccess request={["ADMIN_ROLE"]}>
+      <UnlockAccess request={["ADMIN_ROLE"]}>
         <Grid item xs={12}>
           <Item
             description="manage your subscription for better experience"
             title="Subscriptions"
             icon="subscriptions"
-            route="/"
+            route="/subscriptions"
           />
         </Grid>
-      </UnlockAccess> */}
+      </UnlockAccess>
       <UnlockAccess request={[]}>
         <Snackbar
           onClick={handleClickOpen}

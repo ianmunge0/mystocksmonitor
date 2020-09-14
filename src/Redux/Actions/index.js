@@ -110,6 +110,7 @@ export const login = (email, password, type) => {
             console.log("saving to localstorage login", res.data);
             reactLocalStorage.setObject("userdata", userdata.profile);
             reactLocalStorage.setObject("currentshop", userdata.currentshop);
+            reactLocalStorage.setObject("currentpackage", userdata.currpackage);
             reactLocalStorage.setObject("shops", userdata.shops);
             reactLocalStorage.setObject("countries", userdata.countries);
             reactLocalStorage.setObject("roles", userdata.roles);
