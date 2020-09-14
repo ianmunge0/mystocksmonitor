@@ -73,6 +73,13 @@ function setDate(params) {
   );
 }
 
+function remainingDays(endson_){
+  var currtime = Math.floor(Date.now() / 1000);
+  var remtime = endson_ - currtime;
+  var remdays = remtime / 86400;
+  return Math.trunc(remdays);
+}
+
 function Subscription(props) {
   
    const classes2 = useStyles2();
@@ -123,6 +130,7 @@ function Subscription(props) {
               </Grid>
               <Grid item>
                 <Typography variant="body2" style={{ cursor: 'pointer' }}>
+  {remainingDays(reactLocalStorage.getObject("currentpackage").endson)} days remaining
                 </Typography>
               </Grid>
             </Grid>
