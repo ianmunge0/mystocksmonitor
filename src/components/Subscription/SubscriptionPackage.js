@@ -21,8 +21,7 @@ const useStyles1 = makeStyles((theme) => ({
        height: 128
     },
     active:{
-        backgroundColor:'lightgreen',
-        color: 'white',
+        backgroundColor:'#00ff00',
     }
  
 }));
@@ -94,7 +93,7 @@ function SubscriptionPackage(props) {
                     </Grid>
                     <Grid item direction="row" justify="flex-end" alignItems="center">
                         <Button component={ Link } to="/subscriptionpackages" variant="outlined" size="large" color="primary" className={classes2.margin} >
-                            Select
+                            Upgrade
                         </Button>
                     </Grid>
                 </Grid>

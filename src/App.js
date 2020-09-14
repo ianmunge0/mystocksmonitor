@@ -55,6 +55,7 @@ import NetworkDetector from "./components/Common/NetworkDetector";
 import Subscription from "./components/Subscription/Subscription";
 import Packages from "./components/Subscription/Packages";
 import PaymentOptions from "./components/Subscription/PaymentOptions";
+import { reactLocalStorage } from "reactjs-localstorage";
 function App(props) {
   return (
     <React.Fragment>
@@ -70,7 +71,7 @@ function App(props) {
             title="All Shops"
             backlink="dashboard"
             path="/shops"
-            component={Shops}
+            component={reactLocalStorage.getObject("currentpackage").ifexpired ? Dashboard : Shops}
           />
           <ProtectedRoute
             roles={["SHOPS_MANAGER"]}
@@ -84,7 +85,7 @@ function App(props) {
             roles={["SALES_MANAGER"]}
             title="Sales"
             settings="sales"
-            component={SalesManager}
+            component={reactLocalStorage.getObject("currentpackage").ifexpired ? Dashboard : SalesManager}
           />
           <ProtectedRoute
             title="Sales Receipts"
@@ -166,7 +167,7 @@ function App(props) {
             roles={["STOCK_REPORT_MANAGER"]}
             path="/stockinmanager"
             settings="stockin" //this is if you want to have a button at the app bar
-            component={StockInManager}
+            component={reactLocalStorage.getObject("currentpackage").ifexpired ? Dashboard : StockInManager}
           />
           <ProtectedRoute
             title="Stock Setup"
@@ -206,7 +207,7 @@ function App(props) {
             title="Profit "
             roles={["PROFIT_EXPENSES_MANAGER"]}
             settings="profitnexpenses"
-            component={ProfitExpensesManager}
+            component={reactLocalStorage.getObject("currentpackage").ifexpired ? Dashboard : ProfitExpensesManager}
           />
           <ProtectedRoute
             title="Attendants"
@@ -286,7 +287,7 @@ function App(props) {
             title="Cash Flow"
             path="/cashflow"
             roles={["CASH_FLOW"]}
-            component={Singlecashflow}
+            component={reactLocalStorage.getObject("currentpackage").ifexpired ? Dashboard : Singlecashflow}
           />
           <ProtectedRoute
             title="Counts History"
