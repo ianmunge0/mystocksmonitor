@@ -40,7 +40,7 @@ const AuthenticationReducer = (state = initialState, action) => {
         userdata: action.userdata,
         loggedin: action.userdata.status,
         message: action.userdata.status === false ? action.userdata.msg : "",
-        loading: false,
+        loginloading: false,
       };
     case REG:
       console.log("REG", state);

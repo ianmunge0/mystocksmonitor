@@ -188,6 +188,7 @@ function StockIn(props) {
   };
 
   const handleCloseSupplier = () => {
+    console.log("handleCloseSupplier");
     setOpenSupplier(false);
   };
 
@@ -195,7 +196,7 @@ function StockIn(props) {
     supplier_name: "",
   });
 
-  const getSupplier = (supplier) => {
+  const getSetSupplier = (supplier) => {
     console.log("set ", supplier);
     setSupplier(supplier);
   };
@@ -227,6 +228,14 @@ function StockIn(props) {
   console.log("bbb ", props.stocks.stocks);
   return (
     <>
+      {opensupplier && (
+        <SupplierDialog
+          fullScreen
+          getSetSupplier={getSetSupplier}
+          opensupplier={opensupplier}
+          handleCloseSupplier={handleCloseSupplier}
+        />
+      )}
       {props.stocks && (
         <SalesDialog
           fullScreen
@@ -365,14 +374,6 @@ function StockIn(props) {
                 />
                 <span>Credit</span>
               </label>
-              {opensupplier && (
-                <SupplierDialog
-                  fullScreen
-                  getSupplier={getSupplier}
-                  open={opensupplier}
-                  handleClose={handleCloseSupplier}
-                />
-              )}
             </Grid>
             <Grid align="center" item xs={3}>
               <label>
@@ -398,10 +399,7 @@ function StockIn(props) {
                 // changePrice={changePrice}
                 setCurrentItem={setCurrentItem}
                 handleOpenOptionPriceDialog={handleOpenOptionPriceDialog}
-                opensupplier={opensupplier}
-                getSupplier={getSupplier}
                 handleClose={handleClose}
-                handleCloseSupplier={handleCloseSupplier}
                 key={index}
               />
             ))

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import {
   makeStyles,
@@ -28,6 +28,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Badge from "@material-ui/core/Badge";
 import { reactLocalStorage } from "reactjs-localstorage";
 import auth from "../auth";
+import { SERVER_URL } from "../Common/Variables";
 
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
@@ -38,6 +39,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import { UnlockAccess } from "../Common/UnlockAccess";
 
+import { Offline, Online, Detector } from "react-detect-offline";
+import Snackbar from "@material-ui/core/Snackbar";
 import { grantPermission } from "../Common/GrantPermission";
 const drawerWidth = 240;
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -183,10 +186,44 @@ function AppBarComponent(props) {
       });
     }
   };
+  const [offlineopen, setOfflineOpen] = useState(true);
 
+  const handleClickOpenOffline = () => {
+    setOfflineOpen(true);
+  };
+
+  const handleCloseOffline = () => {
+    setOfflineOpen(false);
+  };
+
+  const check = (v) => {
+    console.log("vv ", v);
+  };
+
+  console.log("vvvvv", props);
   const drawer = (
     <div>
       <div className={classes.toolbar} />
+      {/* <Detector render={({ online }) => check(online)} />
+      <Offline
+        onChange={() => {
+          console.log("changed conne");
+        }}
+      >
+        <Snackbar
+          onClick={handleCloseOffline}
+          open={true}
+          // autoHideDuration={6000}
+          message="Your on an offline mode"
+          action={
+            <Button onClick={handleCloseOffline} color="inherit" size="small">
+              Okay
+            </Button>
+          }
+          className={classes.snackbar}
+        />
+      </Offline> */}
+
       <Grid
         container
         spacing={0}
@@ -203,11 +240,7 @@ function AppBarComponent(props) {
           }}
           variant="dot"
         >
-          <Avatar
-            alt="Remy Sharp"
-            className={classes.large}
-            src="/static/images/avatar/1.jpg"
-          />
+          <Avatar alt="Remy Sharp" className={classes.large} src="" />
         </StyledBadge>
         <h5>{reactLocalStorage.getObject("userdata").username}</h5>
       </Grid>

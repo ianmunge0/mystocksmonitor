@@ -9,6 +9,14 @@ export const getSalesReceipts = (fromtimeStamp, totimeStamp, type) => {
       type: LOADING,
       loading: true,
     });
+    console.log("receipts", {
+      fromtimeStamp: moment(fromtimeStamp).format("YYYY-MM-DD hh:mm:ss"),
+      totimeStamp: moment(totimeStamp).format("YYYY-MM-DD hh:mm:ss"),
+      shop: reactLocalStorage.getObject("userdata").default_shop,
+      userid: reactLocalStorage.getObject("userdata").serialno,
+      action: "getsales",
+      type,
+    });
 
     Api.get(`/sales.php`, {
       params: {
@@ -22,7 +30,11 @@ export const getSalesReceipts = (fromtimeStamp, totimeStamp, type) => {
     })
       .then((res) => {
         const receipts = res.data;
-        console.log("getSales", receipts);
+        console.log("all getSales", receipts);
+
+        navigator.serviceWorker.controller.postMessage({
+          savereceipts: receipts,
+        });
 
         dispatch({
           type: GET_RECEIPTS,
@@ -30,6 +42,10 @@ export const getSalesReceipts = (fromtimeStamp, totimeStamp, type) => {
         });
       })
       .catch((error) => {
+        dispatch({
+          type: "LOADING",
+          loading: false,
+        });
         // your error handling goes here}
         console.log("error", error);
       });
@@ -45,12 +61,10 @@ export const deleteReceipt = (receiptno, props) => {
       type: "LOADING",
     });
 
-    Api.get(`/sales.php`, {
-      params: {
-        receiptno,
-        shopid: reactLocalStorage.getObject("userdata").default_shop,
-        action: "delete_customer_receipt",
-      },
+    Api.post(`/sales.php`, {
+      receiptno,
+      shopid: reactLocalStorage.getObject("userdata").default_shop,
+      action: "delete_customer_receipt",
     })
       .then((res) => {
         const receiptpayments = res.data;

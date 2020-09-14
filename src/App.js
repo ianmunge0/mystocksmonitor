@@ -50,6 +50,8 @@ import Index from "./components/Users/Index";
 import BadStock from "./components/CashSales/BadStock";
 import ExpesensesList from "./components/CashSales/ExpesensesList";
 import StockIn from "./components/Stocks/StockIn";
+import NetworkDetector from "./components/Common/NetworkDetector";
+
 function App(props) {
   return (
     <React.Fragment>
@@ -323,6 +325,9 @@ const mapDispacthToProps = (dispatch) => {
     logout: () => dispatch(logout()),
   };
 };
-export default connect(mapStateToProps, mapDispacthToProps)(App);
+export default connect(
+  mapStateToProps,
+  mapDispacthToProps
+)(NetworkDetector(App));
 
 // export default App;

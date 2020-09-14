@@ -143,11 +143,7 @@ function CustomerProfile(props) {
         }}
       >
         <Grid item xs={3} align="center">
-          <Avatar
-            alt="Remy Sharp"
-            src="/static/images/avatar/1.jpg"
-            className={classes.large}
-          />
+          <Avatar alt="Remy Sharp" src="" className={classes.large} />
         </Grid>
         <Grid item xs={6}>
           <Typography>
@@ -196,10 +192,7 @@ function CustomerProfile(props) {
               >
                 <ListItem alignItems="flex-start">
                   <ListItemAvatar>
-                    <Avatar
-                      alt={value.name}
-                      src="/static/images/avatar/1.jpg"
-                    />
+                    <Avatar alt={value.name} src="" />
                   </ListItemAvatar>
                   <ListItemText
                     primary={value.name}
@@ -265,10 +258,7 @@ function CustomerProfile(props) {
               >
                 <ListItem alignItems="flex-start">
                   <ListItemAvatar>
-                    <Avatar
-                      alt={value.name}
-                      src="/static/images/avatar/1.jpg"
-                    />
+                    <Avatar alt={value.name} src="" />
                   </ListItemAvatar>
                   <ListItemText
                     primary={value.name}
@@ -331,7 +321,7 @@ function CustomerProfile(props) {
             >
               <ListItem alignItems="flex-start">
                 <ListItemAvatar>
-                  <Avatar alt={value.name} src="/static/images/avatar/1.jpg" />
+                  <Avatar alt={value.name} src="" />
                 </ListItemAvatar>
                 <ListItemText
                   primary={value.name}

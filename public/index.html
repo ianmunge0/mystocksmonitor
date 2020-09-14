@@ -61,6 +61,21 @@
             .catch(function (err) {
               console.log(err);
             });
+
+          //register a sync to check if user is online or offline
+          navigator.serviceWorker.ready
+            .then(function (registration) {
+              console.log("Service Worker Ready");
+              return registration.sync.register("onlinestate");
+            })
+            .then(function () {
+              console.log("sync event registered");
+            })
+            .catch(function () {
+              // system was unable to register for a sync,
+              // this could be an OS-level restriction
+              console.log("sync registration failed");
+            });
         });
       } else {
         console.log("Service Worker is not supported by browser.");

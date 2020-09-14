@@ -398,17 +398,7 @@ function NewCashSale(props) {
         <div className={classes.root}>
           <Typography variant="h5" align="center" style={{ margin: 10 }}>
             Total:
-            {props.sales.sales.length > 0
-              ? props.sales.sales.map(
-                  (item) =>
-                    item.quantity *
-                    parseInt(
-                      item.salessellingprice
-                        ? item.salessellingprice
-                        : item.sellingprice
-                    )
-                )
-              : 0}
+            {props.sales.total}
             /=
           </Typography>
           <Grid container spacing={3}>
@@ -535,7 +525,7 @@ function NewCashSale(props) {
                       <CancelIcon
                         onClick={() =>
                           props.dispatch({
-                            type: "REMOVE_ITEM",
+                            type: "REMOVE_SALE_ITEM",
                             sales: value,
                           })
                         }
@@ -560,46 +550,6 @@ function NewCashSale(props) {
                           setCurrentItem(value);
                           handleOpenQtyDialog();
                         }}
-                        // startAdornment={
-                        //   <InputAdornment position="start">
-                        //     <RemoveCircleIcon
-                        //       aria-label="toggle password visibility"
-                        //       onClick={() =>
-                        //         props.dispatch({
-                        //           type: "REMOVE_QTY",
-                        //           sales: value,
-                        //         })
-                        //       }
-                        //       edge="end"
-                        //     >
-                        //       {values.showPassword ? (
-                        //         <Visibility />
-                        //       ) : (
-                        //         <VisibilityOff />
-                        //       )}
-                        //     </RemoveCircleIcon>
-                        //   </InputAdornment>
-                        // }
-                        // endAdornment={
-                        //   <InputAdornment position="end">
-                        //     <AddCircleIcon
-                        //       aria-label="toggle password visibility"
-                        //       onClick={() =>
-                        //         props.dispatch({
-                        //           type: "ADD_QTY",
-                        //           sales: value,
-                        //         })
-                        //       }
-                        //       edge="end"
-                        //     >
-                        //       {values.showPassword ? (
-                        //         <Visibility />
-                        //       ) : (
-                        //         <VisibilityOff />
-                        //       )}
-                        //     </AddCircleIcon>
-                        //   </InputAdornment>
-                        // }
                         labelWidth={70}
                       />
                     </FormControl>

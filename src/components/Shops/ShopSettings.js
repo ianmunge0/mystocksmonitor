@@ -11,6 +11,13 @@ import Api from "../../api/api";
 import { reactLocalStorage } from "reactjs-localstorage";
 import { Divider } from "@material-ui/core";
 import Checkbox from "@material-ui/core/Checkbox";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Slide from "@material-ui/core/Slide";
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function ShopSettings(props) {
   useEffect(() => {
@@ -18,7 +25,7 @@ function ShopSettings(props) {
   }, []);
 
   const [loading, setLoading] = useState(false);
-  const [shop, setShop] = useState({});
+  const [shop, setShop] = useState({ shopname: "" });
 
   const getShop = (id) => {
     console.log({
@@ -123,10 +130,6 @@ function ShopSettings(props) {
   const handleChange = (event) => {
     setChecked(event.target.checked);
   };
-  // const [shop, setShop] = useState({
-  //   shopname: "",
-  //   password: "",
-  // });
   const handleShopData = (e) => {
     setShop({
       ...shop,
@@ -136,60 +139,75 @@ function ShopSettings(props) {
   };
   console.log("settings", shop);
 
-  return (
-    <form className="col s12" onSubmit={updateShop} style={{ margin: 10 }}>
-      <Loader fullPage loading={loading} />
-      <p className="red-text">{error}</p>
-      <p style={{ padding: 0, margin: 0 }}>Shop name</p>
-      <TextField
-        variant="outlined"
-        margin="normal"
-        required
-        fullWidth
-        value={shop.shopname}
-        onChange={handleShopData}
-        name="shopname"
-        type="text"
-        id="shopname"
-      />
-      <p style={{ padding: 0, margin: 0 }}>Branch</p>
-      <TextField
-        variant="outlined"
-        margin="normal"
-        required
-        fullWidth
-        value={shop.region}
-        onChange={handleShopData}
-        name="region"
-        type="text"
-        id="region"
-      />
-      <p style={{ padding: 0, margin: 0 }}>Type</p>
-      <TextField
-        variant="outlined"
-        margin="normal"
-        required
-        fullWidth
-        value={shop.shoptype}
-        onChange={handleShopData}
-        name="shoptype"
-        type="text"
-        id="shoptype"
-      />
-      <h5>Settings</h5>
-      <Divider />
-      <h6 style={{ margin: 0, padding: 0 }}>
-        Send Backup{" "}
-        <Checkbox
-          checked={checked}
-          onChange={handleChange}
-          inputProps={{ "aria-label": "primary checkbox" }}
-        />
-      </h6>
+  const [open, setOpen] = useState(false);
 
-      {/* <div className="input-field custominpt col s12"> */}
-      <div>Backup email</div>
-      {/* <input
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (action) => {
+    setOpen(false);
+    if (action === "delete") {
+      deleteShop(props.match.params.id);
+    }
+  };
+
+  return (
+    <>
+      <Loader fullPage loading={loading} />
+      {shop.shopname != "" && (
+        <form className="col s12" onSubmit={updateShop} style={{ margin: 10 }}>
+          <p className="red-text">{error}</p>
+          <p style={{ padding: 0, margin: 0 }}>Shop name</p>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            defaultValue={shop.shopname}
+            onChange={handleShopData}
+            name="shopname"
+            type="text"
+            id="shopname"
+          />
+          <p style={{ padding: 0, margin: 0 }}>Branch</p>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            defaultValue={shop.region}
+            onChange={handleShopData}
+            name="region"
+            type="text"
+            id="region"
+          />
+          <p style={{ padding: 0, margin: 0 }}>Type</p>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            defaultValue={shop.shoptype}
+            onChange={handleShopData}
+            name="shoptype"
+            type="text"
+            id="shoptype"
+          />
+          <h5>Settings</h5>
+          <Divider />
+          <h6 style={{ margin: 0, padding: 0 }}>
+            Send Backup{" "}
+            <Checkbox
+              checked={checked}
+              onChange={handleChange}
+              inputProps={{ "aria-label": "primary checkbox" }}
+            />
+          </h6>
+
+          {/* <div className="input-field custominpt col s12"> */}
+          <div>Backup email</div>
+          {/* <input
           id="shoptype"
           type="text"
           placeholder="shoptype"
@@ -198,45 +216,67 @@ function ShopSettings(props) {
           className="validate"
         /> */}
 
-      <TextField
-        variant="outlined"
-        margin="normal"
-        required
-        fullWidth
-        value={shop.emailaddress}
-        onChange={handleShopData}
-        name="email"
-        type="text"
-        id="email"
-      />
-      {/* </div> */}
-      <Link
-        to="!#"
-        fullWidth
-        style={{
-          padding: 15,
-          color: "red",
-          textDecoration: "none",
-          textAlign: "center",
-          fontSize: 17,
-        }}
-        onClick={() => {
-          deleteShop(props.match.params.id);
-        }}
-      >
-        Delete Shop
-      </Link>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            value={shop.emailaddress}
+            onChange={handleShopData}
+            name="email"
+            type="text"
+            id="email"
+          />
+          {/* </div> */}
+          <Button
+            style={{
+              padding: 15,
+              color: "red",
+              textDecoration: "none",
+              textAlign: "center",
+              fontSize: 17,
+            }}
+            onClick={() => {
+              handleClickOpen();
+            }}
+          >
+            Delete Shop
+          </Button>
 
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        color="primary"
-        style={{ padding: 15, marginTop: 20 }}
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            style={{ padding: 15, marginTop: 20 }}
+          >
+            Update
+          </Button>
+        </form>
+      )}
+
+      <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
       >
-        Update
-      </Button>
-    </form>
+        <DialogTitle id="alert-dialog-slide-title">
+          {"Are you sure you want to delete your shop?"}
+        </DialogTitle>
+
+        <DialogActions>
+          <Button onClick={() => handleClose("close")} color="primary">
+            Not Yet
+          </Button>
+          <Button onClick={() => handleClose("delete")} color="primary">
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
 

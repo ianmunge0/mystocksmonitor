@@ -229,10 +229,7 @@ function Customers(props) {
                 >
                   <ListItem alignItems="flex-start">
                     <ListItemAvatar>
-                      <Avatar
-                        alt={value.name}
-                        src="/static/images/avatar/1.jpg"
-                      />
+                      <Avatar alt={value.name} src="" />
                     </ListItemAvatar>
                     <ListItemText
                       primary={value.name}
@@ -279,10 +276,7 @@ function Customers(props) {
                 >
                   <ListItem alignItems="flex-start">
                     <ListItemAvatar>
-                      <Avatar
-                        alt={value.name}
-                        src="/static/images/avatar/1.jpg"
-                      />
+                      <Avatar alt={value.name} src="" />
                     </ListItemAvatar>
                     <ListItemText
                       primary={value.name}

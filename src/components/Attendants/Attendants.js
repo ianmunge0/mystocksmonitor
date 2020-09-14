@@ -197,10 +197,7 @@ function Attendants(props) {
                 alignItems="flex-start"
               >
                 <ListItemAvatar>
-                  <Avatar
-                    alt={value.username}
-                    src="/static/images/avatar/1.jpg"
-                  />
+                  <Avatar alt={value.username} src="" />
                 </ListItemAvatar>
                 <ListItemText
                   primary={

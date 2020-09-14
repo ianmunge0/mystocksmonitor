@@ -108,7 +108,7 @@ function SalesDialog(props) {
       onClose={props.handleClose}
       TransitionComponent={Transition}
     >
-      <Loader fullPage loading={props.stockresponse.loading} />
+      {/* <Loader fullPage loading={props.stockresponse.loading} /> */}
       <AppBar className={classes.appBar}>
         <Toolbar>
           <IconButton

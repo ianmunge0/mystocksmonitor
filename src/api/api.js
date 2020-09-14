@@ -1,7 +1,7 @@
 import axios from "axios";
-
+import { SERVER_URL } from "../components/Common/Variables";
 const instance = axios.create({
-  baseURL: "https://remotepaywallet.com/public/stockapi",
+  baseURL: SERVER_URL,
 });
 
 // axios.defaults.headers.post["Content-Type"] = "application/json";

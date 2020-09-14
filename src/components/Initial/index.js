@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 function Initial(props) {
-  console.log("index", reactLocalStorage.get("loggedin"));
+  console.log("index", auth.isAuthenticated());
   if (auth.isAuthenticated()) {
     if (reactLocalStorage.getObject("user_type") === "attendant") {
       props.history.push("/user");
@@ -41,7 +41,7 @@ function Initial(props) {
       if (reactLocalStorage.getObject("shops").length == 0) {
         props.history.push("initialshopspage");
       } else {
-        // props.history.push("/dashboard");
+        props.history.push("/dashboard");
       }
     }
   }

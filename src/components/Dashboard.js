@@ -8,6 +8,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import { UnlockAccess } from "./Common/UnlockAccess";
+
 const useStyles = makeStyles((theme) => ({
   "@global": {
     body: {
@@ -36,6 +37,14 @@ function Dashboard(props) {
   };
   return (
     <Grid container>
+      {/* <Detector
+        render={({ online }) => (
+          <div className={online ? "normal" : "warning"}>
+            You are currently {online ? "online" : "offline"}
+          </div>
+        )}
+      /> */}
+
       <UnlockAccess request={["ADMIN_ROLE"]}>
         <Grid item xs={12} style={{ marginLeft: 10, marginRight: 10 }}>
           <Button
@@ -96,7 +105,6 @@ function Dashboard(props) {
           />
         </Grid>
       </UnlockAccess>
-
       <UnlockAccess request={["ATTENDANT_ROLE"]}>
         <Grid item xs={12}>
           <Item

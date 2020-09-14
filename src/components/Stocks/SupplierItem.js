@@ -33,7 +33,7 @@ function SupplierItem(props) {
     >
       <ListItem alignItems="flex-start">
         <ListItemAvatar>
-          <Avatar alt={invoiceid} src="/static/images/avatar/1.jpg" />
+          <Avatar alt={invoiceid} src="" />
         </ListItemAvatar>
         <ListItemText
           primary={"Invoice No#" + invoiceid}

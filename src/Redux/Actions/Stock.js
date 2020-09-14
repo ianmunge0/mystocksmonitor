@@ -222,12 +222,22 @@ export const getStock = () => {
     })
       .then((res) => {
         console.log("getStock", res.data);
+
+        //save stocks to index db
+        navigator.serviceWorker.controller.postMessage({
+          stocks: res.data,
+        });
+
         dispatch({
           type: GET_STOCK,
           stocks: res.data,
         });
       })
       .catch((error) => {
+        dispatch({
+          type: LOADING,
+          loading: false,
+        });
         // your error handling goes here}
         console.log("error", error);
       });

@@ -1,0 +1,5 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target" : { "namespace": "android_app", "package_name": "com.mystocksmonitor.twa",
+                   "sha256_cert_fingerprints": ["45:BC:7F:A1:A8:AC:19:6A:19:D3:1B:50:4B:44:7B:A9:D7:81:F5:84:43:CF:5F:D1:6F:78:77:EB:A1:6C:25:5A"] }
+    }]

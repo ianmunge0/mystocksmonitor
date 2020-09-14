@@ -177,11 +177,7 @@ function SupplierProfile(props) {
         }}
       >
         <Grid item xs={3} align="center">
-          <Avatar
-            alt="Remy Sharp"
-            src="/static/images/avatar/1.jpg"
-            className={classes.large}
-          />
+          <Avatar alt="Remy Sharp" src="" className={classes.large} />
         </Grid>
         <Grid item xs={6}>
           <Typography>

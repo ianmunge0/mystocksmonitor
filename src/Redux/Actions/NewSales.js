@@ -2,6 +2,7 @@ import { LOADING, GET_RECEIPTS, ADD_SALES } from "./actions";
 import Api from "../../api/api";
 import { reactLocalStorage } from "reactjs-localstorage";
 import moment from "moment";
+import axios from "axios";
 
 export const addSales = (item, props) => {
   return (dispatch) => {
@@ -20,54 +21,38 @@ export const addSales = (item, props) => {
 };
 
 export const saveSales = (sales, customer, type) => {
+  var attendant_key = "";
+  if (reactLocalStorage.get("user_type") === "attendant") {
+    attendant_key = reactLocalStorage.getObject("userdata").serialno;
+  }
+  var dd = new Date().getTime();
+  var para = {
+    sales,
+    customer_id: customer ? customer.serialno : 0,
+    attendant_key,
+    type: reactLocalStorage.get("user_type"),
+    shop: reactLocalStorage.getObject("userdata").default_shop,
+    initialamount: customer ? customer.amount : 0,
+    oncredit_due_date: customer ? customer.duedate : "",
+    action: "save",
+    saletype: type,
+    date_time: moment(dd).format("YYYY-MM-DD hh:mm:ss"),
+  };
+
   return (dispatch) => {
     console.log("sales", sales);
-    var dd = new Date().getTime();
     dispatch({
       type: LOADING,
       loading: true,
     });
-    var attendant_key = "";
-    if (reactLocalStorage.get("user_type") === "attendant") {
-      attendant_key = reactLocalStorage.getObject("userdata").serialno;
-    }
-    console.log("save sale", {
-      sales,
-      customer_id: customer ? customer.serialno : 0,
-      attendant_key,
-      type: reactLocalStorage.get("user_type"),
-      shop: reactLocalStorage.getObject("userdata").default_shop,
-      initialamount: customer ? customer.amount : 0,
-      oncredit_due_date: customer ? customer.duedate : "",
-      action: "save",
-      saletype: type,
-      date_time: moment(dd).format("YYYY-MM-DD hh:mm:ss"),
-    });
-    Api.get(`/sales.php`, {
-      params: {
-        sales,
-        customer_id: customer ? customer.serialno : 0,
-        attendant_key,
-        type: reactLocalStorage.get("user_type"),
-        shop: reactLocalStorage.getObject("userdata").default_shop,
-        initialamount: customer ? customer.amount : 0,
-        oncredit_due_date: customer ? customer.duedate : "",
-        action: "save",
-        saletype: type,
-        date_time: moment(dd).format("YYYY-MM-DD hh:mm:ss"),
-      },
-    })
+    Api.post(`/sales.php`, para)
       .then((res) => {
         const response = res.data;
         console.log("single", response);
 
-        // //update stock qty after selling
-        // dispatch({
-        //   type: "UPDATE_STOCK",
-        //   solditems: sales,
-        // });
+        //update stock qty after selling
 
-        //clear sales receipt to allow new sale
+        // clear sales receipt to allow new sale
         dispatch({
           type: "CLEAR_SALES_RECEIPT",
         });
@@ -79,6 +64,14 @@ export const saveSales = (sales, customer, type) => {
         });
       })
       .catch((error) => {
+        navigator.serviceWorker.controller.postMessage({
+          newsale: para,
+        });
+        // clear sales receipt to allow new sale
+        dispatch({
+          type: "CLEAR_SALES_RECEIPT",
+        });
+
         // your error handling goes here}
         console.log("error", error);
       });
@@ -95,14 +88,12 @@ export const deleteSaleReceipt = (receiptno, props) => {
       type: "LOADING",
     });
 
-    Api.get(`/sales.php`, {
-      params: {
-        receiptno,
-        shopid: reactLocalStorage.getObject("userdata").default_shop,
-        type: reactLocalStorage.get("user_type"),
-        userid: reactLocalStorage.getObject("userdata").serialno,
-        action: "delete_sale_receipt",
-      },
+    Api.post(`/sales.php`, {
+      receiptno,
+      shopid: reactLocalStorage.getObject("userdata").default_shop,
+      type: reactLocalStorage.get("user_type"),
+      userid: reactLocalStorage.getObject("userdata").serialno,
+      action: "delete_sale_receipt",
     })
       .then((res) => {
         const receiptpayments = res.data;

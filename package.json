@@ -1,6 +1,6 @@
 {
   "name": "pos",
-  "homepage": "https://remotepaywallet.com/public/stockapp2/",
+  "homepage": "https://mystocksmonitor.com/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -25,6 +25,7 @@
     "moment": "^2.27.0",
     "react": "^16.13.1",
     "react-date-range": "^1.0.3",
+    "react-detect-offline": "^2.4.0",
     "react-dom": "^16.13.1",
     "react-materialize": "^3.9.2",
     "react-overlay-loader": "0.0.3",
@@ -35,14 +36,16 @@
     "reactjs-localstorage": "^1.0.1",
     "recharts": "^1.8.5",
     "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "workbox-cli": "^5.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "deploy-production": "react-scripts build && scp -r ./build/* root@159.65.239.9:/var/www/wallet/public/stockapp2",
+    "deploy-production": "react-scripts build && scp -r ./build/* root@mystocksmonitor.com:/var/www/html",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "generate-sw": "workbox wizard"
   },
   "eslintConfig": {
     "extends": "react-app"

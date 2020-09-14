@@ -217,10 +217,7 @@ function Suppliers(props) {
                 >
                   <ListItem alignItems="flex-start">
                     <ListItemAvatar>
-                      <Avatar
-                        alt={value.supplier_name}
-                        src="/static/images/avatar/1.jpg"
-                      />
+                      <Avatar alt={value.supplier_name} src="" />
                     </ListItemAvatar>
                     <ListItemText
                       primary={value.supplier_name}
@@ -267,10 +264,7 @@ function Suppliers(props) {
                 >
                   <ListItem alignItems="flex-start">
                     <ListItemAvatar>
-                      <Avatar
-                        alt={value.supplier_name}
-                        src="/static/images/avatar/1.jpg"
-                      />
+                      <Avatar alt={value.supplier_name} src="" />
                     </ListItemAvatar>
                     <ListItemText
                       primary={value.supplier_name}

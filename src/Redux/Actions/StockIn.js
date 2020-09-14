@@ -5,7 +5,6 @@ import moment from "moment";
 
 export const addStockIn = (item, props) => {
   return (dispatch) => {
-    console.log(item);
     item.quantity = 1;
     item.type = "cash";
     item.total = item.buyingprice;

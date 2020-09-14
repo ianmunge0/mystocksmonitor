@@ -110,7 +110,7 @@ const Sales = (state = initialState, action) => {
             : state.sales[index]
         ),
       };
-    case "REMOVE_ITEM":
+    case "REMOVE_SALE_ITEM":
       var items = state.sales.filter(
         (item) => item.serialno !== action.sales.serialno
       );
@@ -126,15 +126,14 @@ const Sales = (state = initialState, action) => {
       return {
         ...state,
         sales: items,
-        total: items.map(
-          (item) =>
-            item.quantity *
+        total:
+          state.total -
+          action.sales.quantity *
             parseInt(
-              item.salessellingprice
-                ? item.salessellingprice
-                : item.sellingprice
-            )
-        ),
+              action.sales.salessellingprice
+                ? action.sales.salessellingprice
+                : action.sales.sellingprice
+            ),
       };
     case "CHANGE_PRICE":
       console.log("CHANGE_PRICE ");
@@ -167,6 +166,7 @@ const Sales = (state = initialState, action) => {
         (item) => action.sales.serialno === item.serialno
       );
       if (existed_item) {
+        console.log("existed_item", existed_item);
         return {
           ...state,
           sales: state.sales.map((item, index) =>
@@ -184,19 +184,15 @@ const Sales = (state = initialState, action) => {
                 }
               : state.sales[index]
           ),
-          total: state.total + parseInt(price),
+          total: parseInt(state.total) + parseInt(price),
         };
       } else {
+        console.log("not in ", price);
+        console.log("not in two", state.total);
         return {
           ...state,
           sales: [...state.sales, action.sales],
-          total: state.total + parseInt(price),
-          credit: [...state.sales, action.sales].filter(
-            (item) => item.type === "credit"
-          ).length,
-          cash: [...state.sales, action.sales].filter(
-            (item) => item.type === "cash"
-          ).length,
+          total: parseInt(state.total) + parseInt(price),
         };
       }
     default:

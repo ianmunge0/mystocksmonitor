@@ -40,23 +40,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 function SupplierDialog(props) {
-  // const [suppliers, setSuppliers] = useState([]);
-  const [selectedsupplier, setSelectedSuppliers] = useState({});
-  const [chipData, setChipData] = useState([]);
-
   useEffect(() => {
     props.getSuppliers("get");
   }, []);
   const classes = useStyles();
-
-  const [open, setOpen] = React.useState(false);
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const openn = Boolean(anchorEl);
-  function isString(obj) {
-    return Object.prototype.toString.call(obj) === "[object String]";
-  }
-  const selectSupplier = () => {};
 
   const [supplier, setSuppliers] = useState({
     name: "",
@@ -70,7 +57,6 @@ function SupplierDialog(props) {
   };
 
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
   const saveSupplier = (event) => {
     event.preventDefault();
     props.saveSupplier(supplier, event.target);
@@ -83,8 +69,8 @@ function SupplierDialog(props) {
   return (
     <Dialog
       fullScreen
-      open={props.open}
-      onClose={props.handleClose}
+      open={props.opensupplier}
+      // onClose={props.handleCloseSupplier}
       TransitionComponent={Transition}
     >
       <Loader fullPage loading={props.waiting.loading} />
@@ -93,7 +79,7 @@ function SupplierDialog(props) {
           <IconButton
             edge="start"
             color="inherit"
-            onClick={props.handleClose}
+            // onClick={props.handleCloseSupplier}
             aria-label="close"
           >
             <CloseIcon />
@@ -104,7 +90,6 @@ function SupplierDialog(props) {
         </Toolbar>
       </AppBar>
 
-      <Loader fullPage loading={loading} />
       <Paper component="ul" className={classes.root}>
         {props.suppliers
           ? props.suppliers.map((data, key) => {
@@ -120,10 +105,9 @@ function SupplierDialog(props) {
                     className={classes.chip}
                     onDelete={() => handleSupplierDelete(data)}
                     onClick={() => {
-                      setSelectedSuppliers(data);
-                      props.getSupplier(data);
+                      props.getSetSupplier(data);
 
-                      props.handleClose();
+                      props.handleCloseSupplier();
                     }}
                   />
                 </li>

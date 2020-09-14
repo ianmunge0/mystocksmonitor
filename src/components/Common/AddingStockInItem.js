@@ -54,7 +54,7 @@ function StockInProductItem(props, key) {
               onClick={() =>
                 props.dispatch({
                   type: "REMOVE_ITEM",
-                  sales: value,
+                  stocksin: value,
                 })
               }
             />
@@ -79,33 +79,6 @@ function StockInProductItem(props, key) {
                 setCurrentItem(value);
                 handleOpenOptionPriceDialog("qty");
               }}
-              // startAdornment={
-              //   <InputAdornment position="start">
-              //     <RemoveCircleIcon
-              //       onClick={() =>
-              //         props.dispatch({
-              //           type: "REMOVE_QTY",
-              //           stocksin: value,
-              //         })
-              //       }
-              //       edge="end"
-              //     ></RemoveCircleIcon>
-              //   </InputAdornment>
-              // }
-              // endAdornment={
-              //   <InputAdornment position="end">
-              //     <AddCircleIcon
-              //       aria-label="toggle password visibility"
-              //       onClick={() =>
-              //         props.dispatch({
-              //           type: "ADD_QTY",
-              //           stocksin: value,
-              //         })
-              //       }
-              //       edge="end"
-              //     ></AddCircleIcon>
-              //   </InputAdornment>
-              // }
               labelWidth={70}
             />
           </FormControl>

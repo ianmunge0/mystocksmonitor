@@ -30,7 +30,7 @@ const StocksIn = (state = initialState, action) => {
         loading: false,
       };
     case "ADD_STOCKIN":
-      console.log("state.stocksin", state);
+      console.log("ADD_STOCKIN", state);
 
       var price = action.stocksin.stockinbuyingprice
         ? parseInt(action.stocksin.stockinbuyingprice)
@@ -39,6 +39,7 @@ const StocksIn = (state = initialState, action) => {
         (item) => action.stocksin.serialno === item.serialno
       );
       if (existed_item) {
+        console.log("two");
         return {
           ...state,
           stocksin: state.stocksin.map((item, index) =>
@@ -54,13 +55,16 @@ const StocksIn = (state = initialState, action) => {
                 }
               : state.stocksin[index]
           ),
-          total: state.total + price,
+          total: parseInt(state.total) + parseInt(price),
         };
       } else {
+        console.log("one total ", parseInt(state.total) + parseInt(price));
+        console.log("one state total ", state.total);
+        console.log("one price ", price);
         return {
           ...state,
           stocksin: [...state.stocksin, action.stocksin],
-          total: state.total + price,
+          total: parseInt(state.total) + parseInt(price),
         };
       }
     case "CLEAR_STOCKIN":
@@ -130,12 +134,18 @@ const StocksIn = (state = initialState, action) => {
         ),
       };
     case "REMOVE_ITEM":
+      console.log("REMOVE_ITEM ", action.stocksin);
       var items = state.stocksin.filter(
         (item) => item.serialno !== action.stocksin.serialno
       );
+      console.log("REMOVE_ITEM items ", items);
       return {
         ...state,
         stocksin: items,
+        total:
+          state.total -
+          parseInt(action.stocksin.stockinbuyingprice) *
+            parseInt(action.stocksin.quantity),
       };
     case "CHANGE_PRICE":
       return {
