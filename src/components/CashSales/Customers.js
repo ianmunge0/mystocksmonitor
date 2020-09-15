@@ -195,11 +195,12 @@ function Customers(props) {
                     className={classes.chip}
                     onClick={() => {
                       setSelectedCustomers(data);
-                      props.getCustomer(data);
 
+                      console.log("type", props.type);
                       if (props.type === "credit") {
                         handleAlertClickOpen();
                       } else {
+                        props.getCustomer(data);
                         props.handleClose();
                       }
                     }}
@@ -259,6 +260,7 @@ function Customers(props) {
                   placeholder="Due Date"
                   id="outlined-basic"
                   type="date"
+                  defaultValue={new Date().toISOString().substring(0, 10)}
                   name="duedate"
                   onChange={handleChange}
                   variant="outlined"

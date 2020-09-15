@@ -20,6 +20,7 @@ import Slide from "@material-ui/core/Slide";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 import { Grid } from "@material-ui/core";
+import Messages from "../Common/Messages";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -108,7 +109,7 @@ function SalesDialog(props) {
       onClose={props.handleClose}
       TransitionComponent={Transition}
     >
-      {/* <Loader fullPage loading={props.stockresponse.loading} /> */}
+      <Loader fullPage loading={props.stockresponse.loading} />
       <AppBar className={classes.appBar}>
         <Toolbar>
           <IconButton
@@ -145,35 +146,37 @@ function SalesDialog(props) {
         </Toolbar>
       </AppBar>
       <List>
-        {props.stocks.length > 0
-          ? props.stocks.map((value, index) => (
-              <div key={index}>
-                <ListItem
-                  disabled={
-                    props.type === "stockin"
-                      ? false
-                      : value.stock_qty > 0
-                      ? false
-                      : true
+        {props.stocks.length > 0 ? (
+          props.stocks.map((value, index) => (
+            <div key={index}>
+              <ListItem
+                disabled={
+                  props.type === "stockin"
+                    ? false
+                    : value.stock_qty > 0
+                    ? false
+                    : true
+                }
+                button
+                onClick={() => additemOnsaleList(value)}
+              >
+                <ListItemText
+                  primary={`${value.name} Qty: ${value.stock_qty}`}
+                  secondary={
+                    value.stock_qty > 0 ? (
+                      ""
+                    ) : (
+                      <span className="red-text">Out of stock</span>
+                    )
                   }
-                  button
-                  onClick={() => additemOnsaleList(value)}
-                >
-                  <ListItemText
-                    primary={`${value.name} Qty: ${value.stock_qty}`}
-                    secondary={
-                      value.stock_qty > 0 ? (
-                        ""
-                      ) : (
-                        <span className="red-text">Out of stock</span>
-                      )
-                    }
-                  />
-                </ListItem>
-                <Divider />
-              </div>
-            ))
-          : ""}
+                />
+              </ListItem>
+              <Divider />
+            </div>
+          ))
+        ) : (
+          <Messages text={"No products yet"} />
+        )}
       </List>
     </Dialog>
   );

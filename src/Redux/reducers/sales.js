@@ -34,6 +34,7 @@ const Sales = (state = initialState, action) => {
         total: 0,
         credit: [],
         cash: [],
+        loading: false,
       };
     case "REMOVE_QTY":
       // var newqty = item.quantity - 1 < 1 ? 1 : item.quantity - 1;
@@ -105,7 +106,7 @@ const Sales = (state = initialState, action) => {
             ? {
                 ...state.sales[index],
                 quantity: item.quantity,
-                total: item.quantity * parseInt(action.sales.sellingprice),
+                total: item.quantity * parseInt(action.sales.salessellingprice),
               }
             : state.sales[index]
         ),
@@ -143,6 +144,7 @@ const Sales = (state = initialState, action) => {
           item.serialno === action.sales.serialno
             ? {
                 ...state.sales[index],
+                salessellingprice: action.sales.salessellingprice,
                 total: item.quantity * parseInt(action.sales.salessellingprice),
               }
             : state.sales[index]
@@ -185,6 +187,7 @@ const Sales = (state = initialState, action) => {
               : state.sales[index]
           ),
           total: parseInt(state.total) + parseInt(price),
+          loading: false,
         };
       } else {
         console.log("not in ", price);
@@ -193,6 +196,7 @@ const Sales = (state = initialState, action) => {
           ...state,
           sales: [...state.sales, action.sales],
           total: parseInt(state.total) + parseInt(price),
+          loading: false,
         };
       }
     default:

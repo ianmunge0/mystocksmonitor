@@ -218,6 +218,7 @@ function PartialPayment(props) {
                     variant="outlined"
                     name="date_time"
                     fullWidth
+                    defaultValue={new Date().toISOString().substring(0, 10)}
                     type="date"
                   />
                 </div>

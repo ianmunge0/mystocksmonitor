@@ -200,9 +200,9 @@ function NewStock(props) {
             <TextField
               className={classes.inputs}
               id="selling_price_options"
-              label="Price Range Options (optional)"
-              placeholder="e.g 100,200,300"
-              type="text"
+              label="Min Price"
+              type="number"
+              pattern="[0-9]*"
               onChange={handleStockData}
               defaultValue={
                 props.stock ? props.stock.selling_price_options : ""

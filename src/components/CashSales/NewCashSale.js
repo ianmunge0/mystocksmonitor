@@ -285,16 +285,18 @@ function NewCashSale(props) {
   };
 
   const saveSales = () => {
-    console.log("vv");
     setError("");
 
     if (
       props.sales.sales.filter(
         (value) =>
-          parseInt(value.salessellingprice) < parseInt(value.sellingprice)
+          parseInt(value.salessellingprice) <
+          parseInt(value.selling_price_options)
       ).length > 0
     ) {
-      setError("you cant sell this product less than the selling price");
+      setError(
+        "you cant sell this product less than the minimum selling price"
+      );
       return;
     }
     if (
@@ -321,8 +323,10 @@ function NewCashSale(props) {
     }
 
     // props.sales.sales.customer = customer;
-    console.log(type);
+    console.log("bbb ", props.sales.sales);
     props.saveSales(props.sales.sales, customer, type);
+    setType("cash");
+    setCustomer({ name: "" });
   };
 
   const [open, setOpen] = React.useState(false);
@@ -339,7 +343,6 @@ function NewCashSale(props) {
   const [opencustomer, setOpenCustomer] = React.useState(false);
 
   const handleClickOpenCustomer = () => {
-    setType("cutomersale");
     setOpenCustomer(true);
   };
 
@@ -368,6 +371,7 @@ function NewCashSale(props) {
 
   return (
     <>
+      <Loader fullPage loading={props.sales.loading} />
       <SalesDialog
         type="sales"
         fullScreen
@@ -565,6 +569,10 @@ function NewCashSale(props) {
                       }}
                       variant="outlined"
                       disabled
+                      onClick={() => {
+                        setCurrentItem(value);
+                        handleOpenOptionPriceDialog();
+                      }}
                       defaultValue={
                         value.salessellingprice
                           ? value.salessellingprice
@@ -590,7 +598,9 @@ function NewCashSale(props) {
                   </Grid>
                   <Grid item xs={4}>
                     Min S.P:
-                    {value.sellingprice}
+                    {value.selling_price_options
+                      ? value.selling_price_options
+                      : value.sellingprice}
                   </Grid>
                   <Grid item xs={4}>
                     Total:
@@ -602,7 +612,6 @@ function NewCashSale(props) {
           : ""}
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Loader fullPage loading={props.todaysales.loading} />
         {itemsList().length > 0 ? itemsList() : <NoItems text="No sales yet" />}
       </TabPanel>
 

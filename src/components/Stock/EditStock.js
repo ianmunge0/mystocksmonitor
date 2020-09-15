@@ -15,6 +15,7 @@ import Typography from "@material-ui/core/Typography";
 import UnitDialog from "../Stocks/UnitDialog";
 import SupplierDialog from "../Stocks/SupplierDialog";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import Messages from "../Common/Messages";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -84,6 +85,18 @@ function EditStock(props) {
         setError(key.split("_").join(" ") + " cannot be empty");
       }
     });
+    if (parseInt(e.target.buyingprice.value) > stock.sellingprice) {
+      setLoading(false);
+      send = false;
+      setError("buying price cannot be greater than the selling price");
+    }
+    console.log("hh ", e.target.selling_price_options.value);
+    console.log("hhh ", stock.sellingprice);
+    if (stock.sellingprice < parseInt(e.target.selling_price_options.value)) {
+      setLoading(false);
+      send = false;
+      setError("minimum price should be greater than the selling price");
+    }
     if (send) {
       stock.action = "updatestock";
       var dd = new Date().getTime();
@@ -150,7 +163,6 @@ function EditStock(props) {
         onSubmit={updateStockData}
         style={{ margin: 10 }}
       >
-        <p className="red-text">{error}</p>
         <Grid container>
           <Grid item xs={12}>
             <TextField
@@ -186,7 +198,7 @@ function EditStock(props) {
               fullWidth
               onChange={handleStockData}
               variant="outlined"
-              type="text"
+              type="number"
               placeholder="Qty"
             />
           </Grid>
@@ -197,8 +209,9 @@ function EditStock(props) {
               value={stock.buyingprice}
               fullWidth
               onChange={handleStockData}
-              variant="outlined"
+              type="number"
               pattern="[0-9]*"
+              variant="outlined"
               placeholder="Qty"
             />
           </Grid>
@@ -208,24 +221,23 @@ function EditStock(props) {
               id="sellingprice"
               value={stock.sellingprice}
               fullWidth
+              type="number"
+              pattern="[0-9]*"
               onChange={handleStockData}
               variant="outlined"
-              pattern="[0-9]*"
               placeholder="Selling Price"
             />
           </Grid>
           <Grid item xs={12} style={{ marginTop: 10 }}>
+            <div className={classes.label}>Min Selling Price </div>
             <TextField
               className={classes.inputs}
               id="selling_price_options"
-              label="Price Range Options (optional)"
-              placeholder="e.g 100,200,300"
               fullWidth
-              type="text"
+              pattern="[0-9]*"
+              type="number"
               onChange={handleStockData}
-              defaultValue={
-                props.stock ? props.stock.selling_price_options : ""
-              }
+              value={stock.selling_price_options}
               variant="outlined"
             />
           </Grid>
@@ -233,6 +245,7 @@ function EditStock(props) {
             <div className={classes.label}>Re-Order Level </div>
             <TextField
               id="reorder_level"
+              type="number"
               value={stock.reorder_level}
               fullWidth
               onChange={handleStockData}
@@ -286,6 +299,7 @@ function EditStock(props) {
             </Typography>
           </Grid>
         </Grid>
+        <Messages type="error" text={error} />
         <Button
           type="submit"
           variant="contained"

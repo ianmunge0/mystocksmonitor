@@ -136,10 +136,6 @@ function Register(props) {
           className={classes.form}
           onSubmit={handleSubmit}
         >
-          <span className="red-text">
-            {props.message ? props.regdata.message : ""}
-          </span>
-
           <TextField
             variant="outlined"
             margin="normal"
@@ -223,6 +219,7 @@ function Register(props) {
             id="password"
             autoComplete="current-password"
           />
+          <Messages type="error" text={props.regdata.message} />
           <Button
             type="submit"
             fullWidth
@@ -230,7 +227,7 @@ function Register(props) {
             color="primary"
             className={classes.submit}
           >
-            Sign In
+            Click here to register
           </Button>
         </form>
 

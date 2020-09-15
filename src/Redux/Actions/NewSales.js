@@ -40,11 +40,11 @@ export const saveSales = (sales, customer, type) => {
   };
 
   return (dispatch) => {
-    console.log("sales", sales);
     dispatch({
       type: LOADING,
       loading: true,
     });
+    console.log("sales", sales);
     Api.post(`/sales.php`, para)
       .then((res) => {
         const response = res.data;
