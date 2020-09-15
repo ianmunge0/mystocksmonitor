@@ -80,6 +80,17 @@ function remainingDays(endson_){
   return Math.trunc(remdays);
 }
 
+function ifshopexpired(endson_){
+  var currtime = Math.floor(Date.now() / 1000);
+  var remtime = endson_ - currtime;
+  
+  if(remtime < 0){
+    return true;
+  }
+  return false;
+
+}
+
 function Subscription(props) {
   
    const classes2 = useStyles2();
@@ -119,10 +130,10 @@ function Subscription(props) {
             <Grid item xs container direction="column" spacing={2}>
               <Grid item xs>
                 <Typography gutterBottom variant="subtitle1">
-                  <strong>{reactLocalStorage.getObject("currentpackage").plan} plan is active</strong>
+  <strong>{reactLocalStorage.getObject("currentshop").plan} plan is {ifshopexpired(reactLocalStorage.getObject("currentshop").endson) ? "expired" : "active"}</strong>
                 </Typography>
                 <Typography variant="body2" gutterBottom>
-                  Ending on {setDate(reactLocalStorage.getObject("currentpackage").endson)}
+                {ifshopexpired(reactLocalStorage.getObject("currentshop").endson) ? "Expired on" : "Ending on"} {setDate(reactLocalStorage.getObject("currentshop").endson)}
                   
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
@@ -130,7 +141,7 @@ function Subscription(props) {
               </Grid>
               <Grid item>
                 <Typography variant="body2" style={{ cursor: 'pointer' }}>
-  {remainingDays(reactLocalStorage.getObject("currentpackage").endson)} days remaining
+                {ifshopexpired(reactLocalStorage.getObject("currentshop").endson) ? "" : remainingDays(reactLocalStorage.getObject("currentshop").endson) + " days remaining"}
                 </Typography>
               </Grid>
             </Grid>
