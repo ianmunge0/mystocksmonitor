@@ -202,7 +202,7 @@ function PaymentOptions(props) {
                 fullWidth
                 onClick={() => handleClick(packagename.serialno, state)}
               >
-                COMPLETE
+                Pay
               </Button>
             </Grid>
           </>

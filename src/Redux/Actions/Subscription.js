@@ -111,7 +111,7 @@ export const makeSubscription = (plan, state, props) => {
           })
             .then((res) => {
               console.log("response checkPayment " + trial, res.data);
-              if (res.data.status == true || trial > 10) {
+              if (res.data.status == true || trial > 5) {
                 trial = 0;
                 clearInterval(interval);
                 if (res.data.status == true) {
