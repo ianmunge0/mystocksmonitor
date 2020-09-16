@@ -102,7 +102,7 @@ export const makeSubscription = (plan, state, props) => {
           });
           return;
         }
-        // reactLocalStorage.setObject("currentshop", madesubscription);
+        //
         const interval = setInterval(() => {
           pp.action = "checkpayment";
           console.log("checkPayment pp ", checkPayment);
@@ -117,6 +117,9 @@ export const makeSubscription = (plan, state, props) => {
                 } else {
                   trial = 0;
                   res.data.waitingmpesa = madesubscription;
+
+                  //save the new shop to localstorage
+                  reactLocalStorage.setObject("currentshop", res.data);
                   dispatch({
                     type: "PAYMENT_CONFIRMATION",
                     confirmation: res.data,
