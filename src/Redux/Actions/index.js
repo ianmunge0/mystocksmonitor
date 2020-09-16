@@ -134,7 +134,6 @@ export const login = (email, password, type) => {
 export const logout = () => {
   return (dispatch) => {
     reactLocalStorage.clear();
-    console.log("logged out");
     dispatch({
       type: LOG_OUT,
     });

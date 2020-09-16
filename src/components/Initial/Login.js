@@ -96,10 +96,6 @@ function Login(props) {
     }
   };
 
-  console.log("login", auth.isAuthenticated());
-  // if (auth.isAuthenticated()) {
-  //   props.history.push("/dashboard");
-  // }
   if (props.loggedin) {
     auth.login(() => {
       props.history.push("/dashboard");

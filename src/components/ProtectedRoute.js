@@ -123,7 +123,6 @@ export const ProtectedRoute = ({ component: Component, roles, ...rest }) => {
                     </main>
                   </div>
                 )}
-                {console.log("log", props.location)}
 
                 {!grantPermission(roles) && props.history.goBack()}
               </>

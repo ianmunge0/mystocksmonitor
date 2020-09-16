@@ -36,7 +36,8 @@ export default function (ComposedComponent) {
               navigator.serviceWorker.controller.postMessage("updatedatabase");
               return clearInterval(webPing);
             })
-            .catch(() => {
+            .catch((err) => {
+              console.log("error internet detector ", err);
               setisDisconnected(true);
             });
         }, 2000);

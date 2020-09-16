@@ -27,14 +27,12 @@ const AuthenticationReducer = (state = initialState, action) => {
         loading: false,
       };
     case "COUNTRIES":
-      console.log("login countries");
       return {
         ...state,
         countries: action.userdata,
         loading: false,
       };
     case LOG_IN:
-      console.log("login dispatch");
       return {
         ...state,
         userdata: action.userdata,
@@ -43,7 +41,6 @@ const AuthenticationReducer = (state = initialState, action) => {
         loginloading: false,
       };
     case REG:
-      console.log("REG", state);
       return {
         ...state,
         userdata: action.userdata,
@@ -51,7 +48,6 @@ const AuthenticationReducer = (state = initialState, action) => {
         loading: false,
       };
     case LOG_OUT:
-      console.log("logged out redu");
       return { ...state, loading: false, logout: true };
     default:
       return state;

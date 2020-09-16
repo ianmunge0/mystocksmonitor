@@ -165,7 +165,6 @@ function AppBarComponent(props) {
   const classes = useStyles();
   //   render() {
   useEffect(() => {}, []);
-
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
@@ -186,43 +185,10 @@ function AppBarComponent(props) {
       });
     }
   };
-  const [offlineopen, setOfflineOpen] = useState(true);
 
-  const handleClickOpenOffline = () => {
-    setOfflineOpen(true);
-  };
-
-  const handleCloseOffline = () => {
-    setOfflineOpen(false);
-  };
-
-  const check = (v) => {
-    console.log("vv ", v);
-  };
-
-  console.log("vvvvv", props);
   const drawer = (
     <div>
       <div className={classes.toolbar} />
-      {/* <Detector render={({ online }) => check(online)} />
-      <Offline
-        onChange={() => {
-          console.log("changed conne");
-        }}
-      >
-        <Snackbar
-          onClick={handleCloseOffline}
-          open={true}
-          // autoHideDuration={6000}
-          message="Your on an offline mode"
-          action={
-            <Button onClick={handleCloseOffline} color="inherit" size="small">
-              Okay
-            </Button>
-          }
-          className={classes.snackbar}
-        />
-      </Offline> */}
 
       <Grid
         container
@@ -304,7 +270,6 @@ function AppBarComponent(props) {
   };
 
   const initToolbar = (title) => {
-    console.log("initToolbar", title);
     switch (title) {
       case "dashboard":
         return (

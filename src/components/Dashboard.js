@@ -35,16 +35,17 @@ function Dashboard(props) {
   const handleClose = () => {
     setOpen(false);
   };
+  const ifshopexpired = () => {
+    var currtime = Math.floor(Date.now() / 1000);
+    var remtime = reactLocalStorage.getObject("currentshop").endson - currtime;
+    if (remtime < 0) {
+      return true;
+    }
+    return false;
+  };
+
   return (
     <Grid container>
-      {/* <Detector
-        render={({ online }) => (
-          <div className={online ? "normal" : "warning"}>
-            You are currently {online ? "online" : "offline"}
-          </div>
-        )}
-      /> */}
-
       <UnlockAccess request={["ADMIN_ROLE"]}>
         <Grid item xs={12} style={{ marginLeft: 10, marginRight: 10 }}>
           <Button
@@ -82,7 +83,7 @@ function Dashboard(props) {
           <Grid item xs={12}>
             <Item
               description="add sales"
-              disabled={reactLocalStorage.getObject("currentpackage").ifexpired}
+              disabled={ifshopexpired()}
               title="Add Sales"
               route="newsale"
               icon="arrow_downward"
@@ -92,7 +93,7 @@ function Dashboard(props) {
             <Item
               description="add and view customer sales"
               title="Customers Manager"
-              disabled={reactLocalStorage.getObject("currentpackage").ifexpired}
+              disabled={ifshopexpired()}
               route="customermanager"
               icon="settings"
             />
@@ -103,7 +104,7 @@ function Dashboard(props) {
             <Item
               description="add, count and view all stocks"
               title="Stock Setup"
-              disabled={reactLocalStorage.getObject("currentpackage").ifexpired}
+              disabled={ifshopexpired()}
               route="stocksetup"
               icon="settings"
             />
@@ -114,7 +115,7 @@ function Dashboard(props) {
             <Item
               description="add, count and view all stocks"
               title="Stock In"
-              disabled={reactLocalStorage.getObject("currentpackage").ifexpired}
+              disabled={ifshopexpired()}
               route="stockin"
               icon="settings"
             />
@@ -125,7 +126,7 @@ function Dashboard(props) {
             <Item
               description="Stock reports view/print"
               className="datepicker"
-              disabled={reactLocalStorage.getObject("currentpackage").ifexpired}
+              disabled={ifshopexpired()}
               title="Stock In"
               route="stockinmanager"
               icon="arrow_downward"
@@ -137,7 +138,7 @@ function Dashboard(props) {
             <Item
               description="Sales reports view/print"
               title="Sales Reports"
-              disabled={reactLocalStorage.getObject("currentpackage").ifexpired}
+              disabled={ifshopexpired()}
               route="salesmanager"
               icon="cloud_download"
             />
@@ -148,7 +149,7 @@ function Dashboard(props) {
             <Item
               description="Profit and expenses management"
               title="Profit & Expenses Reports"
-              disabled={reactLocalStorage.getObject("currentpackage").ifexpired}
+              disabled={ifshopexpired()}
               icon="call_missed_outgoing"
               route="profitexpense"
             />
@@ -160,7 +161,7 @@ function Dashboard(props) {
               description="add or remove attendants"
               title="Attendants"
               route="attendants"
-              disabled={reactLocalStorage.getObject("currentpackage").ifexpired}
+              disabled={ifshopexpired()}
               icon="person_add"
             />
           </Grid>
@@ -170,7 +171,7 @@ function Dashboard(props) {
             <Item
               description="Cash Flow Management"
               title="Cash Flow"
-              disabled={reactLocalStorage.getObject("currentpackage").ifexpired}
+              disabled={ifshopexpired()}
               icon="subdirectory_arrow_right"
               route="cashflow"
             />
