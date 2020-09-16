@@ -3,30 +3,49 @@ import { Link, withRouter } from "react-router-dom";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import Icon from "@material-ui/core/Icon";
+import Grid from "@material-ui/core/Grid";
 
 import Divider from "@material-ui/core/Divider";
+import { Button } from "@material-ui/core";
 
 function Item(props) {
-  // render() {
-  const { title, icon, route, description, data, onClick } = props;
+  const { title, icon, route, description, data, onClick, disabled } = props;
   return (
     <>
+      {disabled && (
+        <Grid container>
+          <Grid>
+            <Button
+              style={{
+                position: "absolute",
+                right: 5,
+                fontSize: 12,
+                color: "#931a25",
+              }}
+            >
+              Upgrade
+            </Button>
+          </Grid>
+        </Grid>
+      )}
+
       <ListItem
         button
         onClick={() => {
-          if (onClick) {
-            props.onClick(true);
+          if (disabled && route != "shops" && route != "subscriptions") {
+            props.history.push("subscriptions");
           } else {
-            props.history.push({
-              pathname: route,
-              state: data,
-            });
+            if (onClick) {
+              props.onClick(true);
+            } else {
+              props.history.push({
+                pathname: route,
+                state: data,
+              });
+            }
           }
         }}
       >
-        {/* <i size={500} className="material-icons black-text left medium valign">
-          {icon}
-        </i> */}
         <Icon fontSize="large" style={{ marginRight: 10 }}>
           {icon}
         </Icon>
@@ -40,28 +59,6 @@ function Item(props) {
       </ListItem>
       <Divider />
     </>
-    // <Link to={route}>
-    //   <div className="collection-wrap">
-    //     <div className="collection avatar">
-    //       <div
-    //         className="collection-item transparent valign-wrapper"
-    //         style={{ borderBottom: 1 }}
-    //       >
-    //         <i className="material-icons black-text left medium valign">
-    //           {icon}
-    //         </i>
-    //         <div className="black-text">
-    //           <span style={{ fontSize: 18, fontWeight: "bold" }}>
-    //             {title}
-    //           </span>
-    //           <br />
-    //           <span style={{ fontSize: 12 }}>{description}</span>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </Link>
   );
-  // }
 }
 export default withRouter(Item);

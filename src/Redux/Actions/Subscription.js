@@ -69,13 +69,14 @@ export const makeSubscription = (plan) => {
       params: {
         admin_key: reactLocalStorage.getObject("userdata").serialno,
         plankey: plan,
+        shopidkey: reactLocalStorage.getObject("currentshop").serialno,
         action:"subscribe",
       },
     })
       .then((res) => {
         const madesubscription = res.data;
         console.log("madeSubsc", madesubscription);
-        reactLocalStorage.setObject("currentpackage", madesubscription);
+        reactLocalStorage.setObject("currentshop", madesubscription);
         
 
         dispatch({

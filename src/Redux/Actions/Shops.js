@@ -33,11 +33,6 @@ export const addShop = (shop, props) => {
         const shops = res.data;
         console.log("ADDED SHOP", shops);
 
-        console.log("shop ", shop);
-        console.log(
-          "default_shop ",
-          reactLocalStorage.getObject("userdata").default_shop
-        );
         //check if its an attendant with role ADD_SHOP
         if (reactLocalStorage.get("user_type") === "admin") {
           if (
@@ -94,7 +89,7 @@ export const getShops = (id) => {
     })
       .then((res) => {
         const shops = res.data;
-
+        console.log("shops dialog ", shops);
         dispatch({
           type: GET_SHOPS,
           shops,

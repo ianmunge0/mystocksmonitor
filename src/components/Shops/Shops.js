@@ -112,7 +112,7 @@ function Shops(props) {
                     onClick={() =>
                       props.history.push({
                         pathname: `/shopsettings/${value.serialno}`,
-                        myCustomProps: value,
+                        state: value,
                       })
                     }
                   >

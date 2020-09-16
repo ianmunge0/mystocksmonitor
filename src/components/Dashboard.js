@@ -77,95 +77,106 @@ function Dashboard(props) {
           />
         </Grid>
       </UnlockAccess>
-      <UnlockAccess request={["ATTENDANT_ROLE"]}>
-        <Grid item xs={12}>
-          <Item
-            description="add sales"
-            title="Add Sales"
-            route="newsale"
-            icon="arrow_downward"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Item
-            description="add and view customer sales"
-            title="Customers Manager"
-            route="customermanager"
-            icon="settings"
-          />
-        </Grid>
-      </UnlockAccess>
-      <UnlockAccess request={["STOCK_MANAGER"]}>
-        <Grid item xs={12}>
-          <Item
-            description="add, count and view all stocks"
-            title="Stock Setup"
-            route="stocksetup"
-            icon="settings"
-          />
-        </Grid>
-      </UnlockAccess>
-      <UnlockAccess request={["ATTENDANT_ROLE"]}>
-        <Grid item xs={12}>
-          <Item
-            description="add, count and view all stocks"
-            title="Stock In"
-            route="stockin"
-            icon="settings"
-          />
-        </Grid>
-      </UnlockAccess>
-      <UnlockAccess request={["STOCK_REPORT_MANAGER"]}>
-        <Grid item xs={12}>
-          <Item
-            description="Stock reports view/print"
-            className="datepicker"
-            title="Stock In"
-            route="stockinmanager"
-            icon="arrow_downward"
-          />
-        </Grid>
-      </UnlockAccess>
-      <UnlockAccess request={["SALES_MANAGER"]}>
-        <Grid item xs={12}>
-          <Item
-            description="Sales reports view/print"
-            title="Sales Reports"
-            route="salesmanager"
-            icon="cloud_download"
-          />
-        </Grid>
-      </UnlockAccess>
-      <UnlockAccess request={["PROFIT_EXPENSES_MANAGER"]}>
-        <Grid item xs={12}>
-          <Item
-            description="Profit and expenses management"
-            title="Profit & Expenses Reports"
-            icon="call_missed_outgoing"
-            route="profitexpense"
-          />
-        </Grid>
-      </UnlockAccess>
-      <UnlockAccess request={["ADMIN_ROLE"]}>
-        <Grid item xs={12}>
-          <Item
-            description="add or remove attendants"
-            title="Attendants"
-            route="attendants"
-            icon="person_add"
-          />
-        </Grid>
-      </UnlockAccess>
-      <UnlockAccess request={["CASH_FLOW"]}>
-        <Grid item xs={12}>
-          <Item
-            description="Cash Flow Management"
-            title="Cash Flow"
-            icon="subdirectory_arrow_right"
-            route="cashflow"
-          />
-        </Grid>
-      </UnlockAccess>
+      <Grid item xs={12}>
+        <UnlockAccess request={["ATTENDANT_ROLE"]}>
+          <Grid item xs={12}>
+            <Item
+              description="add sales"
+              disabled={reactLocalStorage.getObject("currentpackage").ifexpired}
+              title="Add Sales"
+              route="newsale"
+              icon="arrow_downward"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Item
+              description="add and view customer sales"
+              title="Customers Manager"
+              disabled={reactLocalStorage.getObject("currentpackage").ifexpired}
+              route="customermanager"
+              icon="settings"
+            />
+          </Grid>
+        </UnlockAccess>
+        <UnlockAccess request={["STOCK_MANAGER"]}>
+          <Grid item xs={12}>
+            <Item
+              description="add, count and view all stocks"
+              title="Stock Setup"
+              disabled={reactLocalStorage.getObject("currentpackage").ifexpired}
+              route="stocksetup"
+              icon="settings"
+            />
+          </Grid>
+        </UnlockAccess>
+        <UnlockAccess request={["ATTENDANT_ROLE"]}>
+          <Grid item xs={12}>
+            <Item
+              description="add, count and view all stocks"
+              title="Stock In"
+              disabled={reactLocalStorage.getObject("currentpackage").ifexpired}
+              route="stockin"
+              icon="settings"
+            />
+          </Grid>
+        </UnlockAccess>
+        <UnlockAccess request={["STOCK_REPORT_MANAGER"]}>
+          <Grid item xs={12}>
+            <Item
+              description="Stock reports view/print"
+              className="datepicker"
+              disabled={reactLocalStorage.getObject("currentpackage").ifexpired}
+              title="Stock In"
+              route="stockinmanager"
+              icon="arrow_downward"
+            />
+          </Grid>
+        </UnlockAccess>
+        <UnlockAccess request={["SALES_MANAGER"]}>
+          <Grid item xs={12}>
+            <Item
+              description="Sales reports view/print"
+              title="Sales Reports"
+              disabled={reactLocalStorage.getObject("currentpackage").ifexpired}
+              route="salesmanager"
+              icon="cloud_download"
+            />
+          </Grid>
+        </UnlockAccess>
+        <UnlockAccess request={["PROFIT_EXPENSES_MANAGER"]}>
+          <Grid item xs={12}>
+            <Item
+              description="Profit and expenses management"
+              title="Profit & Expenses Reports"
+              disabled={reactLocalStorage.getObject("currentpackage").ifexpired}
+              icon="call_missed_outgoing"
+              route="profitexpense"
+            />
+          </Grid>
+        </UnlockAccess>
+        <UnlockAccess request={["ADMIN_ROLE"]}>
+          <Grid item xs={12}>
+            <Item
+              description="add or remove attendants"
+              title="Attendants"
+              route="attendants"
+              disabled={reactLocalStorage.getObject("currentpackage").ifexpired}
+              icon="person_add"
+            />
+          </Grid>
+        </UnlockAccess>
+        <UnlockAccess request={["CASH_FLOW"]}>
+          <Grid item xs={12}>
+            <Item
+              description="Cash Flow Management"
+              title="Cash Flow"
+              disabled={reactLocalStorage.getObject("currentpackage").ifexpired}
+              icon="subdirectory_arrow_right"
+              route="cashflow"
+            />
+          </Grid>
+        </UnlockAccess>
+      </Grid>
       <UnlockAccess request={["ADMIN_ROLE"]}>
         <Grid item xs={12}>
           <Item

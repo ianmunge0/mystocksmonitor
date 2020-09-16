@@ -71,7 +71,7 @@ function App(props) {
             title="All Shops"
             backlink="dashboard"
             path="/shops"
-            component={reactLocalStorage.getObject("currentpackage").ifexpired ? Dashboard : Shops}
+            component={Shops}
           />
           <ProtectedRoute
             roles={["SHOPS_MANAGER"]}
@@ -85,7 +85,11 @@ function App(props) {
             roles={["SALES_MANAGER"]}
             title="Sales"
             settings="sales"
-            component={reactLocalStorage.getObject("currentpackage").ifexpired ? Dashboard : SalesManager}
+            component={
+              reactLocalStorage.getObject("currentpackage").ifexpired
+                ? Dashboard
+                : SalesManager
+            }
           />
           <ProtectedRoute
             title="Sales Receipts"
@@ -167,7 +171,11 @@ function App(props) {
             roles={["STOCK_REPORT_MANAGER"]}
             path="/stockinmanager"
             settings="stockin" //this is if you want to have a button at the app bar
-            component={reactLocalStorage.getObject("currentpackage").ifexpired ? Dashboard : StockInManager}
+            component={
+              reactLocalStorage.getObject("currentpackage").ifexpired
+                ? Dashboard
+                : StockInManager
+            }
           />
           <ProtectedRoute
             title="Stock Setup"
@@ -207,7 +215,11 @@ function App(props) {
             title="Profit "
             roles={["PROFIT_EXPENSES_MANAGER"]}
             settings="profitnexpenses"
-            component={reactLocalStorage.getObject("currentpackage").ifexpired ? Dashboard : ProfitExpensesManager}
+            component={
+              reactLocalStorage.getObject("currentpackage").ifexpired
+                ? Dashboard
+                : ProfitExpensesManager
+            }
           />
           <ProtectedRoute
             title="Attendants"
@@ -287,7 +299,11 @@ function App(props) {
             title="Cash Flow"
             path="/cashflow"
             roles={["CASH_FLOW"]}
-            component={reactLocalStorage.getObject("currentpackage").ifexpired ? Dashboard : Singlecashflow}
+            component={
+              reactLocalStorage.getObject("currentpackage").ifexpired
+                ? Dashboard
+                : Singlecashflow
+            }
           />
           <ProtectedRoute
             title="Counts History"
@@ -317,23 +333,25 @@ function App(props) {
           <ProtectedRoute
             roles={["ADMIN_ROLE"]}
             title="Subscriptions"
+            backlink="dashboard"
             path="/subscriptions"
             component={Subscription}
           />
           <ProtectedRoute
             roles={["ADMIN_ROLE"]}
             title="Packages"
+            backlink="subscriptions"
             path="/subscriptionpackages"
             component={Packages}
           />
           <ProtectedRoute
             roles={["ADMIN_ROLE"]}
             title="Payment Options"
+            backlink="subscriptionpackages"
             path="/paymentoptions"
             component={PaymentOptions}
           />
           <Route exact basename="/" component={DefaultPage} />
-          
         </Switch>
       </>
     </React.Fragment>
