@@ -110,16 +110,16 @@ export const makeSubscription = (plan, state, props) => {
             params: pp,
           })
             .then((res) => {
-              console.log("response checkPayment ", res.data);
+              console.log("response checkPayment " + trial, res.data);
               if (res.data.status == true || trial > 10) {
+                trial = 0;
+                clearInterval(interval);
                 if (res.data.status == true) {
+                  reactLocalStorage.setObject("currentshop", res.data);
                   props.history.push("subscriptions");
                 } else {
-                  trial = 0;
                   res.data.waitingmpesa = madesubscription;
-
                   //save the new shop to localstorage
-                  reactLocalStorage.setObject("currentshop", res.data);
                   dispatch({
                     type: "PAYMENT_CONFIRMATION",
                     confirmation: res.data,
@@ -134,7 +134,6 @@ export const makeSubscription = (plan, state, props) => {
               console.log("madesubscerr", error);
             });
         }, 5000);
-        return () => clearInterval(interval);
       })
       .catch((error) => {
         // your error handling goes here}
