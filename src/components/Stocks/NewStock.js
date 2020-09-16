@@ -281,7 +281,7 @@ function NewStock(props) {
       <SupplierDialog
         fullScreen
         getSupplier={getSupplier}
-        open={opensupplier}
+        opensupplier={opensupplier}
         handleClose={handleCloseSupplier}
       />
 

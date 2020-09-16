@@ -312,14 +312,22 @@ export const getCountHistory = (timestamp) => {
     dispatch({
       type: LOADING,
     });
-    console.log({
+    console.log("getCountHistory", {
       timestamp,
+      user_type: reactLocalStorage.get("user_type"),
+      userid: reactLocalStorage.getObject("userdata").serialno,
+      shopid: reactLocalStorage.getObject("userdata").default_shop,
+      roles: reactLocalStorage.getObject("roles"),
       action: "counthistory",
     });
 
     Api.get(`/stocks.php`, {
       params: {
         timestamp,
+        user_type: reactLocalStorage.get("user_type"),
+        userid: reactLocalStorage.getObject("userdata").serialno,
+        shopid: reactLocalStorage.getObject("userdata").default_shop,
+        roles: reactLocalStorage.getObject("roles"),
         action: "counthistory",
       },
     })

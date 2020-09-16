@@ -263,12 +263,12 @@ function App(props) {
           />
           <ProtectedRoute
             title="Day's Count"
-            roles={["STOCK_COUNT"]}
+            roles={["STOCK_MANAGER"]}
             path="/counts/:timestamp"
             component={Counts}
           />
           <ProtectedRoute
-            roles={["STOCK_COUNT"]}
+            roles={["STOCK_MANAGER"]}
             path="/stockcount"
             component={StockCount}
           />
@@ -292,7 +292,7 @@ function App(props) {
           <ProtectedRoute
             title="Edit Product"
             path="/editstock/:id"
-            roles={["EDIT_PRODUCT,STOCK_MANAGER"]}
+            roles={["STOCK_MANAGER"]}
             component={EditStock}
           />
           <ProtectedRoute
@@ -308,7 +308,7 @@ function App(props) {
           <ProtectedRoute
             title="Counts History"
             path="/counthistory"
-            roles={["STOCK_COUNT"]}
+            roles={["STOCK_MANAGER"]}
             component={CountHistory}
           />
           <ProtectedRoute

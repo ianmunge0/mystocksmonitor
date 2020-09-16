@@ -105,9 +105,9 @@ function SupplierDialog(props) {
                     className={classes.chip}
                     onDelete={() => handleSupplierDelete(data)}
                     onClick={() => {
-                      props.getSetSupplier(data);
+                      props.getSupplier(data);
 
-                      props.handleCloseSupplier();
+                      props.handleClose();
                     }}
                   />
                 </li>
@@ -139,6 +139,7 @@ function SupplierDialog(props) {
               placeholder="Phone Number"
               id="outlined-basic"
               name="phone"
+              type="number"
               onChange={handleChange}
               variant="outlined"
             />
