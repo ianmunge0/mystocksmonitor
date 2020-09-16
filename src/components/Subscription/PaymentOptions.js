@@ -12,10 +12,13 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Switch from "@material-ui/core/Switch";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { reactLocalStorage } from "reactjs-localstorage";
 import { connect } from "react-redux";
 import { makeSubscription } from "../../Redux/Actions/Subscription";
+import Messages from "../Common/Messages";
+import { Loader } from "react-overlay-loader";
+import "react-overlay-loader/styles.css";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -28,11 +31,7 @@ function TabPanel(props) {
       aria-labelledby={`scrollable-force-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box p={3}>{children}</Box>}
     </div>
   );
 }
@@ -58,31 +57,37 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function handleClick(props, plan, state) {
-  if (state.checkedB) {
-    props.makeSubscription_(plan);
-  } else {
-    alert("You need to accept terms and conditions");
-  }
-}
-
 function PaymentOptions(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
+  const handleClick = (plan, state) => {
+    if (state.checkedB) {
+      props.makeSubscription_(plan, state, props);
+    } else {
+      alert("You need to accept terms and conditions");
+    }
+  };
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   const [state, setState] = React.useState({
     checkedB: true,
+    phoneno: reactLocalStorage.getObject("userdata").phoneno,
   });
-
   const handleChangeSwitch = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
+  const handPhoneChange = (event) => {
+    setState({ ...state, phoneno: event.target.value });
+  };
+
+  console.log("props confirmation ", props.subscription);
+  // const handleChangeSwitch = (event) => {
+  //   setState({ ...state, [event.target.name]: event.target.checked });
+  // };
   var packagename = props.location.state.data;
-  console.log("clicked package", props.location.state.data);
   return (
     <div className={classes.root}>
       <AppBar position="static" color="default">
@@ -100,6 +105,7 @@ function PaymentOptions(props) {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
+        <Loader fullPage loading={props.subscription.loading} />
         <Grid
           container
           direction="row"
@@ -137,7 +143,8 @@ function PaymentOptions(props) {
             id="phoneno"
             fullWidth
             label="Mpesa Phone No"
-            defaultValue={reactLocalStorage.getObject("userdata").phoneno}
+            onChange={handPhoneChange}
+            defaultValue={state.phoneno}
             variant="outlined"
           />
         </Grid>
@@ -149,9 +156,7 @@ function PaymentOptions(props) {
               justify="flex-start"
               alignItems="center"
             >
-              <p>
-                Accept <Link>Terms and Conditions</Link>
-              </p>
+              Accept <Link to=""> Terms and Conditions</Link>
               <Switch
                 checked={state.checkedB}
                 onChange={handleChangeSwitch}
@@ -167,12 +172,35 @@ function PaymentOptions(props) {
               justify="flex-start"
               alignItems="center"
             >
+              {console.log("waitingmpesa ", props.subscription.waitingmpesa)}
+              {props.subscription.waitingmpesa ? (
+                props.subscription.waitingmpesa.status == 200 ? (
+                  props.subscription.confirmationstatus == false ? (
+                    <Messages
+                      type="error"
+                      text="Payment failed, click pay button again"
+                    />
+                  ) : (
+                    <Messages
+                      type="success"
+                      text="Waiting for mpesa payment.."
+                    />
+                  )
+                ) : (
+                  <Messages
+                    type="error"
+                    text={props.subscription.waitingmpesa.message}
+                  />
+                )
+              ) : (
+                ""
+              )}
               <Button
                 variant="contained"
                 size="large"
                 color="primary"
                 fullWidth
-                onClick={() => handleClick(props, packagename.serialno, state)}
+                onClick={() => handleClick(packagename.serialno, state)}
               >
                 COMPLETE
               </Button>
@@ -190,12 +218,16 @@ function PaymentOptions(props) {
 }
 
 const mapStateToProps = (state) => ({
-  //subscription: state.subscription
+  subscription: state.subscription,
 });
 
 const mapDispacthToProps = (dispatch) => {
   return {
-    makeSubscription_: (plan) => dispatch(makeSubscription(plan)),
+    makeSubscription_: (plan, state, props) =>
+      dispatch(makeSubscription(plan, state, props)),
   };
 };
-export default connect(mapStateToProps, mapDispacthToProps)(PaymentOptions);
+export default connect(
+  mapStateToProps,
+  mapDispacthToProps
+)(withRouter(PaymentOptions));
